@@ -35,8 +35,14 @@ namespace MediaTekDocuments.dal
         /// méthode HTTP pour insert
         /// </summary>
         private const string POST = "POST";
+        /// </summary>
         /// <summary>
         /// méthode HTTP pour update
+        private const string PUT = "PUT";
+        /// <summary>
+        ///  méthode HTTP pour delete
+        private const string DELETE = "DELETE";
+        /// </summary>
 
         /// <summary>
         /// Méthode privée pour créer un singleton
@@ -155,6 +161,66 @@ namespace MediaTekDocuments.dal
             {
                 List<Exemplaire> liste = TraitementRecup<Exemplaire>(POST, "exemplaire", "champs=" + jsonExemplaire);
                 return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// ecriture d'un livre en base de données
+        /// </summary>
+        /// <param name="livre">livre à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerLivre(Livre livre)
+        {
+          
+            try
+            {
+                var infoDocument = new Dictionary<string, Object>
+           {
+             {"id",livre.Id },
+            {"titre",livre.Titre },
+            {"image",livre.Image },
+            {"idgenre",livre.IdGenre },
+            {"genre",livre.Genre },
+            {"idpublic",livre.IdPublic },
+            {"public",livre.Public },
+            {"idrayon",livre.IdRayon },
+               { "rayon",livre.Rayon }
+           };
+
+                // Insértion dans document d'abord
+                // on utilise pas CustomDateTimeConverter() car un livre ne contient PAS de date !
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Livre> liste1 = TraitementRecup<Livre>(POST, "document", "champs=" + jsonDocument);
+
+                // Insértion dans livre_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
+                String jsonLivreDvd = convertToJson("id",livre.Id);
+                List<Livre> liste2 = TraitementRecup<Livre>(POST, "livre_dvd", "champs=" + jsonDocument);
+                //return liste != null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Modification d'un livre en base de données
+        /// </summary>
+        /// <param name="livre">livre à modifier</param>
+        /// <returns>true si la modification a pu se faire (retour != null)</returns>
+        public bool ModifierLivre(Livre livre)
+        {
+            String jsonLivre = JsonConvert.SerializeObject(livre, new CustomDateTimeConverter());
+            try
+            {
+                List<Livre> liste = TraitementRecup<Livre>(PUT, "livre", "champs=" + jsonLivre);
+                return liste != null;
             }
             catch (Exception ex)
             {
