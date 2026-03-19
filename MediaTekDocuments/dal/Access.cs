@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Linq;
+using System.Xml.Linq;
 using MediaTekDocuments.manager;
 using MediaTekDocuments.model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
+using Org.BouncyCastle.Crypto;
 
 namespace MediaTekDocuments.dal
 {
@@ -270,6 +272,64 @@ namespace MediaTekDocuments.dal
         }
 
         /// <summary>
+        /// <summary>
+        /// ecriture d'un livre en base de données
+        /// </summary>
+        /// <param name="livre">livre à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool SupprimerLivre(Livre livre)
+        {
+
+            try
+            {
+                // Vérifier exemplaires
+                // GET exemplaire avec id = livre.Id
+                // Si liste non vide → return false
+
+                String jsonIdLivre = convertToJson("id", livre.Id);
+                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdLivre, null);
+              
+
+                if (lesExemplaires != null && lesExemplaires.Count > 0){
+                    return false;
+                }
+
+                // Vérifier commandes
+                // GET commande avec id = livre.Id
+                // Si liste non vide → return false
+
+                List<JObject> lesCommandes = TraitementRecup<JObject>
+                (GET, "commande/" + jsonIdLivre, null);
+
+                if (lesCommandes != null && lesCommandes.Count > 0)
+                {
+                    return false;
+                }
+
+                // Suppression dans livre
+
+                List<Livre> liste1 = TraitementRecup<Livre>
+                    (DELETE, "livre/" + jsonIdLivre, null);
+
+                // Suppression dans livres_dvd
+                List<Livre> liste2 = TraitementRecup<Livre>
+                   (DELETE, "livres_dvd/" + jsonIdLivre, null);
+
+                // Suppression dans document
+                // Suppression dans livres_dvd
+                List<Livre> liste3 = TraitementRecup<Livre>
+                   (DELETE, "document/" + jsonIdLivre, null);
+
+                return (liste1 != null && liste2 != null && liste3 != null);  
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
         /// <typeparam name="T"></typeparam>
