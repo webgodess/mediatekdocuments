@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Windows.Forms;
-using MediaTekDocuments.model;
-using MediaTekDocuments.controller;
 using System.Collections.Generic;
-using System.Linq;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
+using MediaTekDocuments.controller;
+using MediaTekDocuments.model;
 
 namespace MediaTekDocuments.view
 
@@ -28,6 +28,31 @@ namespace MediaTekDocuments.view
         {
             InitializeComponent();
             this.controller = new FrmMediatekController();
+        }
+
+        /// <summary>
+        /// Met les champs en mode édition ou lecture seule
+        /// </summary>
+        /// <param name="modeEdition">true = édition, false = lecture</param>
+        private void ModeEditionLivres(bool modeEdition)
+        {
+            txbLivresTitre.ReadOnly = !modeEdition;
+            txbLivresAuteur.ReadOnly = !modeEdition;
+            txbLivresCollection.ReadOnly = !modeEdition;
+            txbLivresIsbn.ReadOnly = !modeEdition;
+            txbLivresImage.ReadOnly = !modeEdition;
+            btnValiderLivre.Visible = modeEdition;
+            btnAnnulerLivre.Visible = modeEdition;
+            btnAjoutLivre.Visible = !modeEdition;
+            btnModifierLivre.Visible = !modeEdition;
+            btnSupprimerLivre.Visible = !modeEdition;
+
+            txbLivresGenre.Visible = !modeEdition;
+            txbLivresPublic.Visible = !modeEdition;
+            txbLivresRayon.Visible = !modeEdition;
+            cbxLivresGenresEditAdd.Visible = modeEdition;
+            cbxLivresPublicsEditAdd.Visible = modeEdition;
+            cbxLivresRayonsEditAdd.Visible = modeEdition;
         }
 
         /// <summary>
@@ -63,6 +88,12 @@ namespace MediaTekDocuments.view
             RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxLivresGenres);
             RemplirComboCategorie(controller.GetAllPublics(), bdgPublics, cbxLivresPublics);
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxLivresRayons);
+
+            // rempli les combobox pour l'ajout ou modification d'un livre
+            RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxLivresGenresEditAdd);
+            RemplirComboCategorie(controller.GetAllPublics(), bdgPublics, cbxLivresPublicsEditAdd);
+            RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxLivresRayonsEditAdd);
+
             RemplirLivresListeComplete();
         }
 
@@ -1239,5 +1270,101 @@ namespace MediaTekDocuments.view
             }
         }
         #endregion
+
+        /// <summary>
+        /// Passe en mode édition pour l'ajout d'un nouveau livre.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void BtnAjoutLivre_Click(object sender, EventArgs e)
+        {   // Vide les champs
+            VideLivresInfos();
+            // Passe en mode édition
+            ModeEditionLivres(true);
+            // On peut mettre un id 
+            txbLivresNumero.ReadOnly = false;
+            txbLivresNumero.Focus();
+
+
+        }
+
+        /// <summary>
+        /// Modifie un livre.
+        /// On passe en mode edition
+        /// L'id du livre reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void BtnModifierLivre_Click(object sender, EventArgs e)
+        {   // on passe en mode édition
+            ModeEditionLivres(true);
+            //on ne peut changer l'id
+            txbLivresNumero.ReadOnly = true;
+        }
+
+
+        /// <summary>
+        /// Supprime le livre sélectionné après confirmation.
+        /// Impossible si le livre possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void BtnSupprimerLivre_Click(object sender, EventArgs e)
+        {
+            // to be filled
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderLivre
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+        private void BtnValiderLivre_Click(object sender, EventArgs e)
+        {
+            Genre genre = (Genre)cbxLivresGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxLivresPublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxLivresRayonsEditAdd.SelectedItem;
+
+            if (txbLivresNumero.Text.Equals("") ||
+        txbLivresTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !",
+                                "Erreur");
+                return;
+            }
+        }
+
     }
 }

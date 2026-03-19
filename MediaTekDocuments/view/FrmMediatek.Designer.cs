@@ -53,6 +53,11 @@ namespace MediaTekDocuments.view
             this.label12 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.grpLivresRecherche = new System.Windows.Forms.GroupBox();
+            this.btnAnnulerLivre = new System.Windows.Forms.Button();
+            this.btnValiderLivre = new System.Windows.Forms.Button();
+            this.btnSupprimerLivre = new System.Windows.Forms.Button();
+            this.btnModifierLivre = new System.Windows.Forms.Button();
+            this.btnAjoutLivre = new System.Windows.Forms.Button();
             this.btnLivresAnnulRayons = new System.Windows.Forms.Button();
             this.btnlivresAnnulPublics = new System.Windows.Forms.Button();
             this.btnLivresNumRecherche = new System.Windows.Forms.Button();
@@ -178,6 +183,9 @@ namespace MediaTekDocuments.view
             this.label53 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
             this.btnReceptionRechercher = new System.Windows.Forms.Button();
+            this.cbxLivresGenresEditAdd = new System.Windows.Forms.ComboBox();
+            this.cbxLivresPublicsEditAdd = new System.Windows.Forms.ComboBox();
+            this.cbxLivresRayonsEditAdd = new System.Windows.Forms.ComboBox();
             this.tabOngletsApplication.SuspendLayout();
             this.tabLivres.SuspendLayout();
             this.grpLivresInfos.SuspendLayout();
@@ -231,6 +239,9 @@ namespace MediaTekDocuments.view
             // 
             // grpLivresInfos
             // 
+            this.grpLivresInfos.Controls.Add(this.cbxLivresRayonsEditAdd);
+            this.grpLivresInfos.Controls.Add(this.cbxLivresPublicsEditAdd);
+            this.grpLivresInfos.Controls.Add(this.cbxLivresGenresEditAdd);
             this.grpLivresInfos.Controls.Add(this.label59);
             this.grpLivresInfos.Controls.Add(this.txbLivresIsbn);
             this.grpLivresInfos.Controls.Add(this.txbLivresImage);
@@ -442,6 +453,11 @@ namespace MediaTekDocuments.view
             // 
             // grpLivresRecherche
             // 
+            this.grpLivresRecherche.Controls.Add(this.btnAnnulerLivre);
+            this.grpLivresRecherche.Controls.Add(this.btnValiderLivre);
+            this.grpLivresRecherche.Controls.Add(this.btnSupprimerLivre);
+            this.grpLivresRecherche.Controls.Add(this.btnModifierLivre);
+            this.grpLivresRecherche.Controls.Add(this.btnAjoutLivre);
             this.grpLivresRecherche.Controls.Add(this.btnLivresAnnulRayons);
             this.grpLivresRecherche.Controls.Add(this.btnlivresAnnulPublics);
             this.grpLivresRecherche.Controls.Add(this.btnLivresNumRecherche);
@@ -463,6 +479,57 @@ namespace MediaTekDocuments.view
             this.grpLivresRecherche.TabIndex = 18;
             this.grpLivresRecherche.TabStop = false;
             this.grpLivresRecherche.Text = "Recherches";
+            // 
+            // btnAnnulerLivre
+            // 
+            this.btnAnnulerLivre.Location = new System.Drawing.Point(335, 133);
+            this.btnAnnulerLivre.Name = "btnAnnulerLivre";
+            this.btnAnnulerLivre.Size = new System.Drawing.Size(75, 23);
+            this.btnAnnulerLivre.TabIndex = 21;
+            this.btnAnnulerLivre.Text = "Annuler";
+            this.btnAnnulerLivre.UseVisualStyleBackColor = true;
+            this.btnAnnulerLivre.Visible = false;
+            // 
+            // btnValiderLivre
+            // 
+            this.btnValiderLivre.Location = new System.Drawing.Point(247, 133);
+            this.btnValiderLivre.Name = "btnValiderLivre";
+            this.btnValiderLivre.Size = new System.Drawing.Size(75, 23);
+            this.btnValiderLivre.TabIndex = 20;
+            this.btnValiderLivre.Text = "Valider";
+            this.btnValiderLivre.UseVisualStyleBackColor = true;
+            this.btnValiderLivre.Visible = false;
+            this.btnValiderLivre.Click += new System.EventHandler(this.btnValiderLivre_Click);
+            // 
+            // btnSupprimerLivre
+            // 
+            this.btnSupprimerLivre.Location = new System.Drawing.Point(171, 98);
+            this.btnSupprimerLivre.Name = "btnSupprimerLivre";
+            this.btnSupprimerLivre.Size = new System.Drawing.Size(75, 23);
+            this.btnSupprimerLivre.TabIndex = 19;
+            this.btnSupprimerLivre.Text = "Supprimer";
+            this.btnSupprimerLivre.UseVisualStyleBackColor = true;
+            this.btnSupprimerLivre.Click += new System.EventHandler(this.btnSupprimerLivre_Click);
+            // 
+            // btnModifierLivre
+            // 
+            this.btnModifierLivre.Location = new System.Drawing.Point(90, 98);
+            this.btnModifierLivre.Name = "btnModifierLivre";
+            this.btnModifierLivre.Size = new System.Drawing.Size(75, 23);
+            this.btnModifierLivre.TabIndex = 18;
+            this.btnModifierLivre.Text = "Modifier";
+            this.btnModifierLivre.UseVisualStyleBackColor = true;
+            this.btnModifierLivre.Click += new System.EventHandler(this.btnModifierLivre_Click);
+            // 
+            // btnAjoutLivre
+            // 
+            this.btnAjoutLivre.Location = new System.Drawing.Point(9, 98);
+            this.btnAjoutLivre.Name = "btnAjoutLivre";
+            this.btnAjoutLivre.Size = new System.Drawing.Size(75, 23);
+            this.btnAjoutLivre.TabIndex = 17;
+            this.btnAjoutLivre.Text = "Ajouter";
+            this.btnAjoutLivre.UseVisualStyleBackColor = true;
+            this.btnAjoutLivre.Click += new System.EventHandler(this.btnAjoutLivre_Click);
             // 
             // btnLivresAnnulRayons
             // 
@@ -586,7 +653,7 @@ namespace MediaTekDocuments.view
             this.dgvLivresListe.AllowUserToResizeColumns = false;
             this.dgvLivresListe.AllowUserToResizeRows = false;
             this.dgvLivresListe.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvLivresListe.Location = new System.Drawing.Point(9, 150);
+            this.dgvLivresListe.Location = new System.Drawing.Point(9, 162);
             this.dgvLivresListe.MultiSelect = false;
             this.dgvLivresListe.Name = "dgvLivresListe";
             this.dgvLivresListe.ReadOnly = true;
@@ -611,6 +678,7 @@ namespace MediaTekDocuments.view
             // 
             this.txbLivresTitreRecherche.Location = new System.Drawing.Point(220, 18);
             this.txbLivresTitreRecherche.Name = "txbLivresTitreRecherche";
+            this.txbLivresTitreRecherche.ReadOnly = true;
             this.txbLivresTitreRecherche.Size = new System.Drawing.Size(190, 20);
             this.txbLivresTitreRecherche.TabIndex = 3;
             this.txbLivresTitreRecherche.TextChanged += new System.EventHandler(this.TxbLivresTitreRecherche_TextChanged);
@@ -1776,6 +1844,34 @@ namespace MediaTekDocuments.view
             this.btnReceptionRechercher.UseVisualStyleBackColor = true;
             this.btnReceptionRechercher.Click += new System.EventHandler(this.btnReceptionRechercher_Click);
             // 
+            // cbxLivresGenresEditAdd
+            // 
+            this.cbxLivresGenresEditAdd.FormattingEnabled = true;
+            this.cbxLivresGenresEditAdd.Location = new System.Drawing.Point(150, 117);
+            this.cbxLivresGenresEditAdd.Name = "cbxLivresGenresEditAdd";
+            this.cbxLivresGenresEditAdd.Size = new System.Drawing.Size(207, 21);
+            this.cbxLivresGenresEditAdd.TabIndex = 34;
+            this.cbxLivresGenresEditAdd.Visible = false;
+            this.cbxLivresGenresEditAdd.SelectedIndexChanged += new System.EventHandler(this.cbxLivresGenresEditAdd_SelectedIndexChanged);
+            // 
+            // cbxLivresPublicsEditAdd
+            // 
+            this.cbxLivresPublicsEditAdd.FormattingEnabled = true;
+            this.cbxLivresPublicsEditAdd.Location = new System.Drawing.Point(150, 145);
+            this.cbxLivresPublicsEditAdd.Name = "cbxLivresPublicsEditAdd";
+            this.cbxLivresPublicsEditAdd.Size = new System.Drawing.Size(207, 21);
+            this.cbxLivresPublicsEditAdd.TabIndex = 35;
+            this.cbxLivresPublicsEditAdd.Visible = false;
+            // 
+            // cbxLivresRayonsEditAdd
+            // 
+            this.cbxLivresRayonsEditAdd.FormattingEnabled = true;
+            this.cbxLivresRayonsEditAdd.Location = new System.Drawing.Point(150, 168);
+            this.cbxLivresRayonsEditAdd.Name = "cbxLivresRayonsEditAdd";
+            this.cbxLivresRayonsEditAdd.Size = new System.Drawing.Size(207, 21);
+            this.cbxLivresRayonsEditAdd.TabIndex = 36;
+            this.cbxLivresRayonsEditAdd.Visible = false;
+            // 
             // FrmMediatek
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1970,6 +2066,14 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.Label label57;
         private System.Windows.Forms.Label label58;
         private System.Windows.Forms.Label label59;
+        private System.Windows.Forms.Button btnSupprimerLivre;
+        private System.Windows.Forms.Button btnModifierLivre;
+        private System.Windows.Forms.Button btnAjoutLivre;
+        private System.Windows.Forms.Button btnAnnulerLivre;
+        private System.Windows.Forms.Button btnValiderLivre;
+        private System.Windows.Forms.ComboBox cbxLivresRayonsEditAdd;
+        private System.Windows.Forms.ComboBox cbxLivresPublicsEditAdd;
+        private System.Windows.Forms.ComboBox cbxLivresGenresEditAdd;
     }
 }
 
