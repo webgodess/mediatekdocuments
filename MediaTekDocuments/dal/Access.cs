@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using MediaTekDocuments.model;
+using System.Collections.ObjectModel;
+using System.Configuration;
+using System.Linq;
 using MediaTekDocuments.manager;
+using MediaTekDocuments.model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using System.Configuration;
-using System.Linq;
 
 namespace MediaTekDocuments.dal
 {
@@ -43,6 +44,10 @@ namespace MediaTekDocuments.dal
         ///  méthode HTTP pour delete
         private const string DELETE = "DELETE";
         /// </summary>
+        /// <summary>
+        /// Constante de "champs"
+        private const string CHAMPS = "champs=";
+        /// </summary>
 
         /// <summary>
         /// Méthode privée pour créer un singleton
@@ -69,7 +74,7 @@ namespace MediaTekDocuments.dal
         /// <returns>instance unique de la classe</returns>
         public static Access GetInstance()
         {
-            if(instance == null)
+            if (instance == null)
             {
                 instance = new Access();
             }
@@ -159,7 +164,7 @@ namespace MediaTekDocuments.dal
             String jsonExemplaire = JsonConvert.SerializeObject(exemplaire, new CustomDateTimeConverter());
             try
             {
-                List<Exemplaire> liste = TraitementRecup<Exemplaire>(POST, "exemplaire", "champs=" + jsonExemplaire);
+                List<Exemplaire> liste = TraitementRecup<Exemplaire>(POST, "exemplaire", CHAMPS + jsonExemplaire);
                 return (liste != null);
             }
             catch (Exception ex)
@@ -176,7 +181,7 @@ namespace MediaTekDocuments.dal
         /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
         public bool CreerLivre(Livre livre)
         {
-          
+
             try
             {
                 var infoDocument = new Dictionary<string, Object>
@@ -185,22 +190,33 @@ namespace MediaTekDocuments.dal
             {"titre",livre.Titre },
             {"image",livre.Image },
             {"idgenre",livre.IdGenre },
-            {"genre",livre.Genre },
             {"idpublic",livre.IdPublic },
-            {"public",livre.Public },
             {"idrayon",livre.IdRayon },
-               { "rayon",livre.Rayon }
            };
 
                 // Insértion dans document d'abord
                 // on utilise pas CustomDateTimeConverter() car un livre ne contient PAS de date !
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
-                List<Livre> liste1 = TraitementRecup<Livre>(POST, "document", "champs=" + jsonDocument);
+                List<Livre> liste1 = TraitementRecup<Livre>(POST, "document", CHAMPS + jsonDocument);
 
                 // Insértion dans livre_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
-                String jsonLivreDvd = convertToJson("id",livre.Id);
-                List<Livre> liste2 = TraitementRecup<Livre>(POST, "livre_dvd", "champs=" + jsonDocument);
-                //return liste != null;
+                String jsonLivreDvd = convertToJson("id", livre.Id);
+                List<Livre> liste2 = TraitementRecup<Livre>(POST, "livres_dvd", CHAMPS + jsonLivreDvd);
+
+                // Insértion dans livre
+
+                var infoLivre = new Dictionary<string, Object> {
+                    {"id",livre.Id},
+                    {"isbn",livre.Isbn },
+            {"auteur",livre.Auteur },
+            {"collection",livre.Collection }
+
+                };
+                String jsonLivre = JsonConvert.SerializeObject(infoLivre);
+                List<Livre> liste3 = TraitementRecup<Livre>(POST, "livre", CHAMPS + jsonLivre);
+
+
+                return liste1 != null && liste2 != null && liste3 != null;
             }
             catch (Exception ex)
             {
@@ -219,7 +235,7 @@ namespace MediaTekDocuments.dal
             String jsonLivre = JsonConvert.SerializeObject(livre, new CustomDateTimeConverter());
             try
             {
-                List<Livre> liste = TraitementRecup<Livre>(PUT, "livre", "champs=" + jsonLivre);
+                List<Livre> liste = TraitementRecup<Livre>(PUT, "livre", CHAMPS + jsonLivre);
                 return liste != null;
             }
             catch (Exception ex)
@@ -237,7 +253,7 @@ namespace MediaTekDocuments.dal
         /// <param name="message">information envoyée dans l'url</param>
         /// <param name="parametres">paramètres à envoyer dans le body, au format "chp1=val1&chp2=val2&..."</param>
         /// <returns>liste d'objets récupérés (ou liste vide)</returns>
-        private List<T> TraitementRecup<T> (String methode, String message, String parametres)
+        private List<T> TraitementRecup<T>(String methode, String message, String parametres)
         {
             // trans
             List<T> liste = new List<T>();
@@ -260,9 +276,10 @@ namespace MediaTekDocuments.dal
                 {
                     Console.WriteLine("code erreur = " + code + " message = " + (String)retour["message"]);
                 }
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
-                Console.WriteLine("Erreur lors de l'accès à l'API : "+e.Message);
+                Console.WriteLine("Erreur lors de l'accès à l'API : " + e.Message);
                 Environment.Exit(0);
             }
             return liste;
