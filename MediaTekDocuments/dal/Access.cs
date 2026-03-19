@@ -189,9 +189,9 @@ namespace MediaTekDocuments.dal
              {"id",livre.Id },
             {"titre",livre.Titre },
             {"image",livre.Image },
-            {"idgenre",livre.IdGenre },
-            {"idpublic",livre.IdPublic },
-            {"idrayon",livre.IdRayon },
+            {"idGenre",livre.IdGenre },
+            {"idPublic",livre.IdPublic },
+            {"idRayon",livre.IdRayon },
            };
 
                 // Insértion dans document d'abord
@@ -199,7 +199,7 @@ namespace MediaTekDocuments.dal
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
                 List<Livre> liste1 = TraitementRecup<Livre>(POST, "document", CHAMPS + jsonDocument);
 
-                // Insértion dans livre_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
+                // Insértion dans livres_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
                 String jsonLivreDvd = convertToJson("id", livre.Id);
                 List<Livre> liste2 = TraitementRecup<Livre>(POST, "livres_dvd", CHAMPS + jsonLivreDvd);
 
@@ -216,7 +216,7 @@ namespace MediaTekDocuments.dal
                 List<Livre> liste3 = TraitementRecup<Livre>(POST, "livre", CHAMPS + jsonLivre);
 
 
-                return liste1 != null && liste2 != null && liste3 != null;
+                return (liste1 != null && liste2 != null && liste3 != null);
             }
             catch (Exception ex)
             {
@@ -232,11 +232,35 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la modification a pu se faire (retour != null)</returns>
         public bool ModifierLivre(Livre livre)
         {
-            String jsonLivre = JsonConvert.SerializeObject(livre, new CustomDateTimeConverter());
+           
+           
             try
             {
-                List<Livre> liste = TraitementRecup<Livre>(PUT, "livre", CHAMPS + jsonLivre);
-                return liste != null;
+                // Modification dans document
+                var infoDocument = new Dictionary<string, Object>
+           {
+           
+            {"titre",livre.Titre },
+            {"image",livre.Image },
+            {"idGenre",livre.IdGenre },
+            {"idPublic",livre.IdPublic },
+            {"idRayon",livre.IdRayon },
+           };
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Livre> liste1 = TraitementRecup<Livre>(PUT, "document/" + livre.Id, CHAMPS + jsonDocument);
+                // Modification dans livres_dvd - rie
+                //Modification dans livre
+                var infoLivre = new Dictionary<string, Object> {
+                    {"isbn",livre.Isbn },
+            {"auteur",livre.Auteur },
+            {"collection",livre.Collection }
+
+                };
+                String jsonLivre = JsonConvert.SerializeObject(infoLivre);
+                List<Livre> liste2 = TraitementRecup<Livre>(PUT, "livre/" + livre.Id, CHAMPS + jsonLivre);
+
+
+                return (liste1 != null && liste2 != null);
             }
             catch (Exception ex)
             {
