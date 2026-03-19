@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Configuration;
-using System.Linq;
-using System.Xml.Linq;
 using MediaTekDocuments.manager;
 using MediaTekDocuments.model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-using Org.BouncyCastle.Crypto;
 
 namespace MediaTekDocuments.dal
 {
@@ -38,19 +33,19 @@ namespace MediaTekDocuments.dal
         /// méthode HTTP pour insert
         /// </summary>
         private const string POST = "POST";
-        /// </summary>
         /// <summary>
         /// méthode HTTP pour update
+        /// </summary>
         private const string PUT = "PUT";
         /// <summary>
         ///  méthode HTTP pour delete
+        ///  </summary>
         private const string DELETE = "DELETE";
-        /// </summary>
         /// <summary>
         /// Constante de "champs"
-        private const string CHAMPS = "champs=";
         /// </summary>
-
+        private const string CHAMPS = "champs=";
+      
         /// <summary>
         /// Méthode privée pour créer un singleton
         /// initialise l'accès à l'API
@@ -234,14 +229,14 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la modification a pu se faire (retour != null)</returns>
         public bool ModifierLivre(Livre livre)
         {
-           
-           
+
+
             try
             {
                 // Modification dans document
                 var infoDocument = new Dictionary<string, Object>
            {
-           
+
             {"titre",livre.Titre },
             {"image",livre.Image },
             {"idGenre",livre.IdGenre },
@@ -250,7 +245,7 @@ namespace MediaTekDocuments.dal
            };
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
                 List<Livre> liste1 = TraitementRecup<Livre>(PUT, "document/" + livre.Id, CHAMPS + jsonDocument);
-                // Modification dans livres_dvd - rie
+                // Modification dans livres_dvd
                 //Modification dans livre
                 var infoLivre = new Dictionary<string, Object> {
                     {"isbn",livre.Isbn },
@@ -275,7 +270,7 @@ namespace MediaTekDocuments.dal
         /// <summary>
         /// ecriture d'un livre en base de données
         /// </summary>
-        /// <param name="livre">livre à insérer</param>
+        /// <param name="livre">livre à supprimer</param>
         /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
         public bool SupprimerLivre(Livre livre)
         {
@@ -288,9 +283,10 @@ namespace MediaTekDocuments.dal
 
                 String jsonIdLivre = convertToJson("id", livre.Id);
                 List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdLivre, null);
-              
 
-                if (lesExemplaires != null && lesExemplaires.Count > 0){
+
+                if (lesExemplaires != null && lesExemplaires.Count > 0)
+                {
                     return false;
                 }
 
@@ -320,7 +316,7 @@ namespace MediaTekDocuments.dal
                 List<Livre> liste3 = TraitementRecup<Livre>
                    (DELETE, "document/" + jsonIdLivre, null);
 
-                return (liste1 != null && liste2 != null && liste3 != null);  
+                return (liste1 != null && liste2 != null && liste3 != null);
             }
             catch (Exception ex)
             {
