@@ -1347,6 +1347,11 @@ namespace MediaTekDocuments.view
         /// <param name="e"></param>
         private void BtnValiderLivre_Click(object sender, EventArgs e)
         {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle 
+
             Genre genre = (Genre)cbxLivresGenresEditAdd.SelectedItem;
             Public lePublic = (Public)cbxLivresPublicsEditAdd.SelectedItem;
             Rayon rayon = (Rayon)cbxLivresRayonsEditAdd.SelectedItem;
@@ -1364,7 +1369,66 @@ namespace MediaTekDocuments.view
                                 "Erreur");
                 return;
             }
+
+            Livre livre = new Livre(
+txbLivresNumero.Text,
+txbLivresTitre.Text,
+txbLivresImage.Text,
+txbLivresIsbn.Text,
+txbLivresAuteur.Text,
+    txbLivresCollection.Text,
+    genre.Id,
+    genre.Libelle,
+    lePublic.Id,
+    lePublic.Libelle,
+    rayon.Id,
+    rayon.Libelle
+
+    );
+            // Si txbLivresNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierLivre()
+
+            if (txbLivresNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierLivre(livre) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+
+
+                if (controller.ModifierLivre(livre))
+                {
+                    lesLivres = controller.GetAllLivres();
+                    RemplirLivresListeComplete();
+                    ModeEditionLivres(false);
+                    MessageBox.Show("Livre modifié avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !",
+                                    "Erreur");
+                }
+            }
+            else
+            {
+                
+                if (controller.CreerLivre(livre))
+                {
+                    lesLivres = controller.GetAllLivres();
+                    RemplirLivresListeComplete();
+                    ModeEditionLivres(false);
+                    MessageBox.Show("Livre ajouté avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+
         }
+
+
 
     }
 }
