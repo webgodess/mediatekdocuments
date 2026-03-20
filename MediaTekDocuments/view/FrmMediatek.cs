@@ -30,30 +30,6 @@ namespace MediaTekDocuments.view
             this.controller = new FrmMediatekController();
         }
 
-        /// <summary>
-        /// Met les champs en mode édition ou lecture seule
-        /// </summary>
-        /// <param name="modeEdition">true = édition, false = lecture</param>
-        private void ModeEditionLivres(bool modeEdition)
-        {
-            txbLivresTitre.ReadOnly = !modeEdition;
-            txbLivresAuteur.ReadOnly = !modeEdition;
-            txbLivresCollection.ReadOnly = !modeEdition;
-            txbLivresIsbn.ReadOnly = !modeEdition;
-            txbLivresImage.ReadOnly = !modeEdition;
-            btnValiderLivre.Visible = modeEdition;
-            btnAnnulerLivre.Visible = modeEdition;
-            btnAjoutLivre.Visible = !modeEdition;
-            btnModifierLivre.Visible = !modeEdition;
-            btnSupprimerLivre.Visible = !modeEdition;
-
-            txbLivresGenre.Visible = !modeEdition;
-            txbLivresPublic.Visible = !modeEdition;
-            txbLivresRayon.Visible = !modeEdition;
-            cbxLivresGenresEditAdd.Visible = modeEdition;
-            cbxLivresPublicsEditAdd.Visible = modeEdition;
-            cbxLivresRayonsEditAdd.Visible = modeEdition;
-        }
 
         /// <summary>
         /// Rempli un des 3 combo (genre, public, rayon)
@@ -95,6 +71,31 @@ namespace MediaTekDocuments.view
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxLivresRayonsEditAdd);
 
             RemplirLivresListeComplete();
+        }
+
+        /// <summary>
+        /// Met les champs en mode édition ou lecture seule
+        /// </summary>
+        /// <param name="modeEdition">true = édition, false = lecture</param>
+        private void ModeEditionLivres(bool modeEdition)
+        {
+            txbLivresTitre.ReadOnly = !modeEdition;
+            txbLivresAuteur.ReadOnly = !modeEdition;
+            txbLivresCollection.ReadOnly = !modeEdition;
+            txbLivresIsbn.ReadOnly = !modeEdition;
+            txbLivresImage.ReadOnly = !modeEdition;
+            btnValiderLivre.Visible = modeEdition;
+            btnAnnulerLivre.Visible = modeEdition;
+            btnAjoutLivre.Visible = !modeEdition;
+            btnModifierLivre.Visible = !modeEdition;
+            btnSupprimerLivre.Visible = !modeEdition;
+
+            txbLivresGenre.Visible = !modeEdition;
+            txbLivresPublic.Visible = !modeEdition;
+            txbLivresRayon.Visible = !modeEdition;
+            cbxLivresGenresEditAdd.Visible = modeEdition;
+            cbxLivresPublicsEditAdd.Visible = modeEdition;
+            cbxLivresRayonsEditAdd.Visible = modeEdition;
         }
 
         /// <summary>
@@ -237,6 +238,11 @@ namespace MediaTekDocuments.view
                 cbxLivresRayons.SelectedIndex = -1;
                 cbxLivresPublics.SelectedIndex = -1;
             }
+        }
+
+        private void cbxLivresGenresEditAdd_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // to be filled?
         }
 
         /// <summary>
@@ -1244,6 +1250,7 @@ namespace MediaTekDocuments.view
             RemplirReceptionExemplairesListe(sortedList);
         }
 
+
         /// <summary>
         /// affichage de l'image de l'exemplaire suite à la sélection d'un exemplaire dans la liste
         /// </summary>
@@ -1269,7 +1276,7 @@ namespace MediaTekDocuments.view
                 pcbReceptionExemplaireRevueImage.Image = null;
             }
         }
-        #endregion
+
 
         /// <summary>
         /// Passe en mode édition pour l'ajout d'un nouveau livre.
@@ -1284,7 +1291,7 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
-        private void BtnAjoutLivre_Click(object sender, EventArgs e)
+        private void btnAjoutLivre_Click(object sender, EventArgs e)
         {   // Vide les champs
             VideLivresInfos();
             // Passe en mode édition
@@ -1310,7 +1317,7 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
-        private void BtnModifierLivre_Click(object sender, EventArgs e)
+        private void btnModifierLivre_Click(object sender, EventArgs e)
         {   // on passe en mode édition
             ModeEditionLivres(true);
             //on ne peut changer l'id
@@ -1331,7 +1338,7 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
-        private void BtnSupprimerLivre_Click(object sender, EventArgs e)
+        private void btnSupprimerLivre_Click(object sender, EventArgs e)
         {
             // to be filled
         }
@@ -1345,7 +1352,7 @@ namespace MediaTekDocuments.view
         /// e = les informations sur l'événement
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
-        private void BtnValiderLivre_Click(object sender, EventArgs e)
+        private void btnValiderLivre_Click(object sender, EventArgs e)
         {
             // (Genre) est un cast ici
             // sans ce cast genre est juste un "object"
@@ -1412,7 +1419,7 @@ txbLivresAuteur.Text,
             }
             else
             {
-                
+
                 if (controller.CreerLivre(livre))
                 {
                     lesLivres = controller.GetAllLivres();
@@ -1428,7 +1435,25 @@ txbLivresAuteur.Text,
 
         }
 
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerLivre
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
 
+        private void btnAnnulerLivre_Click(object sender, EventArgs e)
+        {
+            ModeEditionLivres(false);
+            RemplirLivresListeComplete();
+        }
 
+        #endregion
     }
+
+
+
 }
