@@ -21,6 +21,14 @@ namespace MediaTekDocuments.view
         private readonly BindingSource bdgPublics = new BindingSource();
         private readonly BindingSource bdgRayons = new BindingSource();
 
+        private readonly BindingSource bdgLivresGenresEditAdd = new BindingSource();
+        private readonly BindingSource bdgLivresPublicsEditAdd = new BindingSource();
+        private readonly BindingSource bdgLivresRayonsEditAdd = new BindingSource();
+
+        private readonly BindingSource bdgDvdGenresEditAdd = new BindingSource();
+        private readonly BindingSource bdgDvdPublicsEditAdd = new BindingSource();
+        private readonly BindingSource bdgDvdRayonsEditAdd = new BindingSource();
+
         /// <summary>
         /// Constructeur : création du contrôleur lié à ce formulaire
         /// </summary>
@@ -66,9 +74,9 @@ namespace MediaTekDocuments.view
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxLivresRayons);
 
             // rempli les combobox pour l'ajout ou modification d'un livre
-            RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxLivresGenresEditAdd);
-            RemplirComboCategorie(controller.GetAllPublics(), bdgPublics, cbxLivresPublicsEditAdd);
-            RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxLivresRayonsEditAdd);
+            RemplirComboCategorie(controller.GetAllGenres(), bdgLivresGenresEditAdd, cbxLivresGenresEditAdd);
+            RemplirComboCategorie(controller.GetAllPublics(), bdgLivresPublicsEditAdd, cbxLivresPublicsEditAdd);
+            RemplirComboCategorie(controller.GetAllRayons(), bdgLivresRayonsEditAdd, cbxLivresRayonsEditAdd);
 
             RemplirLivresListeComplete();
         }
@@ -89,13 +97,22 @@ namespace MediaTekDocuments.view
             btnAjoutLivre.Visible = !modeEdition;
             btnModifierLivre.Visible = !modeEdition;
             btnSupprimerLivre.Visible = !modeEdition;
-
+            cbxLivresGenres.Enabled = !modeEdition;
+            cbxLivresPublics.Enabled = !modeEdition;
+            cbxLivresRayons.Enabled = !modeEdition;
+            txbLivresTitreRecherche.ReadOnly = !modeEdition;
             txbLivresGenre.Visible = !modeEdition;
             txbLivresPublic.Visible = !modeEdition;
             txbLivresRayon.Visible = !modeEdition;
             cbxLivresGenresEditAdd.Visible = modeEdition;
             cbxLivresPublicsEditAdd.Visible = modeEdition;
             cbxLivresRayonsEditAdd.Visible = modeEdition;
+
+            txbLivresNumRecherche.Enabled = !modeEdition;
+            txbLivresTitreRecherche.Enabled = !modeEdition;
+            btnLivresNumRecherche.Enabled = !modeEdition;    
+            btnLivresAnnulGenres.Enabled = !modeEdition;        
+            btnLivresAnnulRayons.Enabled = !modeEdition;     
         }
 
         /// <summary>
@@ -415,6 +432,12 @@ namespace MediaTekDocuments.view
             RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxDvdGenres);
             RemplirComboCategorie(controller.GetAllPublics(), bdgPublics, cbxDvdPublics);
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxDvdRayons);
+
+            // rempli les combobox pour l'ajout ou modification d'un dvd
+            RemplirComboCategorie(controller.GetAllGenres(), bdgDvdGenresEditAdd, cbxDvdGenresEditAdd);
+            RemplirComboCategorie(controller.GetAllPublics(), bdgDvdPublicsEditAdd, cbxDvdPublicsEditAdd);
+            RemplirComboCategorie(controller.GetAllRayons(), bdgDvdRayonsEditAdd, cbxDvdRayonsEditAdd);
+
             RemplirDvdListeComplete();
         }
 
@@ -434,6 +457,37 @@ namespace MediaTekDocuments.view
             dgvDvdListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvDvdListe.Columns["id"].DisplayIndex = 0;
             dgvDvdListe.Columns["titre"].DisplayIndex = 1;
+        }
+
+        /// <summary>
+        /// Met les champs en mode édition ou lecture seule
+        /// </summary>
+        /// <param name="modeEdition">true = édition, false = lecture</param>
+        private void ModeEditionDvd(bool modeEdition)
+        {
+            txbDvdTitre.ReadOnly = !modeEdition;
+            txbDvdRealisateur.ReadOnly = !modeEdition;
+            txbDvdDuree.ReadOnly = !modeEdition;
+            txbDvdSynopsis.ReadOnly = !modeEdition;
+            txbDvdImage.ReadOnly = !modeEdition;
+            btnValiderDvd.Visible = modeEdition;
+            btnAnnulerDvd.Visible = modeEdition;
+            btnAjoutDvd.Visible = !modeEdition;
+            btnModifierDvd.Visible = !modeEdition;
+            btnSupprimerDvd.Visible = !modeEdition;
+            cbxDvdGenres.Enabled = !modeEdition;
+            cbxDvdPublics.Enabled = !modeEdition;
+            cbxDvdRayons.Enabled = !modeEdition;
+
+            txbDvdGenre.Visible = !modeEdition;
+            txbDvdPublic.Visible = !modeEdition;
+            txbDvdRayon.Visible = !modeEdition;
+            cbxDvdGenresEditAdd.Visible = modeEdition;
+            cbxDvdPublicsEditAdd.Visible = modeEdition;
+            cbxDvdRayonsEditAdd.Visible = modeEdition;
+
+            txbDvdNumRecherche.Enabled = !modeEdition;
+            txbDvdTitreRecherche.Enabled = !modeEdition;
         }
 
         /// <summary>
@@ -1419,6 +1473,12 @@ namespace MediaTekDocuments.view
                 return;
             }
 
+            if (!txbLivresNumero.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("Le numéro ne doit contenir que des chiffres !", "Erreur");
+                return;
+            }
+
             Livre livre = new Livre(
 txbLivresNumero.Text,
 txbLivresTitre.Text,
@@ -1444,7 +1504,7 @@ txbLivresAuteur.Text,
                 // ModifierLivre(livre) retourne un bool
                 // if (true)  → succès → afficher liste
                 // if (false) → échec  → afficher erreur
-
+               
 
                 if (controller.ModifierLivre(livre))
                 {
@@ -1461,6 +1521,16 @@ txbLivresAuteur.Text,
             }
             else
             {
+                // ICI c'est le bloc Ajout
+                Livre livreExistant = lesLivres.Find(x => x.Id.Equals(txbLivresNumero.Text));
+
+                if (livreExistant != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbLivresNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
 
                 if (controller.CreerLivre(livre))
                 {
@@ -1494,6 +1564,242 @@ txbLivresAuteur.Text,
         }
 
         #endregion
+
+        /// <summary>
+        /// Passe en mode édition pour l'ajout d'un nouveau dvd.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnAjoutDvd_Click(object sender, EventArgs e)
+        {
+            // Vide les champs
+            VideDvdInfos();
+            // Passe en mode édition
+            ModeEditionDvd(true);
+            // On peut mettre un id 
+            txbDvdNumero.ReadOnly = false;
+            txbDvdNumero.Focus();
+        }
+
+
+
+
+        /// <summary>
+        /// Supprime le dvd sélectionné après confirmation.
+        /// Impossible si le dvd possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnSupprimerDvd_Click(object sender, EventArgs e)
+        {
+            // bdgDvdListe.List : la liste de tous les dvd affichés dans le datagrid
+            // bdgDvdListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Dvd) : cast: on dit "cet objet est un Dvd"
+            // Si on cliques sur la ligne 3 du datagrid Position = 3
+            // List[3] = le dvd à la ligne 3
+            // dvd = ce Dvd
+            Dvd dvd = (Dvd)bdgDvdListe.List[bdgDvdListe.Position];
+            if (dvd != null)
+            {
+
+                // demande de confirmation
+                //result = DialogResult.Yes  si l'utilisateur clique Oui
+                //result = DialogResult.No   si l'utilisateur clique Non
+
+                DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer {dvd.Titre} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerDvd(dvd) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerDvd(dvd))
+                    {
+                        // retourne tous les dvd à partir de la BDD
+                        lesDvd = controller.GetAllDvd();
+                        // Affiche la liste complète des dvd
+                        // et annule toutes les recherches et filtres
+                        RemplirDvdListeComplete();
+                        MessageBox.Show($"{dvd.Titre} supprimé avec succès !");
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {dvd.Titre}, il possède des exemplaires ou commandes.");
+                    }
+                }
+
+            }
+        }
+
+
+        /// <summary>
+        /// Modifie un dvd.
+        /// On passe en mode edition
+        /// L'id du dvd reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnModifierDvd_Click(object sender, EventArgs e)
+        {   // on passe en mode édition
+            ModeEditionDvd(true);
+            //on ne peut changer l'id
+            txbDvdNumero.ReadOnly = true;
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderDvd
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnValiderDvd_Click(object sender, EventArgs e)
+        {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle 
+
+            Genre genre = (Genre)cbxDvdGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxDvdPublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxDvdRayonsEditAdd.SelectedItem;
+
+            if (txbDvdNumero.Text.Equals("") || txbDvdTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !",
+                                "Erreur");
+                return;
+            }
+
+            // parse the input string to integer
+            // we use int.TryParse when we are unsure about the format or validity of the input string,
+            // such as when processing user input from a text box or reading data from a file
+
+            if (!int.TryParse(txbDvdDuree.Text, out int duree))
+            {
+                MessageBox.Show("La durée doit être un nombre !", "Erreur");
+                return;
+            }
+
+            Dvd dvd = new Dvd(
+                txbDvdNumero.Text,
+                txbDvdTitre.Text,
+                txbDvdImage.Text,
+                duree,
+                txbDvdRealisateur.Text,
+                txbDvdSynopsis.Text,
+                genre.Id,
+                genre.Libelle,
+                lePublic.Id,
+                lePublic.Libelle,
+                rayon.Id,
+                rayon.Libelle
+            );
+
+            // Si txbDvdNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierDvd()
+
+            if (txbDvdNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierDvd(dvd) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+
+                if (controller.ModifierDvd(dvd))
+                {
+                    lesDvd = controller.GetAllDvd();
+                    RemplirDvdListeComplete();
+                    ModeEditionDvd(false);
+                    MessageBox.Show("Dvd modifié avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !",
+                                    "Erreur");
+                }
+            }
+            else
+            {
+                Dvd dvdExistant = lesDvd.Find(x => x.Id.Equals(txbDvdNumero.Text));
+
+                if (dvdExistant != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbDvdNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
+
+                if (controller.CreerDvd(dvd))
+                {
+                    lesDvd = controller.GetAllDvd();
+                    RemplirDvdListeComplete();
+                    ModeEditionDvd(false);
+                    MessageBox.Show("Dvd ajouté avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerDvd
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnAnnulerDvd_Click(object sender, EventArgs e)
+        {
+            ModeEditionDvd(false);
+            RemplirDvdListeComplete();
+
+        }
     }
 
 

@@ -478,6 +478,125 @@ namespace MediaTekDocuments.dal
             return false;
         }
 
+        /// <summary>
+        /// ecriture d'une revue en base de données
+        /// </summary>
+        /// <param name="revue">revue à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerRevue(Revue revue)
+        {
+            try
+            {
+                var infoDocument = new Dictionary<string, Object>
+        {
+            {"id",    revue.Id },
+            {"titre", revue.Titre },
+            {"image", revue.Image },
+            {"idGenre",  revue.IdGenre },
+            {"idPublic", revue.IdPublic },
+            {"idRayon",  revue.IdRayon }
+        };
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Revue> liste1 = TraitementRecup<Revue>(POST, "document", CHAMPS + jsonDocument);
+
+
+                var infoRevue = new Dictionary<string, Object>
+        {
+            {"id",              revue.Id },
+            {"periodicite",     revue.Periodicite },
+            {"delaiMiseADispo", revue.DelaiMiseADispo }
+        };
+                String jsonRevue = JsonConvert.SerializeObject(infoRevue);
+                List<Revue> liste2 = TraitementRecup<Revue>(POST, "revue", CHAMPS + jsonRevue);
+
+                return (liste1 != null && liste2 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Modification d'une revue en base de données
+        /// </summary>
+        /// <param name="revue">revue à modifier</param>
+        /// <returns>true si la modification a pu se faire (retour != null)</returns>
+        public bool ModifierRevue(Revue revue)
+        {
+            try
+            {
+                var infoDocument = new Dictionary<string, Object>
+        {
+            {"titre",    revue.Titre },
+            {"image",    revue.Image },
+            {"idGenre",  revue.IdGenre },
+            {"idPublic", revue.IdPublic },
+            {"idRayon",  revue.IdRayon }
+        };
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Revue> liste1 = TraitementRecup<Revue>(PUT, "document/" + revue.Id, CHAMPS + jsonDocument);
+
+                var infoRevue = new Dictionary<string, Object>
+        {
+            {"periodicite",     revue.Periodicite },
+            {"delaiMiseADispo", revue.DelaiMiseADispo }
+        };
+                String jsonRevue = JsonConvert.SerializeObject(infoRevue); 
+                List<Revue> liste2 = TraitementRecup<Revue>(PUT, "revue/" + revue.Id, CHAMPS + jsonRevue); 
+
+                return (liste1 != null && liste2 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Suppression d'une revue en base de données
+        /// </summary>
+        /// <param name="revue">revue à supprimer</param>
+        /// <returns>true si la suppression a pu se faire</returns>
+
+        public bool SupprimerRevue(Revue revue)
+        {
+            try
+            {
+                String jsonIdRevue = convertToJson("id", revue.Id);
+
+                // Vérifier exemplaires
+                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>
+                    (GET, "exemplaire/" + jsonIdRevue, null);
+                if (lesExemplaires != null && lesExemplaires.Count > 0)
+                    return false;
+
+                // Vérifier commandes
+                List<JObject> lesCommandes = TraitementRecup<JObject>
+                    (GET, "commande/" + jsonIdRevue, null);
+                if (lesCommandes != null && lesCommandes.Count > 0)
+                    return false;
+
+                // Suppression dans revue
+                List<Revue> liste1 = TraitementRecup<Revue>
+                    (DELETE, "revue/" + jsonIdRevue, null);
+
+                
+                // Suppression dans document
+                List<Revue> liste2 = TraitementRecup<Revue>
+                    (DELETE, "document/" + jsonIdRevue, null);
+
+                return (liste1 != null && liste2 != null); // ✅ 2 listes seulement
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
 
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
