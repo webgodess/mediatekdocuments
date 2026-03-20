@@ -267,11 +267,10 @@ namespace MediaTekDocuments.dal
         }
 
         /// <summary>
-        /// <summary>
-        /// ecriture d'un livre en base de données
+        /// Suppression d'un livre en base de données
         /// </summary>
         /// <param name="livre">livre à supprimer</param>
-        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        /// <returns>true si la suppression a pu se faire</returns>
         public bool SupprimerLivre(Livre livre)
         {
 
@@ -315,6 +314,160 @@ namespace MediaTekDocuments.dal
                 // Suppression dans livres_dvd
                 List<Livre> liste3 = TraitementRecup<Livre>
                    (DELETE, "document/" + jsonIdLivre, null);
+
+                return (liste1 != null && liste2 != null && liste3 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// ecriture d'un dvd en base de données
+        /// </summary>
+        /// <param name="dvd">dvd à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerDvd(Dvd dvd)
+        {
+
+            try
+            {
+                var infoDocument = new Dictionary<string, Object>
+       {
+         {"id",dvd.Id },
+        {"titre",dvd.Titre },
+        {"image",dvd.Image },
+        {"idGenre",dvd.IdGenre },
+        {"idPublic",dvd.IdPublic },
+        {"idRayon", dvd.IdRayon },
+       };
+
+                // Insértion dans document d'abord
+                // on utilise pas CustomDateTimeConverter() car un dvd ne contient PAS de date !
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Dvd> liste1 = TraitementRecup<Dvd>(POST, "document", CHAMPS + jsonDocument);
+
+                // Insértion dans livres_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
+                String jsonLivreDvd = convertToJson("id", dvd.Id);
+                List<Dvd> liste2 = TraitementRecup<Dvd>(POST, "livres_dvd", CHAMPS + jsonLivreDvd);
+
+                // Insértion dans dvd
+
+                var infoDvd = new Dictionary<string, Object> {
+                {"id",dvd.Id},
+                {"duree",dvd.Duree },
+        {"realisateur",dvd.Realisateur },
+        {"synopsis",dvd.Synopsis }
+
+            };
+                String jsonDvd = JsonConvert.SerializeObject(infoDvd);
+                List<Dvd> liste3 = TraitementRecup<Dvd>(POST, "dvd", CHAMPS + jsonDvd);
+
+
+                return (liste1 != null && liste2 != null && liste3 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Modification d'un dvd en base de données
+        /// </summary>
+        /// <param name="dvd">dvd à modifier</param>
+        /// <returns>true si la modification a pu se faire (retour != null)</returns>
+        public bool ModifierDvd(Dvd dvd)
+        {
+
+
+            try
+            {
+                // Modification dans document
+                var infoDocument = new Dictionary<string, Object>
+    {
+
+     {"titre",dvd.Titre },
+     {"image",dvd.Image },
+     {"idGenre",dvd.IdGenre },
+     {"idPublic",dvd.IdPublic },
+     {"idRayon",dvd.IdRayon },
+    };
+                String jsonDocument = JsonConvert.SerializeObject(infoDocument);
+                List<Dvd> liste1 = TraitementRecup<Dvd>(PUT, "document/" + dvd.Id, CHAMPS + jsonDocument);
+                // Modification dans livres_dvd
+                //Modification dans dvd
+                var infoDvd = new Dictionary<string, Object> {
+
+        {"duree",dvd.Duree },
+{"realisateur",dvd.Realisateur },
+{"synopsis",dvd.Synopsis }
+
+         };
+                String jsonDvd = JsonConvert.SerializeObject(infoDvd);
+                List<Dvd> liste2 = TraitementRecup<Dvd>(PUT, "dvd/" + dvd.Id, CHAMPS + jsonDvd);
+
+
+                return (liste1 != null && liste2 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Suppression d'un dvd en base de données
+        /// </summary>
+        /// <param name="dvd">dvd à supprimer</param>
+        /// <returns>true si la suppression a pu se faire</returns>
+        public bool SupprimerDvd(Dvd dvd)
+        {
+
+            try
+            {
+                // Vérifier exemplaires
+                // GET exemplaire avec id = dvd.Id
+                // Si liste non vide → return false
+
+                String jsonIdDvd = convertToJson("id", dvd.Id);
+                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdDvd, null);
+
+
+                if (lesExemplaires != null && lesExemplaires.Count > 0)
+                {
+                    return false;
+                }
+
+                // Vérifier commandes
+                // GET commande avec id = dvd.Id
+                // Si liste non vide → return false
+
+                List<JObject> lesCommandes = TraitementRecup<JObject>
+                (GET, "commande/" + jsonIdDvd, null);
+
+                if (lesCommandes != null && lesCommandes.Count > 0)
+                {
+                    return false;
+                }
+
+                // Suppression dans dvd
+
+                List<Dvd> liste1 = TraitementRecup<Dvd>
+                    (DELETE, "dvd/" + jsonIdDvd, null);
+
+                // Suppression dans livres_dvd
+                List<Dvd> liste2 = TraitementRecup<Dvd>
+                   (DELETE, "livres_dvd/" + jsonIdDvd, null);
+
+                // Suppression dans document
+                // Suppression dans livres_dvd
+                List<Dvd> liste3 = TraitementRecup<Dvd>
+                   (DELETE, "document/" + jsonIdDvd, null);
 
                 return (liste1 != null && liste2 != null && liste3 != null);
             }
