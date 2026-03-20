@@ -2194,7 +2194,7 @@ namespace MediaTekDocuments.view
             // 
             this.btnAnnulerRevue.Location = new System.Drawing.Point(481, 145);
             this.btnAnnulerRevue.Name = "btnAnnulerRevue";
-            this.btnAnnulerRevue.Size = new System.Drawing.Size(75, 41);
+            this.btnAnnulerRevue.Size = new System.Drawing.Size(80, 41);
             this.btnAnnulerRevue.TabIndex = 20;
             this.btnAnnulerRevue.Text = "Annuler";
             this.btnAnnulerRevue.UseVisualStyleBackColor = true;
