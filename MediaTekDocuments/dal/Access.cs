@@ -109,7 +109,7 @@ namespace MediaTekDocuments.dal
         }
 
         /// <summary>
-        /// Retourne toutes les livres à partir de la BDD
+        /// Retourne tous les livres à partir de la BDD
         /// </summary>
         /// <returns>Liste d'objets Livre</returns>
         public List<Livre> GetAllLivres()
@@ -119,7 +119,7 @@ namespace MediaTekDocuments.dal
         }
 
         /// <summary>
-        /// Retourne toutes les dvd à partir de la BDD
+        /// Retourne tous les dvd à partir de la BDD
         /// </summary>
         /// <returns>Liste d'objets Dvd</returns>
         public List<Dvd> GetAllDvd()

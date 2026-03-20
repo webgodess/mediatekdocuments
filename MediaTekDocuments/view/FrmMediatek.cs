@@ -1340,7 +1340,49 @@ namespace MediaTekDocuments.view
 
         private void btnSupprimerLivre_Click(object sender, EventArgs e)
         {
-            // to be filled
+            // bdgLivresListe.List : la liste de tous les livres affichés dans le datagrid
+            // bdgLivresListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Livre) : cast: on dit "cet objet est un Livre"
+            // Si on cliques sur la ligne 3 du datagrid Position = 3
+            // List[3] = le livre à la ligne 3
+            // livre = ce Livre
+            Livre livre = (Livre)bdgLivresListe.List[bdgLivresListe.Position];
+            if (livre != null) {
+
+                // demande de confirmation
+                //result = DialogResult.Yes  si l'utilisateur clique Oui
+                //result = DialogResult.No   si l'utilisateur clique Non
+
+                DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer {livre.Titre} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerLivre(livre) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerLivre(livre))
+                    {
+                        // retourne tous les livres à partir de la BDD
+                        lesLivres = controller.GetAllLivres();
+                        // Affiche la liste complète des livres
+                        // et annule toutes les recherches et filtres
+                        RemplirLivresListeComplete();
+                        MessageBox.Show($"{livre.Titre} supprimé avec succès !");
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {livre.Titre}, il possède des exemplaires ou commandes.");
+                    }
+                }
+
+            }
         }
 
         /// <summary>
