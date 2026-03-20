@@ -156,5 +156,35 @@ namespace MediaTekDocuments.controller
         {
             return access.SupprimerDvd(dvd);
         }
+
+        /// <summary>
+        /// Crée une revue dans la bdd
+        /// </summary>
+        /// <param name="revue">L'objet Revue concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerRevue(Revue revue)
+        {
+            return access.CreerRevue(revue);
+        }
+
+        /// <summary>
+        /// Modifie une revue dans la bdd
+        /// </summary>
+        /// <param name="revue">L'objet Revue concerné</param>
+        /// <returns>True si la modification a pu se faire</returns>
+        public bool ModifierRevue(Revue revue)
+        {
+            return access.ModifierRevue(revue);
+        }
+
+        /// <summary>
+        /// Supprime une revue dans la bdd
+        /// </summary>
+        /// <param name="revue">L'objet Revue concerné</param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        public bool SupprimerRevue(Revue revue)
+        {
+            return access.SupprimerRevue(revue);
+        }
     }
 }

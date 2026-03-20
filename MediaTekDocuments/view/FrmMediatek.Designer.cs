@@ -194,6 +194,14 @@ namespace MediaTekDocuments.view
             this.label53 = new System.Windows.Forms.Label();
             this.label54 = new System.Windows.Forms.Label();
             this.btnReceptionRechercher = new System.Windows.Forms.Button();
+            this.btnAjoutRevue = new System.Windows.Forms.Button();
+            this.btnModifierRevue = new System.Windows.Forms.Button();
+            this.btnSupprimerRevue = new System.Windows.Forms.Button();
+            this.btnAnnulerRevue = new System.Windows.Forms.Button();
+            this.btnValiderRevue = new System.Windows.Forms.Button();
+            this.cbxRevueRayonsEditAdd = new System.Windows.Forms.ComboBox();
+            this.cbxRevuePublicsEditAdd = new System.Windows.Forms.ComboBox();
+            this.cbxRevueGenresEditAdd = new System.Windows.Forms.ComboBox();
             this.tabOngletsApplication.SuspendLayout();
             this.tabLivres.SuspendLayout();
             this.grpLivresInfos.SuspendLayout();
@@ -1322,6 +1330,9 @@ namespace MediaTekDocuments.view
             // 
             // grpRevuesInfos
             // 
+            this.grpRevuesInfos.Controls.Add(this.cbxRevueGenresEditAdd);
+            this.grpRevuesInfos.Controls.Add(this.cbxRevuePublicsEditAdd);
+            this.grpRevuesInfos.Controls.Add(this.cbxRevueRayonsEditAdd);
             this.grpRevuesInfos.Controls.Add(this.label57);
             this.grpRevuesInfos.Controls.Add(this.txbRevuesImage);
             this.grpRevuesInfos.Controls.Add(this.txbRevuesRayon);
@@ -1533,6 +1544,11 @@ namespace MediaTekDocuments.view
             // 
             // grpRevuesRecherche
             // 
+            this.grpRevuesRecherche.Controls.Add(this.btnValiderRevue);
+            this.grpRevuesRecherche.Controls.Add(this.btnAnnulerRevue);
+            this.grpRevuesRecherche.Controls.Add(this.btnSupprimerRevue);
+            this.grpRevuesRecherche.Controls.Add(this.btnModifierRevue);
+            this.grpRevuesRecherche.Controls.Add(this.btnAjoutRevue);
             this.grpRevuesRecherche.Controls.Add(this.btnRevuesAnnulRayons);
             this.grpRevuesRecherche.Controls.Add(this.btnRevuesAnnulPublics);
             this.grpRevuesRecherche.Controls.Add(this.btnRevuesNumRecherche);
@@ -2144,6 +2160,82 @@ namespace MediaTekDocuments.view
             this.btnReceptionRechercher.UseVisualStyleBackColor = true;
             this.btnReceptionRechercher.Click += new System.EventHandler(this.btnReceptionRechercher_Click);
             // 
+            // btnAjoutRevue
+            // 
+            this.btnAjoutRevue.Location = new System.Drawing.Point(13, 145);
+            this.btnAjoutRevue.Name = "btnAjoutRevue";
+            this.btnAjoutRevue.Size = new System.Drawing.Size(75, 41);
+            this.btnAjoutRevue.TabIndex = 17;
+            this.btnAjoutRevue.Text = "Ajouter";
+            this.btnAjoutRevue.UseVisualStyleBackColor = true;
+            this.btnAjoutRevue.Click += new System.EventHandler(this.btnAjoutRevue_Click);
+            // 
+            // btnModifierRevue
+            // 
+            this.btnModifierRevue.Location = new System.Drawing.Point(116, 145);
+            this.btnModifierRevue.Name = "btnModifierRevue";
+            this.btnModifierRevue.Size = new System.Drawing.Size(92, 41);
+            this.btnModifierRevue.TabIndex = 18;
+            this.btnModifierRevue.Text = "Modifier";
+            this.btnModifierRevue.UseVisualStyleBackColor = true;
+            this.btnModifierRevue.Click += new System.EventHandler(this.btnModifierRevue_Click);
+            // 
+            // btnSupprimerRevue
+            // 
+            this.btnSupprimerRevue.Location = new System.Drawing.Point(225, 145);
+            this.btnSupprimerRevue.Name = "btnSupprimerRevue";
+            this.btnSupprimerRevue.Size = new System.Drawing.Size(95, 41);
+            this.btnSupprimerRevue.TabIndex = 19;
+            this.btnSupprimerRevue.Text = "Supprimer";
+            this.btnSupprimerRevue.UseVisualStyleBackColor = true;
+            this.btnSupprimerRevue.Click += new System.EventHandler(this.btnSupprimerRevue_Click);
+            // 
+            // btnAnnulerRevue
+            // 
+            this.btnAnnulerRevue.Location = new System.Drawing.Point(481, 145);
+            this.btnAnnulerRevue.Name = "btnAnnulerRevue";
+            this.btnAnnulerRevue.Size = new System.Drawing.Size(75, 41);
+            this.btnAnnulerRevue.TabIndex = 20;
+            this.btnAnnulerRevue.Text = "Annuler";
+            this.btnAnnulerRevue.UseVisualStyleBackColor = true;
+            this.btnAnnulerRevue.Visible = false;
+            this.btnAnnulerRevue.Click += new System.EventHandler(this.btnAnnulerRevue_Click);
+            // 
+            // btnValiderRevue
+            // 
+            this.btnValiderRevue.Location = new System.Drawing.Point(380, 145);
+            this.btnValiderRevue.Name = "btnValiderRevue";
+            this.btnValiderRevue.Size = new System.Drawing.Size(75, 41);
+            this.btnValiderRevue.TabIndex = 21;
+            this.btnValiderRevue.Text = "Valider";
+            this.btnValiderRevue.UseVisualStyleBackColor = true;
+            this.btnValiderRevue.Visible = false;
+            this.btnValiderRevue.Click += new System.EventHandler(this.btnValiderRevue_Click);
+            // 
+            // cbxRevueRayonsEditAdd
+            // 
+            this.cbxRevueRayonsEditAdd.FormattingEnabled = true;
+            this.cbxRevueRayonsEditAdd.Location = new System.Drawing.Point(225, 260);
+            this.cbxRevueRayonsEditAdd.Name = "cbxRevueRayonsEditAdd";
+            this.cbxRevueRayonsEditAdd.Size = new System.Drawing.Size(308, 28);
+            this.cbxRevueRayonsEditAdd.TabIndex = 33;
+            // 
+            // cbxRevuePublicsEditAdd
+            // 
+            this.cbxRevuePublicsEditAdd.FormattingEnabled = true;
+            this.cbxRevuePublicsEditAdd.Location = new System.Drawing.Point(225, 223);
+            this.cbxRevuePublicsEditAdd.Name = "cbxRevuePublicsEditAdd";
+            this.cbxRevuePublicsEditAdd.Size = new System.Drawing.Size(308, 28);
+            this.cbxRevuePublicsEditAdd.TabIndex = 34;
+            // 
+            // cbxRevueGenresEditAdd
+            // 
+            this.cbxRevueGenresEditAdd.FormattingEnabled = true;
+            this.cbxRevueGenresEditAdd.Location = new System.Drawing.Point(225, 187);
+            this.cbxRevueGenresEditAdd.Name = "cbxRevueGenresEditAdd";
+            this.cbxRevueGenresEditAdd.Size = new System.Drawing.Size(308, 28);
+            this.cbxRevueGenresEditAdd.TabIndex = 35;
+            // 
             // FrmMediatek
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -2355,6 +2447,14 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.ComboBox cbxDvdPublicsEditAdd;
         private System.Windows.Forms.ComboBox cbxDvdGenresEditAdd;
         private System.Windows.Forms.ComboBox cbxDvdRayonsEditAdd;
+        private System.Windows.Forms.Button btnAjoutRevue;
+        private System.Windows.Forms.Button btnModifierRevue;
+        private System.Windows.Forms.Button btnSupprimerRevue;
+        private System.Windows.Forms.Button btnValiderRevue;
+        private System.Windows.Forms.Button btnAnnulerRevue;
+        private System.Windows.Forms.ComboBox cbxRevueGenresEditAdd;
+        private System.Windows.Forms.ComboBox cbxRevuePublicsEditAdd;
+        private System.Windows.Forms.ComboBox cbxRevueRayonsEditAdd;
     }
 }
 

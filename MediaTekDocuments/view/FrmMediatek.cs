@@ -21,13 +21,20 @@ namespace MediaTekDocuments.view
         private readonly BindingSource bdgPublics = new BindingSource();
         private readonly BindingSource bdgRayons = new BindingSource();
 
+        // Ajouter les 3 BindingSources pour Livres :
         private readonly BindingSource bdgLivresGenresEditAdd = new BindingSource();
         private readonly BindingSource bdgLivresPublicsEditAdd = new BindingSource();
         private readonly BindingSource bdgLivresRayonsEditAdd = new BindingSource();
 
+        // Ajouter les 3 BindingSources pour Dvd :
         private readonly BindingSource bdgDvdGenresEditAdd = new BindingSource();
         private readonly BindingSource bdgDvdPublicsEditAdd = new BindingSource();
         private readonly BindingSource bdgDvdRayonsEditAdd = new BindingSource();
+
+        // Ajouter les 3 BindingSources pour Revues :
+        private readonly BindingSource bdgRevuesGenresEditAdd = new BindingSource();
+        private readonly BindingSource bdgRevuesPublicsEditAdd = new BindingSource();
+        private readonly BindingSource bdgRevuesRayonsEditAdd = new BindingSource();
 
         /// <summary>
         /// Constructeur : création du contrôleur lié à ce formulaire
@@ -784,7 +791,57 @@ namespace MediaTekDocuments.view
             RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxRevuesGenres);
             RemplirComboCategorie(controller.GetAllPublics(), bdgPublics, cbxRevuesPublics);
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxRevuesRayons);
+
+
+            // Combos édition / ajout → BindingSources séparés ✅
+            RemplirComboCategorie(controller.GetAllGenres(), bdgRevuesGenresEditAdd, cbxRevueGenresEditAdd);
+            RemplirComboCategorie(controller.GetAllPublics(), bdgRevuesPublicsEditAdd, cbxRevuePublicsEditAdd);
+            RemplirComboCategorie(controller.GetAllRayons(), bdgRevuesRayonsEditAdd, cbxRevueRayonsEditAdd);
+
             RemplirRevuesListeComplete();
+        }
+
+        /// <summary>
+        /// Met les champs en mode édition ou lecture seule
+        /// </summary>
+        /// <param name="modeEdition">true = édition, false = lecture</param>
+        private void ModeEditionRevue(bool modeEdition)
+        {
+            // Champs texte
+            txbRevuesTitre.ReadOnly = !modeEdition;
+            txbRevuesPeriodicite.ReadOnly = !modeEdition;
+            txbRevuesDateMiseADispo.ReadOnly = !modeEdition;
+            txbRevuesImage.ReadOnly = !modeEdition;
+
+            // Boutons Valider/Annuler
+            btnValiderRevue.Visible = modeEdition;
+            btnAnnulerRevue.Visible = modeEdition;
+
+            // Boutons Ajout/Modifier/Supprimer
+            btnAjoutRevue.Visible = !modeEdition;
+            btnModifierRevue.Visible = !modeEdition;
+            btnSupprimerRevue.Visible = !modeEdition;
+
+            // Textbox Genre/Public/Rayon (lecture)
+            txbRevuesGenre.Visible = !modeEdition;
+            txbRevuesPublic.Visible = !modeEdition;
+            txbRevuesRayon.Visible = !modeEdition;
+
+            // Combos EditAdd (édition)
+            cbxRevueGenresEditAdd.Visible = modeEdition;
+            cbxRevuePublicsEditAdd.Visible = modeEdition;
+            cbxRevueRayonsEditAdd.Visible = modeEdition;
+
+            // Désactiver recherche en mode édition
+            cbxRevuesGenres.Enabled = !modeEdition;
+            cbxRevuesPublics.Enabled = !modeEdition;
+            cbxRevuesRayons.Enabled = !modeEdition;
+            txbRevuesNumRecherche.Enabled = !modeEdition;
+            txbRevuesTitreRecherche.Enabled = !modeEdition;
+            btnRevuesNumRecherche.Enabled = !modeEdition;
+            btnRevuesAnnulGenres.Enabled = !modeEdition;
+            btnRevuesAnnulPublics.Enabled = !modeEdition;
+            btnRevuesAnnulRayons.Enabled = !modeEdition;
         }
 
         /// <summary>
@@ -1800,8 +1857,233 @@ txbLivresAuteur.Text,
             RemplirDvdListeComplete();
 
         }
+
+        /// <summary>
+        /// Passe en mode édition pour l'ajout d'une nouvelle revue.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnAjoutRevue_Click(object sender, EventArgs e)
+        {
+            // Vide les champs
+            VideRevuesInfos();
+            // Passe en mode édition
+            ModeEditionRevue(true);
+            // On peut mettre un id 
+            txbRevuesNumero.ReadOnly = false;
+            txbRevuesNumero.Focus();
+        }
+
+        /// <summary>
+        /// Modifie une revue.
+        /// On passe en mode edition
+        /// L'id de la revue reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnModifierRevue_Click(object sender, EventArgs e)
+        {
+            // on passe en mode édition
+            ModeEditionRevue(true);
+            //on ne peut changer l'id
+            txbRevuesNumero.ReadOnly = true;
+        }
+
+        /// <summary>
+        /// Supprime la revue sélectionnée après confirmation.
+        /// Impossible si la revue possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnSupprimerRevue_Click(object sender, EventArgs e)
+        {
+            // bdgRevuesListe.List : la liste de toutes les revues affichées dans le datagrid
+            // bdgRevuesListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Revue) : cast: on dit "cet objet est une Revue"
+            // Si on clique sur la ligne 3 du datagrid Position = 3
+            // List[3] = la revue à la ligne 3
+            // revue = cette Revue
+            Revue revue = (Revue)bdgRevuesListe.List[bdgRevuesListe.Position];
+            if (revue != null)
+            {
+                // demande de confirmation
+                // result = DialogResult.Yes  si l'utilisateur clique Oui
+                // result = DialogResult.No   si l'utilisateur clique Non
+                DialogResult result = MessageBox.Show(
+                    $"Voulez-vous supprimer {revue.Titre} ?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerRevue(revue) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerRevue(revue))
+                    {
+                        // retourne toutes les revues à partir de la BDD
+                        lesRevues = controller.GetAllRevues();
+                        // Affiche la liste complète des revues
+                        // et annule toutes les recherches et filtres
+                        RemplirRevuesListeComplete();
+                        MessageBox.Show($"{revue.Titre} supprimée avec succès !");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {revue.Titre}, elle possède des exemplaires ou commandes.");
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderRevue
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+
+        private void btnValiderRevue_Click(object sender, EventArgs e)
+        {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle
+            Genre genre = (Genre)cbxRevueGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxRevuePublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxRevueRayonsEditAdd.SelectedItem;
+
+            // 1. Vérification champs obligatoires
+            if (txbRevuesNumero.Text.Equals("") ||
+                txbRevuesTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            // 2. Vérification combos obligatoires
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !", "Erreur");
+                return;
+            }
+
+            // 3. Vérification que le délai est un nombre
+            // on utilise int.TryParse car DelaiMiseADispo est un int
+            // et l'utilisateur peut saisir n'importe quoi
+            if (!int.TryParse(txbRevuesDateMiseADispo.Text, out int delaiMiseADispo))
+            {
+                MessageBox.Show("Le délai de mise à disposition doit être un nombre !", "Erreur");
+                return;
+            }
+
+            // Création de l'objet Revue
+            Revue revue = new Revue(
+                txbRevuesNumero.Text,
+                txbRevuesTitre.Text,
+                txbRevuesImage.Text,
+                genre.Id,
+                genre.Libelle,
+                lePublic.Id,
+                lePublic.Libelle,
+                rayon.Id,
+                rayon.Libelle,
+                txbRevuesPeriodicite.Text,
+                delaiMiseADispo
+            );
+
+            // Si txbRevuesNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierRevue()
+            if (txbRevuesNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierRevue(revue) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+                if (controller.ModifierRevue(revue))
+                {
+                    lesRevues = controller.GetAllRevues();
+                    RemplirRevuesListeComplete();
+                    ModeEditionRevue(false);
+                    MessageBox.Show("Revue modifiée avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !", "Erreur");
+                }
+            }
+            else
+            {
+                // 4. Vérification id existant (mode ajout seulement)
+                Revue revueExistante = lesRevues.Find(x => x.Id.Equals(txbRevuesNumero.Text));
+                if (revueExistante != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbRevuesNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
+
+                if (controller.CreerRevue(revue))
+                {
+                    lesRevues = controller.GetAllRevues();
+                    RemplirRevuesListeComplete();
+                    ModeEditionRevue(false);
+                    MessageBox.Show("Revue ajoutée avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerRevue
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+        private void btnAnnulerRevue_Click(object sender, EventArgs e)
+        {
+            ModeEditionRevue(false);
+            RemplirRevuesListeComplete();
+        }
     }
 
+       
+
+        
 
 
-}
+    }
