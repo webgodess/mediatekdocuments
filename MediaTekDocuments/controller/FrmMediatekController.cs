@@ -126,5 +126,35 @@ namespace MediaTekDocuments.controller
         {
             return access.SupprimerLivre(livre);
         }
+
+        /// <summary>
+        /// Crée un dvd dans la bdd
+        /// </summary>
+        /// <param name="dvd">L'objet Dvd concerné</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerDvd(Dvd dvd)
+        {
+            return access.CreerDvd(dvd);
+        }
+
+        /// <summary>
+        /// Modifie un dvd dans la bdd
+        /// </summary>
+        /// <param name="dvd">L'objet Dvd concerné</param>
+        /// <returns>True si la modification a pu se faire</returns>
+        public bool ModifierDvd(Dvd dvd)
+        {
+            return access.ModifierDvd(dvd);
+        }
+
+        /// <summary>
+        /// Supprime un dvd dans la bdd
+        /// </summary>
+        /// <param name="dvd">L'objet Dvd concerné</param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        public bool SupprimerDvd(Dvd dvd)
+        {
+            return access.SupprimerDvd(dvd);
+        }
     }
 }
