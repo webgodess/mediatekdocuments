@@ -2079,6 +2079,16 @@ txbLivresAuteur.Text,
             ModeEditionRevue(false);
             RemplirRevuesListeComplete();
         }
+
+        private void dgvListeLivreCommandes_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        private void tabCommandesLivres_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
        

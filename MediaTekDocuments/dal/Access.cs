@@ -138,6 +138,15 @@ namespace MediaTekDocuments.dal
             return lesRevues;
         }
 
+        /// <summary>
+        /// Retourne tous les suivis à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets Suivi</returns>
+        public List<Suivi> GetAllSuivis()
+        {
+            IEnumerable<Suivi> lesSuivis = TraitementRecup<Suivi>(GET, "suivi", null);
+            return new List<Suivi>(lesSuivis);
+        }
 
         /// <summary>
         /// Retourne les exemplaires d'une revue
@@ -152,6 +161,19 @@ namespace MediaTekDocuments.dal
         }
 
         /// <summary>
+        /// Retourne toutes les commandes d'un livre ou DVD à partir de la BDD
+        /// </summary>
+        /// <param name="idLivreDvd">id du livre ou DVD concerné</param>
+        /// <returns>Liste d'objets CommandeDocument</returns>
+        public List<CommandeDocument> GetCommandeDocument(string idLivreDvd)
+        {
+            String jsonIdLivre = convertToJson("id", idLivreDvd);
+            List<CommandeDocument> lesCommandesLives = TraitementRecup<CommandeDocument>
+                (GET, "commandedocument/" + jsonIdLivre, null);
+            return lesCommandesLives;
+        }
+
+        /// <summary>
         /// ecriture d'un exemplaire en base de données
         /// </summary>
         /// <param name="exemplaire">exemplaire à insérer</param>
@@ -163,6 +185,49 @@ namespace MediaTekDocuments.dal
             {
                 List<Exemplaire> liste = TraitementRecup<Exemplaire>(POST, "exemplaire", CHAMPS + jsonExemplaire);
                 return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Ecriture d'une commande de document en base de données
+        /// Insère dans la table commande ET dans la table commandedocument
+        /// </summary>
+        /// <param name="commandedoc">commande à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerCommande(CommandeDocument commandedoc)
+        {
+            try
+            {
+                // 1. Insérer dans commande
+                var infoCommande = new Dictionary<string, Object>
+        {
+            {"id", commandedoc.Id},
+            {"dateCommande", commandedoc.DateCommande},
+            {"montant", commandedoc.Montant}
+        };
+                String jsonCommande = JsonConvert.SerializeObject(
+                    infoCommande, new CustomDateTimeConverter());
+                List<CommandeDocument> liste1 = TraitementRecup<CommandeDocument>
+                    (POST, "commande", CHAMPS + jsonCommande);
+
+                // 2. Insérer dans commandedocument
+                var infoCommandeDoc = new Dictionary<string, Object>
+        {
+            {"id", commandedoc.Id},
+            {"nbExemplaire", commandedoc.NbExemplaire},
+            {"idLivreDvd", commandedoc.IdLivreDvd},
+            {"idSuivi", commandedoc.IdSuivi}
+        };
+                String jsonCommandeDoc = JsonConvert.SerializeObject(infoCommandeDoc);
+                List<CommandeDocument> liste2 = TraitementRecup<CommandeDocument>
+                    (POST, "commandedocument", CHAMPS + jsonCommandeDoc);
+
+                return (liste1 != null && liste2 != null);
             }
             catch (Exception ex)
             {
@@ -246,7 +311,7 @@ namespace MediaTekDocuments.dal
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
                 List<Livre> liste1 = TraitementRecup<Livre>(PUT, "document/" + livre.Id, CHAMPS + jsonDocument);
                 // Modification dans livres_dvd
-                //Modification dans livre
+                // Modification dans livre
                 var infoLivre = new Dictionary<string, Object> {
                     {"isbn",livre.Isbn },
             {"auteur",livre.Auteur },
@@ -597,6 +662,61 @@ namespace MediaTekDocuments.dal
             return false;
         }
 
+        /// <summary>
+        /// Modification de l'étape de suivi d'une commande en base de données
+        /// </summary>
+        /// <param name="cmd">commande dont le suivi est à modifier</param>
+        /// <returns>true si la modification a pu se faire (retour != null)</returns>
+        public bool ModifierSuiviCommande(CommandeDocument cmd)
+        {
+            try
+            {
+                // On modifie SEULEMENT idSuivi
+                // dans commandedocument
+                var infoCommande = new Dictionary<string, Object>
+        {
+            {"idSuivi", cmd.IdSuivi}
+        };
+
+                String jsonCommande = JsonConvert.SerializeObject(infoCommande);
+
+                List<CommandeDocument> liste = TraitementRecup<CommandeDocument>
+                    (PUT, "commandedocument/" + cmd.Id, CHAMPS + jsonCommande);
+
+                return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+
+        /// <summary>
+        /// Suppression d'une commande en base de données
+        /// Le trigger deleted_commande supprime automatiquement
+        /// dans commandedocument
+        /// </summary>
+        /// <param name="cmd">commande à supprimer</param>
+        /// <returns>true si la suppression a pu se faire (retour != null)</returns>
+        public bool SupprimerCommande(CommandeDocument cmd)
+        {
+            try
+            {
+                String jsonId = convertToJson("id", cmd.Id);
+
+                List<CommandeDocument> liste = TraitementRecup<CommandeDocument>
+                    (DELETE, "commande/" + jsonId, null);
+
+                return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
 
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
