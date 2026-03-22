@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Management.Instrumentation;
+using System.Runtime.ConstrainedExecution;
+using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MediaTekDocuments.controller;
 using MediaTekDocuments.model;
@@ -70,6 +73,8 @@ namespace MediaTekDocuments.view
         /// <summary>
         /// Ouverture de l'onglet Livres : 
         /// appel des méthodes pour remplir le datagrid des livres et des combos (genre, rayon, public)
+        /// _Enter est un événement qui se déclenche quand l'utilisateur clique sur un onglet
+        /// et que cet onglet devient actif.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -421,6 +426,238 @@ namespace MediaTekDocuments.view
             }
             RemplirLivresListe(sortedList);
         }
+
+        /// <summary>
+        /// Passe en mode édition pour l'ajout d'un nouveau livre.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnAjoutLivre_Click(object sender, EventArgs e)
+        {   // Vide les champs
+            VideLivresInfos();
+            // Passe en mode édition
+            ModeEditionLivres(true);
+            // On peut mettre un id 
+            txbLivresNumero.ReadOnly = false;
+            txbLivresNumero.Focus();
+
+
+        }
+
+        /// <summary>
+        /// Modifie un livre.
+        /// On passe en mode edition
+        /// L'id du livre reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnModifierLivre_Click(object sender, EventArgs e)
+        {   // on passe en mode édition
+            ModeEditionLivres(true);
+            //on ne peut changer l'id
+            txbLivresNumero.ReadOnly = true;
+        }
+
+
+        /// <summary>
+        /// Supprime le livre sélectionné après confirmation.
+        /// Impossible si le livre possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerLivre
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnSupprimerLivre_Click(object sender, EventArgs e)
+        {
+            // bdgLivresListe.List : la liste de tous les livres affichés dans le datagrid
+            // bdgLivresListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Livre) : cast: on dit "cet objet est un Livre"
+            // Si on cliques sur la ligne 3 du datagrid Position = 3
+            // List[3] = le livre à la ligne 3
+            // livre = ce Livre
+            Livre livre = (Livre)bdgLivresListe.List[bdgLivresListe.Position];
+            if (livre != null)
+            {
+
+                // demande de confirmation
+                //result = DialogResult.Yes  si l'utilisateur clique Oui
+                //result = DialogResult.No   si l'utilisateur clique Non
+
+                DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer {livre.Titre} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerLivre(livre) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerLivre(livre))
+                    {
+                        // retourne tous les livres à partir de la BDD
+                        lesLivres = controller.GetAllLivres();
+                        // Affiche la liste complète des livres
+                        // et annule toutes les recherches et filtres
+                        RemplirLivresListeComplete();
+                        MessageBox.Show($"{livre.Titre} supprimé avec succès !");
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {livre.Titre}, il possède des exemplaires ou commandes.");
+                    }
+                }
+
+            }
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderLivre
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+        private void btnValiderLivre_Click(object sender, EventArgs e)
+        {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle 
+
+            Genre genre = (Genre)cbxLivresGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxLivresPublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxLivresRayonsEditAdd.SelectedItem;
+
+            if (txbLivresNumero.Text.Equals("") ||
+        txbLivresTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !",
+                                "Erreur");
+                return;
+            }
+
+            if (!txbLivresNumero.Text.All(char.IsDigit))
+            {
+                MessageBox.Show("Le numéro ne doit contenir que des chiffres !", "Erreur");
+                return;
+            }
+
+            Livre livre = new Livre(
+txbLivresNumero.Text,
+txbLivresTitre.Text,
+txbLivresImage.Text,
+txbLivresIsbn.Text,
+txbLivresAuteur.Text,
+    txbLivresCollection.Text,
+    genre.Id,
+    genre.Libelle,
+    lePublic.Id,
+    lePublic.Libelle,
+    rayon.Id,
+    rayon.Libelle
+
+    );
+            // Si txbLivresNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierLivre()
+
+            if (txbLivresNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierLivre(livre) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+
+
+                if (controller.ModifierLivre(livre))
+                {
+                    lesLivres = controller.GetAllLivres();
+                    RemplirLivresListeComplete();
+                    ModeEditionLivres(false);
+                    MessageBox.Show("Livre modifié avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !",
+                                    "Erreur");
+                }
+            }
+            else
+            {
+                // ICI c'est le bloc Ajout
+                Livre livreExistant = lesLivres.Find(x => x.Id.Equals(txbLivresNumero.Text));
+
+                if (livreExistant != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbLivresNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
+
+                if (controller.CreerLivre(livre))
+                {
+                    lesLivres = controller.GetAllLivres();
+                    RemplirLivresListeComplete();
+                    ModeEditionLivres(false);
+                    MessageBox.Show("Livre ajouté avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerLivre
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnAnnulerLivre_Click(object sender, EventArgs e)
+        {
+            ModeEditionLivres(false);
+            RemplirLivresListeComplete();
+        }
         #endregion
 
         #region Onglet Dvd
@@ -736,6 +973,240 @@ namespace MediaTekDocuments.view
             txbDvdNumRecherche.Text = "";
             txbDvdTitreRecherche.Text = "";
         }
+
+        /// <summary>
+        /// Passe en mode édition pour l'ajout d'un nouveau dvd.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnAjoutDvd_Click(object sender, EventArgs e)
+        {
+            // Vide les champs
+            VideDvdInfos();
+            // Passe en mode édition
+            ModeEditionDvd(true);
+            // On peut mettre un id 
+            txbDvdNumero.ReadOnly = false;
+            txbDvdNumero.Focus();
+        }
+
+        /// <summary>
+        /// Supprime le dvd sélectionné après confirmation.
+        /// Impossible si le dvd possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnSupprimerDvd_Click(object sender, EventArgs e)
+        {
+            // bdgDvdListe.List : la liste de tous les dvd affichés dans le datagrid
+            // bdgDvdListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Dvd) : cast: on dit "cet objet est un Dvd"
+            // Si on cliques sur la ligne 3 du datagrid Position = 3
+            // List[3] = le dvd à la ligne 3
+            // dvd = ce Dvd
+            Dvd dvd = (Dvd)bdgDvdListe.List[bdgDvdListe.Position];
+            if (dvd != null)
+            {
+
+                // demande de confirmation
+                //result = DialogResult.Yes  si l'utilisateur clique Oui
+                //result = DialogResult.No   si l'utilisateur clique Non
+
+                DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer {dvd.Titre} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerDvd(dvd) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerDvd(dvd))
+                    {
+                        // retourne tous les dvd à partir de la BDD
+                        lesDvd = controller.GetAllDvd();
+                        // Affiche la liste complète des dvd
+                        // et annule toutes les recherches et filtres
+                        RemplirDvdListeComplete();
+                        MessageBox.Show($"{dvd.Titre} supprimé avec succès !");
+
+
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {dvd.Titre}, il possède des exemplaires ou commandes.");
+                    }
+                }
+
+            }
+        }
+
+
+        /// <summary>
+        /// Modifie un dvd.
+        /// On passe en mode edition
+        /// L'id du dvd reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierDvd
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+
+        private void btnModifierDvd_Click(object sender, EventArgs e)
+        {   // on passe en mode édition
+            ModeEditionDvd(true);
+            //on ne peut changer l'id
+            txbDvdNumero.ReadOnly = true;
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderDvd
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnValiderDvd_Click(object sender, EventArgs e)
+        {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle 
+
+            Genre genre = (Genre)cbxDvdGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxDvdPublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxDvdRayonsEditAdd.SelectedItem;
+
+            if (txbDvdNumero.Text.Equals("") || txbDvdTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !",
+                                "Erreur");
+                return;
+            }
+
+            // parse the input string to integer
+            // we use int.TryParse when we are unsure about the format or validity of the input string,
+            // such as when processing user input from a text box or reading data from a file
+
+            if (!int.TryParse(txbDvdDuree.Text, out int duree))
+            {
+                MessageBox.Show("La durée doit être un nombre !", "Erreur");
+                return;
+            }
+
+            Dvd dvd = new Dvd(
+                txbDvdNumero.Text,
+                txbDvdTitre.Text,
+                txbDvdImage.Text,
+                duree,
+                txbDvdRealisateur.Text,
+                txbDvdSynopsis.Text,
+                genre.Id,
+                genre.Libelle,
+                lePublic.Id,
+                lePublic.Libelle,
+                rayon.Id,
+                rayon.Libelle
+            );
+
+            // Si txbDvdNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierDvd()
+
+            if (txbDvdNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierDvd(dvd) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+
+                if (controller.ModifierDvd(dvd))
+                {
+                    lesDvd = controller.GetAllDvd();
+                    RemplirDvdListeComplete();
+                    ModeEditionDvd(false);
+                    MessageBox.Show("Dvd modifié avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !",
+                                    "Erreur");
+                }
+            }
+            else
+            {
+                Dvd dvdExistant = lesDvd.Find(x => x.Id.Equals(txbDvdNumero.Text));
+
+                if (dvdExistant != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbDvdNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
+
+                if (controller.CreerDvd(dvd))
+                {
+                    lesDvd = controller.GetAllDvd();
+                    RemplirDvdListeComplete();
+                    ModeEditionDvd(false);
+                    MessageBox.Show("Dvd ajouté avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerDvd
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnAnnulerDvd_Click(object sender, EventArgs e)
+        {
+            ModeEditionDvd(false);
+            RemplirDvdListeComplete();
+
+        }
+
 
         /// <summary>
         /// Tri sur les colonnes
@@ -1100,10 +1571,233 @@ namespace MediaTekDocuments.view
         }
 
         /// <summary>
+        /// Passe en mode édition pour l'ajout d'une nouvelle revue.
+        /// Vide les champs .
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnAjoutRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnAjoutRevue_Click(object sender, EventArgs e)
+        {
+            // Vide les champs
+            VideRevuesInfos();
+            // Passe en mode édition
+            ModeEditionRevue(true);
+            // On peut mettre un id 
+            txbRevuesNumero.ReadOnly = false;
+            txbRevuesNumero.Focus();
+        }
+
+        /// <summary>
+        /// Modifie une revue.
+        /// On passe en mode edition
+        /// L'id de la revue reste en lecture seule.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnModifierRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnModifierRevue_Click(object sender, EventArgs e)
+        {
+            // on passe en mode édition
+            ModeEditionRevue(true);
+            //on ne peut changer l'id
+            txbRevuesNumero.ReadOnly = true;
+        }
+
+        /// <summary>
+        /// Supprime la revue sélectionnée après confirmation.
+        /// Impossible si la revue possède des exemplaires ou commandes.
+        /// </summary>
+        /// <param name="sender">
+        /// L'objet qui a déclenché l'événement
+        /// → ici c'est le bouton btnSupprimerRevue
+        /// </param>
+        /// <param name="e">
+        /// Les informations sur l'événement
+        /// → ici c'est un simple clic sur le bouton
+        /// </param>
+        private void btnSupprimerRevue_Click(object sender, EventArgs e)
+        {
+            // bdgRevuesListe.List : la liste de toutes les revues affichées dans le datagrid
+            // bdgRevuesListe.Position : l'index de la ligne sélectionnée dans le datagrid
+            // (Revue) : cast: on dit "cet objet est une Revue"
+            // Si on clique sur la ligne 3 du datagrid Position = 3
+            // List[3] = la revue à la ligne 3
+            // revue = cette Revue
+            Revue revue = (Revue)bdgRevuesListe.List[bdgRevuesListe.Position];
+            if (revue != null)
+            {
+                // demande de confirmation
+                // result = DialogResult.Yes  si l'utilisateur clique Oui
+                // result = DialogResult.No   si l'utilisateur clique Non
+                DialogResult result = MessageBox.Show(
+                    $"Voulez-vous supprimer {revue.Titre} ?",
+                    "Confirmation",
+                    MessageBoxButtons.YesNo);
+
+                if (result == DialogResult.Yes)
+                {
+                    // fais appel au controller pour supprimer
+                    // controller.SupprimerRevue(revue) envoie la demande de suppression
+                    // à la base de données.
+                    // retourne true  si la suppression a réussi
+                    // retourne false si impossible (exemplaires ou commandes liés)
+                    if (controller.SupprimerRevue(revue))
+                    {
+                        // retourne toutes les revues à partir de la BDD
+                        lesRevues = controller.GetAllRevues();
+                        // Affiche la liste complète des revues
+                        // et annule toutes les recherches et filtres
+                        RemplirRevuesListeComplete();
+                        MessageBox.Show($"{revue.Titre} supprimée avec succès !");
+                    }
+                    else
+                    {
+                        MessageBox.Show($"Impossible de supprimer {revue.Titre}, elle possède des exemplaires ou commandes.");
+                    }
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// Valide les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnValiderRevue
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+
+        private void btnValiderRevue_Click(object sender, EventArgs e)
+        {
+            // (Genre) est un cast ici
+            // sans ce cast genre est juste un "object"
+            // On ne peut pas accéder à
+            // genre.Id ou genre.Libelle
+            Genre genre = (Genre)cbxRevueGenresEditAdd.SelectedItem;
+            Public lePublic = (Public)cbxRevuePublicsEditAdd.SelectedItem;
+            Rayon rayon = (Rayon)cbxRevueRayonsEditAdd.SelectedItem;
+
+            // 1. Vérification champs obligatoires
+            if (txbRevuesNumero.Text.Equals("") ||
+                txbRevuesTitre.Text.Equals(""))
+            {
+                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                return;
+            }
+
+            // 2. Vérification combos obligatoires
+            if (genre == null || lePublic == null || rayon == null)
+            {
+                MessageBox.Show("Genre, Public et Rayon obligatoires !", "Erreur");
+                return;
+            }
+
+            // 3. Vérification que le délai est un nombre
+            // on utilise int.TryParse car DelaiMiseADispo est un int
+            // et l'utilisateur peut saisir n'importe quoi
+            if (!int.TryParse(txbRevuesDateMiseADispo.Text, out int delaiMiseADispo))
+            {
+                MessageBox.Show("Le délai de mise à disposition doit être un nombre !", "Erreur");
+                return;
+            }
+
+            // Création de l'objet Revue
+            Revue revue = new Revue(
+                txbRevuesNumero.Text,
+                txbRevuesTitre.Text,
+                txbRevuesImage.Text,
+                genre.Id,
+                genre.Libelle,
+                lePublic.Id,
+                lePublic.Libelle,
+                rayon.Id,
+                rayon.Libelle,
+                txbRevuesPeriodicite.Text,
+                delaiMiseADispo
+            );
+
+            // Si txbRevuesNumero.ReadOnly = true
+            // On est en mode MODIFICATION
+            // Il faut appeler ModifierRevue()
+            if (txbRevuesNumero.ReadOnly)
+            {
+                // si la modification a reussi
+                // ModifierRevue(revue) retourne un bool
+                // if (true)  → succès → afficher liste
+                // if (false) → échec  → afficher erreur
+                if (controller.ModifierRevue(revue))
+                {
+                    lesRevues = controller.GetAllRevues();
+                    RemplirRevuesListeComplete();
+                    ModeEditionRevue(false);
+                    MessageBox.Show("Revue modifiée avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de la modification !", "Erreur");
+                }
+            }
+            else
+            {
+                // 4. Vérification id existant (mode ajout seulement)
+                Revue revueExistante = lesRevues.Find(x => x.Id.Equals(txbRevuesNumero.Text));
+                if (revueExistante != null)
+                {
+                    MessageBox.Show(
+                        $"Le numéro {txbRevuesNumero.Text} existe déjà !",
+                        "Erreur");
+                    return;
+                }
+
+                if (controller.CreerRevue(revue))
+                {
+                    lesRevues = controller.GetAllRevues();
+                    RemplirRevuesListeComplete();
+                    ModeEditionRevue(false);
+                    MessageBox.Show("Revue ajoutée avec succès !");
+                }
+                else
+                {
+                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Annule les Ajouts ou les modifications saisies
+        /// </summary>
+        /// <param name="sender"></param>
+        /// sender = l'objet qui a déclenché l'événement
+        ///  → ici c'est le bouton btnAnnulerRevue
+        /// e = les informations sur l'événement
+        ///     → ici c'est un simple clic
+        /// <param name="e"></param>
+        private void btnAnnulerRevue_Click(object sender, EventArgs e)
+        {
+            ModeEditionRevue(false);
+            RemplirRevuesListeComplete();
+        }
+
+
+        /// <summary>
         /// Tri sur les colonnes
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+
         private void dgvRevuesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             VideRevuesZones();
@@ -1389,711 +2083,66 @@ namespace MediaTekDocuments.view
         }
 
 
-        /// <summary>
-        /// Passe en mode édition pour l'ajout d'un nouveau livre.
-        /// Vide les champs .
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnAjoutLivre
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-
-        private void btnAjoutLivre_Click(object sender, EventArgs e)
-        {   // Vide les champs
-            VideLivresInfos();
-            // Passe en mode édition
-            ModeEditionLivres(true);
-            // On peut mettre un id 
-            txbLivresNumero.ReadOnly = false;
-            txbLivresNumero.Focus();
-
-
-        }
-
-        /// <summary>
-        /// Modifie un livre.
-        /// On passe en mode edition
-        /// L'id du livre reste en lecture seule.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnModifierLivre
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-
-        private void btnModifierLivre_Click(object sender, EventArgs e)
-        {   // on passe en mode édition
-            ModeEditionLivres(true);
-            //on ne peut changer l'id
-            txbLivresNumero.ReadOnly = true;
-        }
-
-
-        /// <summary>
-        /// Supprime le livre sélectionné après confirmation.
-        /// Impossible si le livre possède des exemplaires ou commandes.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnSupprimerLivre
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-
-        private void btnSupprimerLivre_Click(object sender, EventArgs e)
-        {
-            // bdgLivresListe.List : la liste de tous les livres affichés dans le datagrid
-            // bdgLivresListe.Position : l'index de la ligne sélectionnée dans le datagrid
-            // (Livre) : cast: on dit "cet objet est un Livre"
-            // Si on cliques sur la ligne 3 du datagrid Position = 3
-            // List[3] = le livre à la ligne 3
-            // livre = ce Livre
-            Livre livre = (Livre)bdgLivresListe.List[bdgLivresListe.Position];
-            if (livre != null) {
-
-                // demande de confirmation
-                //result = DialogResult.Yes  si l'utilisateur clique Oui
-                //result = DialogResult.No   si l'utilisateur clique Non
-
-                DialogResult result = MessageBox.Show(
-                $"Voulez-vous supprimer {livre.Titre} ?",
-                "Confirmation",
-                MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    // fais appel au controller pour supprimer
-                    // controller.SupprimerLivre(livre) envoie la demande de suppression
-                    // à la base de données.
-                    // retourne true  si la suppression a réussi
-                    // retourne false si impossible (exemplaires ou commandes liés)
-                    if (controller.SupprimerLivre(livre))
-                    {
-                        // retourne tous les livres à partir de la BDD
-                        lesLivres = controller.GetAllLivres();
-                        // Affiche la liste complète des livres
-                        // et annule toutes les recherches et filtres
-                        RemplirLivresListeComplete();
-                        MessageBox.Show($"{livre.Titre} supprimé avec succès !");
-
-
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Impossible de supprimer {livre.Titre}, il possède des exemplaires ou commandes.");
-                    }
-                }
-
-            }
-        }
-
-        /// <summary>
-        /// Valide les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnValiderLivre
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-        private void btnValiderLivre_Click(object sender, EventArgs e)
-        {
-            // (Genre) est un cast ici
-            // sans ce cast genre est juste un "object"
-            // On ne peut pas accéder à
-            // genre.Id ou genre.Libelle 
-
-            Genre genre = (Genre)cbxLivresGenresEditAdd.SelectedItem;
-            Public lePublic = (Public)cbxLivresPublicsEditAdd.SelectedItem;
-            Rayon rayon = (Rayon)cbxLivresRayonsEditAdd.SelectedItem;
-
-            if (txbLivresNumero.Text.Equals("") ||
-        txbLivresTitre.Text.Equals(""))
-            {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
-                return;
-            }
-
-            if (genre == null || lePublic == null || rayon == null)
-            {
-                MessageBox.Show("Genre, Public et Rayon obligatoires !",
-                                "Erreur");
-                return;
-            }
-
-            if (!txbLivresNumero.Text.All(char.IsDigit))
-            {
-                MessageBox.Show("Le numéro ne doit contenir que des chiffres !", "Erreur");
-                return;
-            }
-
-            Livre livre = new Livre(
-txbLivresNumero.Text,
-txbLivresTitre.Text,
-txbLivresImage.Text,
-txbLivresIsbn.Text,
-txbLivresAuteur.Text,
-    txbLivresCollection.Text,
-    genre.Id,
-    genre.Libelle,
-    lePublic.Id,
-    lePublic.Libelle,
-    rayon.Id,
-    rayon.Libelle
-
-    );
-            // Si txbLivresNumero.ReadOnly = true
-            // On est en mode MODIFICATION
-            // Il faut appeler ModifierLivre()
-
-            if (txbLivresNumero.ReadOnly)
-            {
-                // si la modification a reussi
-                // ModifierLivre(livre) retourne un bool
-                // if (true)  → succès → afficher liste
-                // if (false) → échec  → afficher erreur
-               
-
-                if (controller.ModifierLivre(livre))
-                {
-                    lesLivres = controller.GetAllLivres();
-                    RemplirLivresListeComplete();
-                    ModeEditionLivres(false);
-                    MessageBox.Show("Livre modifié avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de la modification !",
-                                    "Erreur");
-                }
-            }
-            else
-            {
-                // ICI c'est le bloc Ajout
-                Livre livreExistant = lesLivres.Find(x => x.Id.Equals(txbLivresNumero.Text));
-
-                if (livreExistant != null)
-                {
-                    MessageBox.Show(
-                        $"Le numéro {txbLivresNumero.Text} existe déjà !",
-                        "Erreur");
-                    return;
-                }
-
-                if (controller.CreerLivre(livre))
-                {
-                    lesLivres = controller.GetAllLivres();
-                    RemplirLivresListeComplete();
-                    ModeEditionLivres(false);
-                    MessageBox.Show("Livre ajouté avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Annule les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnAnnulerLivre
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-
-        private void btnAnnulerLivre_Click(object sender, EventArgs e)
-        {
-            ModeEditionLivres(false);
-            RemplirLivresListeComplete();
-        }
-
         #endregion
 
-        /// <summary>
-        /// Passe en mode édition pour l'ajout d'un nouveau dvd.
-        /// Vide les champs .
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnAjoutDvd
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-        private void btnAjoutDvd_Click(object sender, EventArgs e)
-        {
-            // Vide les champs
-            VideDvdInfos();
-            // Passe en mode édition
-            ModeEditionDvd(true);
-            // On peut mettre un id 
-            txbDvdNumero.ReadOnly = false;
-            txbDvdNumero.Focus();
-        }
+        #region Onglet Commandes Livres
+        private readonly BindingSource bdgCommandesLivresListe = new BindingSource();
+        private readonly BindingSource bdgSuivisListe = new BindingSource();
+        private List<Livre> lesLivresCommandes = new List<Livre>();
+        private List<Suivi> lesSuivis = new List<Suivi>();
+        private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
 
 
-
-
-        /// <summary>
-        /// Supprime le dvd sélectionné après confirmation.
-        /// Impossible si le dvd possède des exemplaires ou commandes.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnSupprimerDvd
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-
-        private void btnSupprimerDvd_Click(object sender, EventArgs e)
-        {
-            // bdgDvdListe.List : la liste de tous les dvd affichés dans le datagrid
-            // bdgDvdListe.Position : l'index de la ligne sélectionnée dans le datagrid
-            // (Dvd) : cast: on dit "cet objet est un Dvd"
-            // Si on cliques sur la ligne 3 du datagrid Position = 3
-            // List[3] = le dvd à la ligne 3
-            // dvd = ce Dvd
-            Dvd dvd = (Dvd)bdgDvdListe.List[bdgDvdListe.Position];
-            if (dvd != null)
-            {
-
-                // demande de confirmation
-                //result = DialogResult.Yes  si l'utilisateur clique Oui
-                //result = DialogResult.No   si l'utilisateur clique Non
-
-                DialogResult result = MessageBox.Show(
-                $"Voulez-vous supprimer {dvd.Titre} ?",
-                "Confirmation",
-                MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    // fais appel au controller pour supprimer
-                    // controller.SupprimerDvd(dvd) envoie la demande de suppression
-                    // à la base de données.
-                    // retourne true  si la suppression a réussi
-                    // retourne false si impossible (exemplaires ou commandes liés)
-                    if (controller.SupprimerDvd(dvd))
-                    {
-                        // retourne tous les dvd à partir de la BDD
-                        lesDvd = controller.GetAllDvd();
-                        // Affiche la liste complète des dvd
-                        // et annule toutes les recherches et filtres
-                        RemplirDvdListeComplete();
-                        MessageBox.Show($"{dvd.Titre} supprimé avec succès !");
-
-
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Impossible de supprimer {dvd.Titre}, il possède des exemplaires ou commandes.");
-                    }
-                }
-
-            }
-        }
-
-
-        /// <summary>
-        /// Modifie un dvd.
-        /// On passe en mode edition
-        /// L'id du dvd reste en lecture seule.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnModifierDvd
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-
-        private void btnModifierDvd_Click(object sender, EventArgs e)
-        {   // on passe en mode édition
-            ModeEditionDvd(true);
-            //on ne peut changer l'id
-            txbDvdNumero.ReadOnly = true;
-        }
-
-        /// <summary>
-        /// Valide les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnValiderDvd
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-
-        private void btnValiderDvd_Click(object sender, EventArgs e)
-        {
-            // (Genre) est un cast ici
-            // sans ce cast genre est juste un "object"
-            // On ne peut pas accéder à
-            // genre.Id ou genre.Libelle 
-
-            Genre genre = (Genre)cbxDvdGenresEditAdd.SelectedItem;
-            Public lePublic = (Public)cbxDvdPublicsEditAdd.SelectedItem;
-            Rayon rayon = (Rayon)cbxDvdRayonsEditAdd.SelectedItem;
-
-            if (txbDvdNumero.Text.Equals("") || txbDvdTitre.Text.Equals(""))
-            {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
-                return;
-            }
-
-            if (genre == null || lePublic == null || rayon == null)
-            {
-                MessageBox.Show("Genre, Public et Rayon obligatoires !",
-                                "Erreur");
-                return;
-            }
-
-            // parse the input string to integer
-            // we use int.TryParse when we are unsure about the format or validity of the input string,
-            // such as when processing user input from a text box or reading data from a file
-
-            if (!int.TryParse(txbDvdDuree.Text, out int duree))
-            {
-                MessageBox.Show("La durée doit être un nombre !", "Erreur");
-                return;
-            }
-
-            Dvd dvd = new Dvd(
-                txbDvdNumero.Text,
-                txbDvdTitre.Text,
-                txbDvdImage.Text,
-                duree,
-                txbDvdRealisateur.Text,
-                txbDvdSynopsis.Text,
-                genre.Id,
-                genre.Libelle,
-                lePublic.Id,
-                lePublic.Libelle,
-                rayon.Id,
-                rayon.Libelle
-            );
-
-            // Si txbDvdNumero.ReadOnly = true
-            // On est en mode MODIFICATION
-            // Il faut appeler ModifierDvd()
-
-            if (txbDvdNumero.ReadOnly)
-            {
-                // si la modification a reussi
-                // ModifierDvd(dvd) retourne un bool
-                // if (true)  → succès → afficher liste
-                // if (false) → échec  → afficher erreur
-
-                if (controller.ModifierDvd(dvd))
-                {
-                    lesDvd = controller.GetAllDvd();
-                    RemplirDvdListeComplete();
-                    ModeEditionDvd(false);
-                    MessageBox.Show("Dvd modifié avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de la modification !",
-                                    "Erreur");
-                }
-            }
-            else
-            {
-                Dvd dvdExistant = lesDvd.Find(x => x.Id.Equals(txbDvdNumero.Text));
-
-                if (dvdExistant != null)
-                {
-                    MessageBox.Show(
-                        $"Le numéro {txbDvdNumero.Text} existe déjà !",
-                        "Erreur");
-                    return;
-                }
-
-                if (controller.CreerDvd(dvd))
-                {
-                    lesDvd = controller.GetAllDvd();
-                    RemplirDvdListeComplete();
-                    ModeEditionDvd(false);
-                    MessageBox.Show("Dvd ajouté avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Annule les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnAnnulerDvd
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-
-        private void btnAnnulerDvd_Click(object sender, EventArgs e)
-        {
-            ModeEditionDvd(false);
-            RemplirDvdListeComplete();
-
-        }
-
-        /// <summary>
-        /// Passe en mode édition pour l'ajout d'une nouvelle revue.
-        /// Vide les champs .
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnAjoutRevue
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-        private void btnAjoutRevue_Click(object sender, EventArgs e)
-        {
-            // Vide les champs
-            VideRevuesInfos();
-            // Passe en mode édition
-            ModeEditionRevue(true);
-            // On peut mettre un id 
-            txbRevuesNumero.ReadOnly = false;
-            txbRevuesNumero.Focus();
-        }
-
-        /// <summary>
-        /// Modifie une revue.
-        /// On passe en mode edition
-        /// L'id de la revue reste en lecture seule.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnModifierRevue
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-        private void btnModifierRevue_Click(object sender, EventArgs e)
-        {
-            // on passe en mode édition
-            ModeEditionRevue(true);
-            //on ne peut changer l'id
-            txbRevuesNumero.ReadOnly = true;
-        }
-
-        /// <summary>
-        /// Supprime la revue sélectionnée après confirmation.
-        /// Impossible si la revue possède des exemplaires ou commandes.
-        /// </summary>
-        /// <param name="sender">
-        /// L'objet qui a déclenché l'événement
-        /// → ici c'est le bouton btnSupprimerRevue
-        /// </param>
-        /// <param name="e">
-        /// Les informations sur l'événement
-        /// → ici c'est un simple clic sur le bouton
-        /// </param>
-        private void btnSupprimerRevue_Click(object sender, EventArgs e)
-        {
-            // bdgRevuesListe.List : la liste de toutes les revues affichées dans le datagrid
-            // bdgRevuesListe.Position : l'index de la ligne sélectionnée dans le datagrid
-            // (Revue) : cast: on dit "cet objet est une Revue"
-            // Si on clique sur la ligne 3 du datagrid Position = 3
-            // List[3] = la revue à la ligne 3
-            // revue = cette Revue
-            Revue revue = (Revue)bdgRevuesListe.List[bdgRevuesListe.Position];
-            if (revue != null)
-            {
-                // demande de confirmation
-                // result = DialogResult.Yes  si l'utilisateur clique Oui
-                // result = DialogResult.No   si l'utilisateur clique Non
-                DialogResult result = MessageBox.Show(
-                    $"Voulez-vous supprimer {revue.Titre} ?",
-                    "Confirmation",
-                    MessageBoxButtons.YesNo);
-
-                if (result == DialogResult.Yes)
-                {
-                    // fais appel au controller pour supprimer
-                    // controller.SupprimerRevue(revue) envoie la demande de suppression
-                    // à la base de données.
-                    // retourne true  si la suppression a réussi
-                    // retourne false si impossible (exemplaires ou commandes liés)
-                    if (controller.SupprimerRevue(revue))
-                    {
-                        // retourne toutes les revues à partir de la BDD
-                        lesRevues = controller.GetAllRevues();
-                        // Affiche la liste complète des revues
-                        // et annule toutes les recherches et filtres
-                        RemplirRevuesListeComplete();
-                        MessageBox.Show($"{revue.Titre} supprimée avec succès !");
-                    }
-                    else
-                    {
-                        MessageBox.Show($"Impossible de supprimer {revue.Titre}, elle possède des exemplaires ou commandes.");
-                    }
-                }
-            }
-
-        }
-
-        /// <summary>
-        /// Valide les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnValiderRevue
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-
-
-        private void btnValiderRevue_Click(object sender, EventArgs e)
-        {
-            // (Genre) est un cast ici
-            // sans ce cast genre est juste un "object"
-            // On ne peut pas accéder à
-            // genre.Id ou genre.Libelle
-            Genre genre = (Genre)cbxRevueGenresEditAdd.SelectedItem;
-            Public lePublic = (Public)cbxRevuePublicsEditAdd.SelectedItem;
-            Rayon rayon = (Rayon)cbxRevueRayonsEditAdd.SelectedItem;
-
-            // 1. Vérification champs obligatoires
-            if (txbRevuesNumero.Text.Equals("") ||
-                txbRevuesTitre.Text.Equals(""))
-            {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
-                return;
-            }
-
-            // 2. Vérification combos obligatoires
-            if (genre == null || lePublic == null || rayon == null)
-            {
-                MessageBox.Show("Genre, Public et Rayon obligatoires !", "Erreur");
-                return;
-            }
-
-            // 3. Vérification que le délai est un nombre
-            // on utilise int.TryParse car DelaiMiseADispo est un int
-            // et l'utilisateur peut saisir n'importe quoi
-            if (!int.TryParse(txbRevuesDateMiseADispo.Text, out int delaiMiseADispo))
-            {
-                MessageBox.Show("Le délai de mise à disposition doit être un nombre !", "Erreur");
-                return;
-            }
-
-            // Création de l'objet Revue
-            Revue revue = new Revue(
-                txbRevuesNumero.Text,
-                txbRevuesTitre.Text,
-                txbRevuesImage.Text,
-                genre.Id,
-                genre.Libelle,
-                lePublic.Id,
-                lePublic.Libelle,
-                rayon.Id,
-                rayon.Libelle,
-                txbRevuesPeriodicite.Text,
-                delaiMiseADispo
-            );
-
-            // Si txbRevuesNumero.ReadOnly = true
-            // On est en mode MODIFICATION
-            // Il faut appeler ModifierRevue()
-            if (txbRevuesNumero.ReadOnly)
-            {
-                // si la modification a reussi
-                // ModifierRevue(revue) retourne un bool
-                // if (true)  → succès → afficher liste
-                // if (false) → échec  → afficher erreur
-                if (controller.ModifierRevue(revue))
-                {
-                    lesRevues = controller.GetAllRevues();
-                    RemplirRevuesListeComplete();
-                    ModeEditionRevue(false);
-                    MessageBox.Show("Revue modifiée avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de la modification !", "Erreur");
-                }
-            }
-            else
-            {
-                // 4. Vérification id existant (mode ajout seulement)
-                Revue revueExistante = lesRevues.Find(x => x.Id.Equals(txbRevuesNumero.Text));
-                if (revueExistante != null)
-                {
-                    MessageBox.Show(
-                        $"Le numéro {txbRevuesNumero.Text} existe déjà !",
-                        "Erreur");
-                    return;
-                }
-
-                if (controller.CreerRevue(revue))
-                {
-                    lesRevues = controller.GetAllRevues();
-                    RemplirRevuesListeComplete();
-                    ModeEditionRevue(false);
-                    MessageBox.Show("Revue ajoutée avec succès !");
-                }
-                else
-                {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Annule les Ajouts ou les modifications saisies
-        /// </summary>
-        /// <param name="sender"></param>
-        /// sender = l'objet qui a déclenché l'événement
-        ///  → ici c'est le bouton btnAnnulerRevue
-        /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
-        /// <param name="e"></param>
-        private void btnAnnulerRevue_Click(object sender, EventArgs e)
-        {
-            ModeEditionRevue(false);
-            RemplirRevuesListeComplete();
-        }
 
         private void dgvListeLivreCommandes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
         }
 
-        private void tabCommandesLivres_Click(object sender, EventArgs e)
+        /// <summary>
+        /// Quand on clique sur "Commandes de Livres" on veut charger la liste des livres
+        /// et charger la liste des étapes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+        private void tabCommandesLivres_Enter(object sender, EventArgs e)
         {
+            // charge les livres
+            lesLivresCommandes = controller.GetAllLivres();
 
+            // Remplit ComboBox livres
+            bdgCommandesLivresListe.DataSource = lesLivresCommandes;
+            // DataSource Gets the data source
+            // that populates the selections for the combo boxes.
+            cbxIdLivreCommandes.DataSource = bdgCommandesLivresListe;
+            // no id is selected at the moment
+            cbxIdLivreCommandes.SelectedIndex = -1;
+            cbxIdLivreCommandes.DisplayMember = "Titre";
+
+            // charge les etapes 
+            lesSuivis = controller.GetAllSuivis();
+
+            // Remplit ComboBox etapes
+            bdgSuivisListe.DataSource = lesSuivis;
+            cbxEtapeLivresCommandes.DataSource = bdgSuivisListe;
+            cbxEtapeLivresCommandes.DisplayMember = "Libelle";
+            cbxEtapeLivresCommandes.SelectedIndex = -1;
         }
-    }
 
-       
 
         
 
+        private void cbxIdLivreCommandes_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+
+        #endregion
+
 
     }
+
+
+}
