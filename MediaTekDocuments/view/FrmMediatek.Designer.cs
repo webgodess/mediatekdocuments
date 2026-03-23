@@ -50,7 +50,7 @@ namespace MediaTekDocuments.view
             this.colMontant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colNbExemplaires = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colSuivi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cbxIdLivreCommandes = new System.Windows.Forms.ComboBox();
+            this.cbxTitreLivreCommandes = new System.Windows.Forms.ComboBox();
             this.grpInfoLivreCommandes = new System.Windows.Forms.GroupBox();
             this.labelImageLivreCommandes = new System.Windows.Forms.Label();
             this.txtIsbnLivreCommandes = new System.Windows.Forms.TextBox();
@@ -242,6 +242,8 @@ namespace MediaTekDocuments.view
             this.label6 = new System.Windows.Forms.Label();
             this.txbLivresTitreRecherche = new System.Windows.Forms.TextBox();
             this.tabOngletsApplication = new System.Windows.Forms.TabControl();
+            this.labelIdLivreCommandes = new System.Windows.Forms.Label();
+            this.txtIdLivreCommandes = new System.Windows.Forms.TextBox();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -279,7 +281,7 @@ namespace MediaTekDocuments.view
             this.tabCommandesLivres.Controls.Add(this.grpGestionLivreCommandes);
             this.tabCommandesLivres.Controls.Add(this.grpNouvelleLivreCommandes);
             this.tabCommandesLivres.Controls.Add(this.grpListeLivreCommandes);
-            this.tabCommandesLivres.Controls.Add(this.cbxIdLivreCommandes);
+            this.tabCommandesLivres.Controls.Add(this.cbxTitreLivreCommandes);
             this.tabCommandesLivres.Controls.Add(this.grpInfoLivreCommandes);
             this.tabCommandesLivres.Controls.Add(this.labelSelectionLivreCommandes);
             this.tabCommandesLivres.Location = new System.Drawing.Point(4, 22);
@@ -505,17 +507,19 @@ namespace MediaTekDocuments.view
             this.colSuivi.Name = "colSuivi";
             this.colSuivi.ReadOnly = true;
             // 
-            // cbxIdLivreCommandes
+            // cbxTitreLivreCommandes
             // 
-            this.cbxIdLivreCommandes.FormattingEnabled = true;
-            this.cbxIdLivreCommandes.Location = new System.Drawing.Point(238, 37);
-            this.cbxIdLivreCommandes.Name = "cbxIdLivreCommandes";
-            this.cbxIdLivreCommandes.Size = new System.Drawing.Size(308, 28);
-            this.cbxIdLivreCommandes.TabIndex = 21;
-            this.cbxIdLivreCommandes.SelectedIndexChanged += new System.EventHandler(this.cbxIdLivreCommandes_SelectedIndexChanged);
+            this.cbxTitreLivreCommandes.FormattingEnabled = true;
+            this.cbxTitreLivreCommandes.Location = new System.Drawing.Point(238, 37);
+            this.cbxTitreLivreCommandes.Name = "cbxTitreLivreCommandes";
+            this.cbxTitreLivreCommandes.Size = new System.Drawing.Size(308, 28);
+            this.cbxTitreLivreCommandes.TabIndex = 21;
+            this.cbxTitreLivreCommandes.SelectedIndexChanged += new System.EventHandler(this.cbxTitreLivreCommandes_SelectedIndexChanged);
             // 
             // grpInfoLivreCommandes
             // 
+            this.grpInfoLivreCommandes.Controls.Add(this.txtIdLivreCommandes);
+            this.grpInfoLivreCommandes.Controls.Add(this.labelIdLivreCommandes);
             this.grpInfoLivreCommandes.Controls.Add(this.labelImageLivreCommandes);
             this.grpInfoLivreCommandes.Controls.Add(this.txtIsbnLivreCommandes);
             this.grpInfoLivreCommandes.Controls.Add(this.txtRayonLivreCommandes);
@@ -2731,6 +2735,27 @@ namespace MediaTekDocuments.view
             this.tabOngletsApplication.Size = new System.Drawing.Size(1324, 1014);
             this.tabOngletsApplication.TabIndex = 0;
             // 
+            // labelIdLivreCommandes
+            // 
+            this.labelIdLivreCommandes.AutoSize = true;
+            this.labelIdLivreCommandes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelIdLivreCommandes.Location = new System.Drawing.Point(9, 303);
+            this.labelIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelIdLivreCommandes.Name = "labelIdLivreCommandes";
+            this.labelIdLivreCommandes.Size = new System.Drawing.Size(36, 20);
+            this.labelIdLivreCommandes.TabIndex = 34;
+            this.labelIdLivreCommandes.Text = "Id :";
+            // 
+            // txtIdLivreCommandes
+            // 
+            this.txtIdLivreCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtIdLivreCommandes.Location = new System.Drawing.Point(225, 303);
+            this.txtIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtIdLivreCommandes.Name = "txtIdLivreCommandes";
+            this.txtIdLivreCommandes.ReadOnly = true;
+            this.txtIdLivreCommandes.Size = new System.Drawing.Size(308, 26);
+            this.txtIdLivreCommandes.TabIndex = 35;
+            // 
             // FrmMediatek
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -2980,7 +3005,7 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.Label labelAuteurLivreCommandes;
         private System.Windows.Forms.Label labelCollectionLivreCommandes;
         private System.Windows.Forms.Label labelIsbnLivreCommandes;
-        private System.Windows.Forms.ComboBox cbxIdLivreCommandes;
+        private System.Windows.Forms.ComboBox cbxTitreLivreCommandes;
         private System.Windows.Forms.GroupBox grpListeLivreCommandes;
         private System.Windows.Forms.DataGridView dgvListeLivreCommandes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDate;
@@ -3001,6 +3026,8 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.Button btnSupprimerLivresCommandes;
         private System.Windows.Forms.DateTimePicker dtpNouvelleLivreCommandes;
         private System.Windows.Forms.Button btnModifierLivresCommandes;
+        private System.Windows.Forms.TextBox txtIdLivreCommandes;
+        private System.Windows.Forms.Label labelIdLivreCommandes;
     }
 }
 

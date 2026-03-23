@@ -3,9 +3,9 @@
     /// <summary>
     /// Classe métier Suivi  
     /// </summary>
-    public class Suivi : Categorie
+    public class Suivi 
     {
-        public Suivi(string id, string libelle) : base(id, libelle)
+        public Suivi(string id, string libelle) 
         {
         }
     }

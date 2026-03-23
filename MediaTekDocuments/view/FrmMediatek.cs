@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -2088,9 +2089,55 @@ txbLivresAuteur.Text,
         #region Onglet Commandes Livres
         private readonly BindingSource bdgCommandesLivresListe = new BindingSource();
         private readonly BindingSource bdgSuivisListe = new BindingSource();
+        private readonly BindingSource bdgLivresCommandesCombo = new BindingSource();
         private List<Livre> lesLivresCommandes = new List<Livre>();
         private List<Suivi> lesSuivis = new List<Suivi>();
         private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
+
+        /// <summary>
+        /// Affichage des informations du livre sélectionné
+        /// </summary>
+        /// <param name="livre">le livre</param>
+        private void AfficheCommandeLivresInfos(Livre livre)
+        {
+            txtAuteurLivreCommandes.Text = livre.Auteur;
+            txtCollectionLivreCommandes.Text = livre.Collection;
+            txtIsbnLivreCommandes.Text = livre.Isbn;
+            txtGenreLivreCommandes.Text = livre.Genre;
+            txtPublicLivreCommandes.Text = livre.Public;
+            txtRayonLivreCommandes.Text = livre.Rayon;
+            txtTitreLivreCommandes.Text = livre.Titre;
+            txtIdLivreCommandes.Text = livre.Id;
+            string image = livre.Image;
+            try
+            {
+                pcbImageLivreCommandes.Image = Image.FromFile(image);
+            }
+            catch
+            {
+                pcbImageLivreCommandes.Image = null;
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// Vide les zones d'affichage des informations du livre
+        /// </summary>
+        private void VideLivreCommandesInfos()
+        {
+            txtAuteurLivreCommandes.Text = "";
+            txtCollectionLivreCommandes.Text = "";
+            txtIsbnLivreCommandes.Text = "";
+            txtGenreLivreCommandes.Text = "";
+            txtPublicLivreCommandes.Text = "";
+            txtRayonLivreCommandes.Text = "";
+            txtTitreLivreCommandes.Text = "";
+            txtIdLivreCommandes.Text = " ";
+            pcbImageLivreCommandes.Image = null;
+            dgvListeLivreCommandes.DataSource = null;
+        }
 
 
 
@@ -2098,6 +2145,8 @@ txbLivresAuteur.Text,
         {
 
         }
+
+
 
         /// <summary>
         /// Quand on clique sur "Commandes de Livres" on veut charger la liste des livres
@@ -2108,17 +2157,24 @@ txbLivresAuteur.Text,
 
         private void tabCommandesLivres_Enter(object sender, EventArgs e)
         {
+            VideLivreCommandesInfos();
             // charge les livres
             lesLivresCommandes = controller.GetAllLivres();
 
-            // Remplit ComboBox livres
-            bdgCommandesLivresListe.DataSource = lesLivresCommandes;
-            // DataSource Gets the data source
-            // that populates the selections for the combo boxes.
-            cbxIdLivreCommandes.DataSource = bdgCommandesLivresListe;
-            // no id is selected at the moment
-            cbxIdLivreCommandes.SelectedIndex = -1;
-            cbxIdLivreCommandes.DisplayMember = "Titre";
+            // bindSource est l'intermediare entre la liste et
+            // le composant visuel 
+            //Sans BindingSource en cas de modification le ComboBox ne se met pas à jour !
+
+
+
+            // Remplit ComboBox livres 
+
+            //On met les données dans la BindingSource
+            bdgLivresCommandesCombo.DataSource = lesLivresCommandes;
+
+            // On relie le ComboBox à la BindingSource
+            cbxTitreLivreCommandes.DataSource = bdgLivresCommandesCombo;
+            cbxTitreLivreCommandes.DisplayMember = "Titre";
 
             // charge les etapes 
             lesSuivis = controller.GetAllSuivis();
@@ -2131,18 +2187,40 @@ txbLivresAuteur.Text,
         }
 
 
-        
 
-        private void cbxIdLivreCommandes_SelectedIndexChanged(object sender, EventArgs e)
+        /// <summary>
+        /// Filtre sur l'Id selectionne dans le comboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbxTitreLivreCommandes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cbxTitreLivreCommandes.SelectedIndex >= 0)
+            {
+                // on fait un cast pour acceder a livre, si pas de case on 
+                //peut acceder a livre.Titre
+                Livre livre = (Livre)cbxTitreLivreCommandes.SelectedItem;
+                if (livre != null)
+                {
+                    AfficheCommandeLivresInfos(livre);
 
+                }
+                else
+                {
+                    MessageBox.Show("livre introuvable");
+                }
+            }
+
+            
         }
-
-
-        #endregion
-
 
     }
 
 
+    #endregion
+
+
 }
+
+
+
