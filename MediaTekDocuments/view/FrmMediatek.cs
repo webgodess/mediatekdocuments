@@ -2117,8 +2117,8 @@ txbLivresAuteur.Text,
             {
                 pcbImageLivreCommandes.Image = null;
             }
-
-
+            //  Les commandes s'affichent
+            AfficheCommandesLivreListe();
         }
 
 
@@ -2137,6 +2137,45 @@ txbLivresAuteur.Text,
             txtIdLivreCommandes.Text = " ";
             pcbImageLivreCommandes.Image = null;
             dgvListeLivreCommandes.DataSource = null;
+        }
+
+        /// <summary>
+        /// Remplit le dategrid des exemplaires avec la liste reçue en paramètre
+        /// Remplit le dategrid des commandes avec la liste reçue en paramètre
+        /// </summary>
+        ///  /// <param name=lesCommandesLivres"">liste des commandes de livres</param>
+
+
+        private void RemplirCommandesLivreListe(List<CommandeDocument> lesCommandesLivres)
+        {
+            if (lesCommandesLivres != null)
+            {
+                bdgCommandesLivresListe.DataSource = lesCommandesLivres;
+                dgvListeLivreCommandes.DataSource = bdgCommandesLivresListe;
+
+
+                // cacher quelques colonnes 
+                dgvListeLivreCommandes.Columns["idLivreDvd"].Visible = false;
+                dgvListeLivreCommandes.Columns["id"].Visible = false;
+                dgvListeLivreCommandes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+
+
+            }
+            else
+            {
+                bdgCommandesLivresListe.DataSource = null;
+            }
+        }
+
+        /// <summary>
+        /// Récupère et affiche les commandes d'un livre
+        /// </summary>
+        private void AfficheCommandesLivreListe()
+        {
+            string idLivreDvd = txtIdLivreCommandes.Text;
+            lesCommandesLivres = controller.GetCommandeDocument(idLivreDvd);
+            RemplirCommandesLivreListe(lesCommandesLivres);
+            //AccesReceptionExemplaireGroupBox(true);
         }
 
 
