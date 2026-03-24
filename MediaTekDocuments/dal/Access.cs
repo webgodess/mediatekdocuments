@@ -144,8 +144,30 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets Suivi</returns>
         public List<Suivi> GetAllSuivis()
         {
-            IEnumerable<Suivi> lesSuivis = TraitementRecup<Suivi>(GET, "suivi", null);
-            return new List<Suivi>(lesSuivis);
+            List<Suivi> lesSuivis = TraitementRecup<Suivi>(GET, "suivi", null);
+            return lesSuivis;
+        }
+
+
+        /// <summary>
+        /// Retourne toutes les commandes à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets Commande</returns>
+        public List<Commande> GetAllCommandes()
+        {
+            List<Commande> lesCommandes = TraitementRecup<Commande>(GET, "commande", null);
+            return lesCommandes;
+        }
+
+        /// <summary>
+        /// Retourne toutes les commandes livres à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets CommandeDocument</returns>
+        public List<CommandeDocument> GetAllCommandesLivres()
+        {
+            List<CommandeDocument> lesCommandesLivres = TraitementRecup<CommandeDocument>
+                (GET, "commandedocument", null);
+            return lesCommandesLivres;
         }
 
         /// <summary>
@@ -167,7 +189,7 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets CommandeDocument</returns>
         public List<CommandeDocument> GetCommandeDocument(string idLivreDvd)
         {
-            String jsonIdLivre = convertToJson("id", idLivreDvd);
+            String jsonIdLivre = convertToJson("idLivreDvd", idLivreDvd);
             List<CommandeDocument> lesCommandesLives = TraitementRecup<CommandeDocument>
                 (GET, "commandedocument/" + jsonIdLivre, null);
             return lesCommandesLives;

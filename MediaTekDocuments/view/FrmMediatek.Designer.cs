@@ -52,6 +52,8 @@ namespace MediaTekDocuments.view
             this.colSuivi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbxTitreLivreCommandes = new System.Windows.Forms.ComboBox();
             this.grpInfoLivreCommandes = new System.Windows.Forms.GroupBox();
+            this.txtIdLivreCommandes = new System.Windows.Forms.TextBox();
+            this.labelIdLivreCommandes = new System.Windows.Forms.Label();
             this.labelImageLivreCommandes = new System.Windows.Forms.Label();
             this.txtIsbnLivreCommandes = new System.Windows.Forms.TextBox();
             this.txtRayonLivreCommandes = new System.Windows.Forms.TextBox();
@@ -242,8 +244,6 @@ namespace MediaTekDocuments.view
             this.label6 = new System.Windows.Forms.Label();
             this.txbLivresTitreRecherche = new System.Windows.Forms.TextBox();
             this.tabOngletsApplication = new System.Windows.Forms.TabControl();
-            this.labelIdLivreCommandes = new System.Windows.Forms.Label();
-            this.txtIdLivreCommandes = new System.Windows.Forms.TextBox();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -385,6 +385,7 @@ namespace MediaTekDocuments.view
             this.btnEnregistrerLivreCommandes.TabIndex = 30;
             this.btnEnregistrerLivreCommandes.Text = "Enregistrer";
             this.btnEnregistrerLivreCommandes.UseVisualStyleBackColor = true;
+            this.btnEnregistrerLivreCommandes.Click += new System.EventHandler(this.btnEnregistrerLivreCommandes_Click);
             // 
             // txtboxQuantiteLivresCommandes
             // 
@@ -392,7 +393,6 @@ namespace MediaTekDocuments.view
             this.txtboxQuantiteLivresCommandes.Location = new System.Drawing.Point(115, 123);
             this.txtboxQuantiteLivresCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtboxQuantiteLivresCommandes.Name = "txtboxQuantiteLivresCommandes";
-            this.txtboxQuantiteLivresCommandes.ReadOnly = true;
             this.txtboxQuantiteLivresCommandes.Size = new System.Drawing.Size(132, 26);
             this.txtboxQuantiteLivresCommandes.TabIndex = 29;
             // 
@@ -402,7 +402,6 @@ namespace MediaTekDocuments.view
             this.txtboxMontantLivresCommandes.Location = new System.Drawing.Point(115, 79);
             this.txtboxMontantLivresCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtboxMontantLivresCommandes.Name = "txtboxMontantLivresCommandes";
-            this.txtboxMontantLivresCommandes.ReadOnly = true;
             this.txtboxMontantLivresCommandes.Size = new System.Drawing.Size(132, 26);
             this.txtboxMontantLivresCommandes.TabIndex = 28;
             // 
@@ -455,6 +454,7 @@ namespace MediaTekDocuments.view
             this.dgvListeLivreCommandes.AllowUserToDeleteRows = false;
             this.dgvListeLivreCommandes.AllowUserToResizeColumns = false;
             this.dgvListeLivreCommandes.AllowUserToResizeRows = false;
+            this.dgvListeLivreCommandes.AutoGenerateColumns = false;
             this.dgvListeLivreCommandes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvListeLivreCommandes.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvListeLivreCommandes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -501,7 +501,7 @@ namespace MediaTekDocuments.view
             // 
             // colSuivi
             // 
-            this.colSuivi.DataPropertyName = "Libelle";
+            this.colSuivi.DataPropertyName = "IdSuivi";
             this.colSuivi.HeaderText = "Étape";
             this.colSuivi.MinimumWidth = 8;
             this.colSuivi.Name = "colSuivi";
@@ -544,6 +544,27 @@ namespace MediaTekDocuments.view
             this.grpInfoLivreCommandes.TabIndex = 20;
             this.grpInfoLivreCommandes.TabStop = false;
             this.grpInfoLivreCommandes.Text = "Information du livre";
+            // 
+            // txtIdLivreCommandes
+            // 
+            this.txtIdLivreCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.txtIdLivreCommandes.Location = new System.Drawing.Point(225, 303);
+            this.txtIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.txtIdLivreCommandes.Name = "txtIdLivreCommandes";
+            this.txtIdLivreCommandes.ReadOnly = true;
+            this.txtIdLivreCommandes.Size = new System.Drawing.Size(308, 26);
+            this.txtIdLivreCommandes.TabIndex = 35;
+            // 
+            // labelIdLivreCommandes
+            // 
+            this.labelIdLivreCommandes.AutoSize = true;
+            this.labelIdLivreCommandes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelIdLivreCommandes.Location = new System.Drawing.Point(9, 303);
+            this.labelIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.labelIdLivreCommandes.Name = "labelIdLivreCommandes";
+            this.labelIdLivreCommandes.Size = new System.Drawing.Size(36, 20);
+            this.labelIdLivreCommandes.TabIndex = 34;
+            this.labelIdLivreCommandes.Text = "Id :";
             // 
             // labelImageLivreCommandes
             // 
@@ -2734,27 +2755,6 @@ namespace MediaTekDocuments.view
             this.tabOngletsApplication.SelectedIndex = 0;
             this.tabOngletsApplication.Size = new System.Drawing.Size(1324, 1014);
             this.tabOngletsApplication.TabIndex = 0;
-            // 
-            // labelIdLivreCommandes
-            // 
-            this.labelIdLivreCommandes.AutoSize = true;
-            this.labelIdLivreCommandes.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.labelIdLivreCommandes.Location = new System.Drawing.Point(9, 303);
-            this.labelIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.labelIdLivreCommandes.Name = "labelIdLivreCommandes";
-            this.labelIdLivreCommandes.Size = new System.Drawing.Size(36, 20);
-            this.labelIdLivreCommandes.TabIndex = 34;
-            this.labelIdLivreCommandes.Text = "Id :";
-            // 
-            // txtIdLivreCommandes
-            // 
-            this.txtIdLivreCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.txtIdLivreCommandes.Location = new System.Drawing.Point(225, 303);
-            this.txtIdLivreCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.txtIdLivreCommandes.Name = "txtIdLivreCommandes";
-            this.txtIdLivreCommandes.ReadOnly = true;
-            this.txtIdLivreCommandes.Size = new System.Drawing.Size(308, 26);
-            this.txtIdLivreCommandes.TabIndex = 35;
             // 
             // FrmMediatek
             // 

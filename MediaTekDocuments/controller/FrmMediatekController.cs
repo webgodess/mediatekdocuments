@@ -207,6 +207,22 @@ namespace MediaTekDocuments.controller
         }
 
         /// <summary>
+        /// Retourne toutes les commandes
+        /// </summary>
+        public List<CommandeDocument> GetAllCommandesLivres()
+        {
+            return access.GetAllCommandesLivres();
+        }
+
+        /// <summary>
+        /// Retourne toutes les commandes
+        /// </summary>
+        public List<Commande> GetAllCommandes()
+        {
+            return access.GetAllCommandes();
+        }
+
+        /// <summary>
         /// Crée une commande dans la bdd
         /// </summary>
         /// <param name="commandedoc">commande à créer</param>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using MediaTekDocuments.controller;
 using MediaTekDocuments.model;
+using Org.BouncyCastle.Bcpg.Sig;
 
 namespace MediaTekDocuments.view
 
@@ -123,9 +125,9 @@ namespace MediaTekDocuments.view
 
             txbLivresNumRecherche.Enabled = !modeEdition;
             txbLivresTitreRecherche.Enabled = !modeEdition;
-            btnLivresNumRecherche.Enabled = !modeEdition;    
-            btnLivresAnnulGenres.Enabled = !modeEdition;        
-            btnLivresAnnulRayons.Enabled = !modeEdition;     
+            btnLivresNumRecherche.Enabled = !modeEdition;
+            btnLivresAnnulGenres.Enabled = !modeEdition;
+            btnLivresAnnulRayons.Enabled = !modeEdition;
         }
 
         /// <summary>
@@ -2093,13 +2095,16 @@ txbLivresAuteur.Text,
         private List<Livre> lesLivresCommandes = new List<Livre>();
         private List<Suivi> lesSuivis = new List<Suivi>();
         private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
-
+        private List<CommandeDocument> toutesCommandeslivres = new List<CommandeDocument>();
+        private bool chargementCommandesLivres = false;
+        private string suiviLibelle;
         /// <summary>
         /// Affichage des informations du livre sélectionné
         /// </summary>
         /// <param name="livre">le livre</param>
         private void AfficheCommandeLivresInfos(Livre livre)
         {
+
             txtAuteurLivreCommandes.Text = livre.Auteur;
             txtCollectionLivreCommandes.Text = livre.Collection;
             txtIsbnLivreCommandes.Text = livre.Isbn;
@@ -2134,9 +2139,11 @@ txbLivresAuteur.Text,
             txtPublicLivreCommandes.Text = "";
             txtRayonLivreCommandes.Text = "";
             txtTitreLivreCommandes.Text = "";
-            txtIdLivreCommandes.Text = " ";
+            txtIdLivreCommandes.Text = "";
             pcbImageLivreCommandes.Image = null;
+            bdgCommandesLivresListe.DataSource = null;
             dgvListeLivreCommandes.DataSource = null;
+
         }
 
         /// <summary>
@@ -2150,36 +2157,73 @@ txbLivresAuteur.Text,
         {
             if (lesCommandesLivres != null)
             {
+                dgvListeLivreCommandes.AutoGenerateColumns = false;
                 bdgCommandesLivresListe.DataSource = lesCommandesLivres;
                 dgvListeLivreCommandes.DataSource = bdgCommandesLivresListe;
 
+                dgvListeLivreCommandes.Columns["colDate"].DisplayIndex = 0;
+                dgvListeLivreCommandes.Columns["colMontant"].DisplayIndex = 1;
+                dgvListeLivreCommandes.Columns["colNbExemplaires"].DisplayIndex = 2;
+                dgvListeLivreCommandes.Columns["colSuivi"].DisplayIndex = 3;
 
-                // cacher quelques colonnes 
-                dgvListeLivreCommandes.Columns["idLivreDvd"].Visible = false;
-                dgvListeLivreCommandes.Columns["id"].Visible = false;
-                dgvListeLivreCommandes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+                dgvListeLivreCommandes.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
 
-
+                foreach (DataGridViewRow row in dgvListeLivreCommandes.Rows)
+                {
+                    string idSuivi = row.Cells["colSuivi"].Value?.ToString();
+                    if (idSuivi != null)
+                    {
+                        Suivi suivi = lesSuivis.Find(x => x.Id == idSuivi);
+                        if (suivi != null)
+                        {
+                            row.Cells["colSuivi"].Value = suivi.Libelle;
+                        }
+                    }
+                }
             }
             else
             {
                 bdgCommandesLivresListe.DataSource = null;
+                dgvListeLivreCommandes.DataSource = null;
             }
         }
-
         /// <summary>
         /// Récupère et affiche les commandes d'un livre
         /// </summary>
         private void AfficheCommandesLivreListe()
         {
+            // id du livre selectionne
             string idLivreDvd = txtIdLivreCommandes.Text;
-            lesCommandesLivres = controller.GetCommandeDocument(idLivreDvd);
+
+            //recupere les lignes de commandedocument pour ce livre
+            List<CommandeDocument> commandesDoc = controller.GetCommandeDocument(idLivreDvd);
+            // toutes les commandes de la table commande
+            List<Commande> commandes = controller.GetAllCommandes();
+            List<CommandeDocument> nouvelleCommandes = new List<CommandeDocument>();
+
+            foreach (CommandeDocument cd in commandesDoc)
+            {
+                // On cherche dans commandes la commande qui a le même id que cd
+                Commande commande = commandes.Find(c => c.Id == cd.Id);
+
+                if (commande != null)
+                {
+                    CommandeDocument nouvelleCommande = new CommandeDocument(
+                        cd.Id,
+                        cd.NbExemplaire,
+                        cd.IdLivreDvd,
+                        cd.IdSuivi,
+                        commande.DateCommande,
+                        commande.Montant
+                    );
+
+                    nouvelleCommandes.Add(nouvelleCommande);
+                }
+            }
+
+            lesCommandesLivres = nouvelleCommandes;
             RemplirCommandesLivreListe(lesCommandesLivres);
-            //AccesReceptionExemplaireGroupBox(true);
         }
-
-
-
         private void dgvListeLivreCommandes_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
 
@@ -2196,6 +2240,8 @@ txbLivresAuteur.Text,
 
         private void tabCommandesLivres_Enter(object sender, EventArgs e)
         {
+            chargementCommandesLivres = true;
+
             VideLivreCommandesInfos();
             // charge les livres
             lesLivresCommandes = controller.GetAllLivres();
@@ -2214,7 +2260,7 @@ txbLivresAuteur.Text,
             // On relie le ComboBox à la BindingSource
             cbxTitreLivreCommandes.DataSource = bdgLivresCommandesCombo;
             cbxTitreLivreCommandes.DisplayMember = "Titre";
-
+            cbxTitreLivreCommandes.SelectedIndex = -1;
             // charge les etapes 
             lesSuivis = controller.GetAllSuivis();
 
@@ -2223,8 +2269,9 @@ txbLivresAuteur.Text,
             cbxEtapeLivresCommandes.DataSource = bdgSuivisListe;
             cbxEtapeLivresCommandes.DisplayMember = "Libelle";
             cbxEtapeLivresCommandes.SelectedIndex = -1;
+            cbxEtapeLivresCommandes.Text = "";
+            chargementCommandesLivres = false;
         }
-
 
 
         /// <summary>
@@ -2234,11 +2281,15 @@ txbLivresAuteur.Text,
         /// <param name="e"></param>
         private void cbxTitreLivreCommandes_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (chargementCommandesLivres) return;
+
             if (cbxTitreLivreCommandes.SelectedIndex >= 0)
             {
-                // on fait un cast pour acceder a livre, si pas de case on 
-                //peut acceder a livre.Titre
+                // on fait un cast pour acceder a livre, si pas de cast on 
+                //peut pas acceder a livre.Titre
                 Livre livre = (Livre)cbxTitreLivreCommandes.SelectedItem;
+
+
                 if (livre != null)
                 {
                     AfficheCommandeLivresInfos(livre);
@@ -2250,16 +2301,95 @@ txbLivresAuteur.Text,
                 }
             }
 
-            
+
         }
 
+
+
+        /// <summary>
+        /// Enregistrement d'une nouvelle commande
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+        /// private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
+
+        private void btnEnregistrerLivreCommandes_Click(object sender, EventArgs e)
+        {
+            // on genere un id
+
+            List<Commande> toutesCommandes= controller.GetAllCommandes();
+            
+            if (!txtIdLivreCommandes.Text.Equals(""))
+            {
+                try
+                {
+                    string livreId = txtIdLivreCommandes.Text;
+                    DateTime dateCommande = dtpNouvelleLivreCommandes.Value;
+                    if (!double.TryParse(txtboxMontantLivresCommandes.Text, out double montant))
+                    {
+                        MessageBox.Show("Le montant doit être un nombre valide.", "Erreur");
+                        return;
+                    }
+                    if (!int.TryParse(txtboxQuantiteLivresCommandes.Text, out int nbExemplaire))
+                    {
+                        MessageBox.Show("La quantité doit être un nombre valide.", "Erreur");
+                        return;
+                    }
+
+                    // une nouvelle commande est toujours en cours 
+                    //l'id de en cours est 1000
+
+                    string idSuivi ="10000"; 
+                 
+
+                    // Genere un nouvel id s'il n'y a aucune commande l'id est 00001 
+                    
+                    string id = toutesCommandes.Count > 0
+                ? (toutesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
+                : "00001";
+
+                    CommandeDocument commandedoc = new CommandeDocument(
+                        id,
+                        nbExemplaire,
+                        livreId,
+                        idSuivi,
+                        dateCommande,
+                        montant);
+
+                    if (controller.CreerCommande(commandedoc))
+                    {
+                        AfficheCommandesLivreListe();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                    }
+                }
+                catch
+                {
+                    MessageBox.Show("Montant et quantité doivent être numériques", "Information");
+                }
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner un livre !", "Information");
+            }
+        }
+
+
+
+
+        #endregion
     }
 
 
-    #endregion
+
+
 
 
 }
+
 
 
 
