@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Management.Instrumentation;
@@ -2097,7 +2098,7 @@ txbLivresAuteur.Text,
         private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
         private List<CommandeDocument> toutesCommandeslivres = new List<CommandeDocument>();
         private bool chargementCommandesLivres = false;
-        private string suiviLibelle;
+
         /// <summary>
         /// Affichage des informations du livre sélectionné
         /// </summary>
@@ -2224,12 +2225,7 @@ txbLivresAuteur.Text,
             lesCommandesLivres = nouvelleCommandes;
             RemplirCommandesLivreListe(lesCommandesLivres);
         }
-        private void dgvListeLivreCommandes_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
-        }
-
-
+       
 
         /// <summary>
         /// Quand on clique sur "Commandes de Livres" on veut charger la liste des livres
@@ -2318,8 +2314,9 @@ txbLivresAuteur.Text,
         {
             // on genere un id
 
-            List<Commande> toutesCommandes= controller.GetAllCommandes();
-            
+            List<Commande> toutesCommandes = controller.GetAllCommandes();
+
+
             if (!txtIdLivreCommandes.Text.Equals(""))
             {
                 try
@@ -2340,11 +2337,11 @@ txbLivresAuteur.Text,
                     // une nouvelle commande est toujours en cours 
                     //l'id de en cours est 1000
 
-                    string idSuivi ="10000"; 
-                 
+                    string idSuivi = "10000";
+
 
                     // Genere un nouvel id s'il n'y a aucune commande l'id est 00001 
-                    
+
                     string id = toutesCommandes.Count > 0
                 ? (toutesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
                 : "00001";
@@ -2378,16 +2375,159 @@ txbLivresAuteur.Text,
         }
 
 
+        private void btnSupprimerLivresCommandes_Click(object sender, EventArgs e)
+        {
+            // on verifie qu'une commande est selectionnee 
+            if (bdgCommandesLivresListe.Position < 0)
+            {
+                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                return;
+            }
 
+            // on recupere l'objet selectionne et on fait un cast pour dire 
+            // cet objet est une CommandeDocument
+
+            CommandeDocument commandesLivres =
+                (CommandeDocument)bdgCommandesLivresListe.List[bdgCommandesLivresListe.Position];
+
+            if (commandesLivres == null)
+            {
+                MessageBox.Show("Aucune commande sélectionnée.", "Information");
+                return;
+            }
+
+            // impossible de supprimer une commande deja livree
+            if (commandesLivres.IdSuivi == "10002")
+            {
+                MessageBox.Show(
+                    "Impossible de supprimer une commande déjà livrée.",
+                    "Erreur",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+                return;
+            }
+
+            // Demande de confirmation
+            DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer la commande {commandesLivres.Id} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+                // on supprime dans commandedocument (table fille)
+                bool step1 = controller.SupprimerCommandeDocument(commandesLivres.Id);
+
+                if (!step1)
+                {
+                    MessageBox.Show(
+                        "Erreur lors de la suppression dans commandedocument.",
+                        "Erreur",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                    return;
+                }
+
+                // supprimer dans commande (table mère)
+                bool step2 = controller.SupprimerCommande(commandesLivres.Id);
+
+                if (step2)
+                {
+                    //  Recharge la liste depuis la BDD
+                    AfficheCommandesLivreListe();
+                    MessageBox.Show(
+                        $"Commande {commandesLivres.Id} supprimée avec succès !",
+                        "Succès",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Erreur lors de la suppression de la commande {commandesLivres.Id}.",
+                        "Erreur",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void btnModifierLivresCommandes_Click(object sender, EventArgs e)
+        {
+            string en_cours = "10000";
+            string relancee = "10001";
+            string livree = "10002";
+            string reglee = "10003";
+
+            // on verifie qu'une commande est selectionnee 
+            if (bdgCommandesLivresListe.Position < 0)
+            {
+                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                return;
+            }
+
+            // on recupere l'objet selectionne et on fait un cast pour dire 
+            // cet objet est une CommandeDocument
+
+            CommandeDocument commandesLivres =
+                (CommandeDocument)bdgCommandesLivresListe.List[bdgCommandesLivresListe.Position];
+
+
+            if (cbxEtapeLivresCommandes != null && commandesLivres != null)
+            {
+                Suivi nouveauSuivi = (Suivi)cbxEtapeLivresCommandes.SelectedItem;
+                string ancienIdSuivi = commandesLivres.IdSuivi;
+                string nouveauIdSuivi = nouveauSuivi.Id;
+
+                
+                if(int.Parse(nouveauIdSuivi) > int.Parse(ancienIdSuivi))
+                {
+                    if (int.Parse(nouveauIdSuivi) == int.Parse(reglee) && int.Parse(ancienIdSuivi) != int.Parse(livree))
+                    {
+                        MessageBox.Show("Une commande ne peut pas être réglée si elle n'est pas livrée. ", "Erreur");
+                        return;
+                    }
+
+
+                    CommandeDocument commandeModifiee = new CommandeDocument(
+                        commandesLivres.Id,
+                        commandesLivres.NbExemplaire,
+                        commandesLivres.IdLivreDvd,
+                        nouveauIdSuivi,
+                        commandesLivres.DateCommande,
+                        commandesLivres.Montant
+                        );
+                    // envoi la methode au controller
+                    if (controller.ModifierSuiviCommande(commandeModifiee))
+                    {
+                        AfficheCommandesLivreListe();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                        return;
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("une commande ne peut pas revenir à une étape précédente", "Erreur");
+                    return;
+
+                }
+
+                
+
+            }
+           
+
+
+        }
 
         #endregion
+
+
     }
-
-
-
-
-
-
 }
 
 

@@ -243,13 +243,23 @@ namespace MediaTekDocuments.controller
         }
 
         /// <summary>
-        /// Supprime une commande dans la bdd
+        /// Supprime une commande document dans la bdd (table fille)
         /// </summary>
-        /// <param name="cmd">commande à supprimer</param>
+        /// <param name="id">id de la commande à supprimer</param>
         /// <returns>True si la suppression a pu se faire</returns>
-        public bool SupprimerCommande(CommandeDocument cmd)
+        public bool SupprimerCommandeDocument(string id)
         {
-            return access.SupprimerCommande(cmd);
+            return access.SupprimerCommandeDocument(id);
+        }
+
+        /// <summary>
+        /// Supprime une commande dans la bdd (table mère)
+        /// </summary>
+        /// <param name="id">id de la commande à supprimer</param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        public bool SupprimerCommande(string id)
+        {
+            return access.SupprimerCommande(id);
         }
     }
 }

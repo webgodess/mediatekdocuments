@@ -314,6 +314,7 @@ namespace MediaTekDocuments.view
             this.btnModifierLivresCommandes.TabIndex = 31;
             this.btnModifierLivresCommandes.Text = "Modifier ";
             this.btnModifierLivresCommandes.UseVisualStyleBackColor = true;
+            this.btnModifierLivresCommandes.Click += new System.EventHandler(this.btnModifierLivresCommandes_Click);
             // 
             // btnSupprimerLivresCommandes
             // 
@@ -323,6 +324,7 @@ namespace MediaTekDocuments.view
             this.btnSupprimerLivresCommandes.TabIndex = 30;
             this.btnSupprimerLivresCommandes.Text = "Supprimer";
             this.btnSupprimerLivresCommandes.UseVisualStyleBackColor = true;
+            this.btnSupprimerLivresCommandes.Click += new System.EventHandler(this.btnSupprimerLivresCommandes_Click);
             // 
             // cbxEtapeLivresCommandes
             // 
@@ -454,7 +456,6 @@ namespace MediaTekDocuments.view
             this.dgvListeLivreCommandes.AllowUserToDeleteRows = false;
             this.dgvListeLivreCommandes.AllowUserToResizeColumns = false;
             this.dgvListeLivreCommandes.AllowUserToResizeRows = false;
-            this.dgvListeLivreCommandes.AutoGenerateColumns = false;
             this.dgvListeLivreCommandes.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvListeLivreCommandes.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dgvListeLivreCommandes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -473,7 +474,6 @@ namespace MediaTekDocuments.view
             this.dgvListeLivreCommandes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvListeLivreCommandes.Size = new System.Drawing.Size(1269, 217);
             this.dgvListeLivreCommandes.TabIndex = 0;
-            this.dgvListeLivreCommandes.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvListeLivreCommandes_CellContentClick);
             // 
             // colDate
             // 

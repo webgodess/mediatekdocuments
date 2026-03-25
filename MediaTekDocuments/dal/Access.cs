@@ -716,28 +716,41 @@ namespace MediaTekDocuments.dal
 
 
         /// <summary>
-        /// Suppression d'une commande en base de données
-        /// Le trigger deleted_commande supprime automatiquement
-        /// dans commandedocument
+        /// Supprime dans commandedocument
         /// </summary>
-        /// <param name="cmd">commande à supprimer</param>
-        /// <returns>true si la suppression a pu se faire (retour != null)</returns>
-        public bool SupprimerCommande(CommandeDocument cmd)
+        public bool SupprimerCommandeDocument(string id)
         {
             try
             {
-                String jsonId = convertToJson("id", cmd.Id);
-
+                String jsonId = convertToJson("id", id);
                 List<CommandeDocument> liste = TraitementRecup<CommandeDocument>
-                    (DELETE, "commande/" + jsonId, null);
-
+                    (DELETE, "commandedocument/" + jsonId, null);
                 return (liste != null);
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return false;
             }
-            return false;
+        }
+
+        /// <summary>
+        /// Supprime dans commande
+        /// </summary>
+        public bool SupprimerCommande(string id)
+        {
+            try
+            {
+                String jsonId = convertToJson("id", id);
+                List<Commande> liste = TraitementRecup<Commande>
+                    (DELETE, "commande/" + jsonId, null);
+                return (liste != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
 
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
