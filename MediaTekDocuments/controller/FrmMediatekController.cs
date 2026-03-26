@@ -208,15 +208,6 @@ namespace MediaTekDocuments.controller
 
      
 
-        /// <summary>
-        /// Retourne toutes les commandes Livres
-        /// </summary>
-        public List<CommandeDocument> GetAllCommandesDvd()
-        {
-            return access.GetAllCommandesDvd();
-        }
-
-
 
         /// <summary>
         /// Retourne toutes les commandes

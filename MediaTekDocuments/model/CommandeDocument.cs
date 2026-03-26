@@ -9,7 +9,7 @@ namespace MediaTekDocuments.model
     public class CommandeDocument : Commande
     {
        
-        public int NbExemplaire { get; }  // ← majuscule
+        public int NbExemplaire { get; }  
         public string IdLivreDvd { get; }
         public string IdSuivi { get; }
         

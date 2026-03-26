@@ -754,6 +754,50 @@ namespace MediaTekDocuments.dal
             }
         }
 
+        /// <summary>
+        /// ecriture d'un abonnement en base de données
+        /// </summary>
+        /// <param name="abonnement">abonnement à insérer</param>
+        /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
+        public bool CreerAbonnement(Abonnement abonnement)
+        {
+
+            try
+            {
+                var infoCommande = new Dictionary<string, Object>
+        {
+            {"id",abonnement.Id},
+            {"dateCommande",abonnement.DateCommande},
+            {"montant",abonnement.Montant}
+
+        };
+
+                // est necessaire ici car il convertis les dates : CustomDateTimeConverter()
+
+                String jsonCommande = JsonConvert.SerializeObject(infoCommande, new CustomDateTimeConverter());
+                // inserer d'abord dans la classe mere Commande
+                List<Abonnement> liste1 = TraitementRecup<Abonnement>(POST, "commande", CHAMPS + jsonCommande);
+
+                var infoAbonnement = new Dictionary<string, Object>
+    {
+        {"id",abonnement.Id},
+       {"dateFinAbonnement",abonnement.DateFinAbonnement },
+       {"idRevue",abonnement.IdRevue}
+    };
+
+                String jsonAbonnement = JsonConvert.SerializeObject(infoAbonnement, new CustomDateTimeConverter());
+                // inserer dans l'abonnement 
+                List<Abonnement> liste2 = TraitementRecup<Abonnement>(POST, "abonnement", CHAMPS + jsonAbonnement);
+                return (liste1 != null && liste2 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
+
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
         /// <typeparam name="T"></typeparam>
