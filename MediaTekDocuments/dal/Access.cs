@@ -159,15 +159,16 @@ namespace MediaTekDocuments.dal
             return lesCommandes;
         }
 
+
         /// <summary>
-        /// Retourne toutes les commandes livres à partir de la BDD
+        /// Retourne toutes les commandes dvd à partir de la BDD
         /// </summary>
         /// <returns>Liste d'objets CommandeDocument</returns>
-        public List<CommandeDocument> GetAllCommandesLivres()
+        public List<CommandeDocument> GetAllCommandesDvd()
         {
-            List<CommandeDocument> lesCommandesLivres = TraitementRecup<CommandeDocument>
+            List<CommandeDocument> lesCommandesDvd = TraitementRecup<CommandeDocument>
                 (GET, "commandedocument", null);
-            return lesCommandesLivres;
+            return lesCommandesDvd;
         }
 
         /// <summary>

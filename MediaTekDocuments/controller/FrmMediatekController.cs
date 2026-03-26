@@ -206,13 +206,17 @@ namespace MediaTekDocuments.controller
             return access.GetAllSuivis();
         }
 
+     
+
         /// <summary>
-        /// Retourne toutes les commandes
+        /// Retourne toutes les commandes Livres
         /// </summary>
-        public List<CommandeDocument> GetAllCommandesLivres()
+        public List<CommandeDocument> GetAllCommandesDvd()
         {
-            return access.GetAllCommandesLivres();
+            return access.GetAllCommandesDvd();
         }
+
+
 
         /// <summary>
         /// Retourne toutes les commandes

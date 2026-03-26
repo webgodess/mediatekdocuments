@@ -5,22 +5,19 @@ namespace MediaTekDocuments.model
 {
     /// <summary>
     /// Classe métier Abonnement représentant un abonnement à une revue
+    /// Abonnement hérite de Commande : contient des propriétés spécifiques aux commandes
     /// </summary>
-    public class Abonnement
+    public class Abonnement: Commande
     {
-        public string Id { get; }
-        public DateTime DateFinAbonnement { get; }
-        public string IdRevue { get; }
-        public DateTime DateCommande { get; }
-        public double Montant { get; }
+        public DateTime DateFinAbonnement { get; set; }
+        public string IdRevue { get; set; }
 
-        public Abonnement(string id, DateTime dateFinAbonnement, string idRevue, DateTime dateCommande, double montant)
+        public Abonnement(string id, DateTime dateFinAbonnement, string idRevue, DateTime dateCommande, double montant): base(id,dateCommande, montant)
         {
-            this.Id = id;
-            this.DateFinAbonnement = dateFinAbonnement;
-            this.IdRevue = idRevue;
-            this.DateCommande = dateCommande;
-            this.Montant = montant;
+            DateFinAbonnement = dateFinAbonnement;
+            IdRevue = idRevue;
+          
+          
         }
     }
 }
