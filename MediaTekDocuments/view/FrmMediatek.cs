@@ -595,7 +595,7 @@ txbLivresAuteur.Text,
 
     );
             // Si txbLivresNumero.ReadOnly = true
-            // On est en mode MODIFICATION
+            // On est en mode Modification
             // Il faut appeler ModifierLivre()
 
             if (txbLivresNumero.ReadOnly)
@@ -621,7 +621,7 @@ txbLivresAuteur.Text,
             }
             else
             {
-                // ICI c'est le bloc Ajout
+                // c'est le bloc Ajout
                 Livre livreExistant = lesLivres.Find(x => x.Id.Equals(txbLivresNumero.Text));
 
                 if (livreExistant != null)
@@ -670,7 +670,8 @@ txbLivresAuteur.Text,
 
         /// <summary>
         /// Ouverture de l'onglet Dvds : 
-        /// appel des méthodes pour remplir le datagrid des dvd et des combos (genre, rayon, public)
+        /// appel des méthodes pour 
+        /// le datagrid des dvd et des combos (genre, rayon, public)
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1268,7 +1269,7 @@ txbLivresAuteur.Text,
             RemplirComboCategorie(controller.GetAllRayons(), bdgRayons, cbxRevuesRayons);
 
 
-            // Combos édition / ajout → BindingSources séparés ✅
+            // Combos édition / ajout pour les separer les bindings
             RemplirComboCategorie(controller.GetAllGenres(), bdgRevuesGenresEditAdd, cbxRevueGenresEditAdd);
             RemplirComboCategorie(controller.GetAllPublics(), bdgRevuesPublicsEditAdd, cbxRevuePublicsEditAdd);
             RemplirComboCategorie(controller.GetAllRayons(), bdgRevuesRayonsEditAdd, cbxRevueRayonsEditAdd);
@@ -1718,9 +1719,19 @@ txbLivresAuteur.Text,
                 return;
             }
 
+            // on converti d'abord en int
+            if (!int.TryParse(txbRevuesNumero.Text, out int idInt))
+            {
+                MessageBox.Show("Le numéro doit être numérique.", "Erreur");
+                return;
+            }
+            String idConvertiString = idInt.ToString("D5");
+            MessageBox.Show($"Texte saisi : '{txbRevuesNumero.Text}'\nidInt : {idInt}\nidConvertiString : '{idConvertiString}'");
+
+
             // Création de l'objet Revue
             Revue revue = new Revue(
-                txbRevuesNumero.Text,
+                idConvertiString,
                 txbRevuesTitre.Text,
                 txbRevuesImage.Text,
                 genre.Id,
@@ -1757,7 +1768,8 @@ txbLivresAuteur.Text,
             else
             {
                 // 4. Vérification id existant (mode ajout seulement)
-                Revue revueExistante = lesRevues.Find(x => x.Id.Equals(txbRevuesNumero.Text));
+
+                Revue revueExistante = lesRevues.Find(x => x.Id.Equals((idConvertiString)));
                 if (revueExistante != null)
                 {
                     MessageBox.Show(
@@ -2127,7 +2139,7 @@ txbLivresAuteur.Text,
             {
                 pcbImageLivreCommandes.Image = null;
             }
-            //  Les commandes s'affichent
+            //  Les commandes du livre selectionne s'affichent
             AfficheCommandesLivreListe();
         }
 
@@ -2192,6 +2204,7 @@ txbLivresAuteur.Text,
                 dgvListeLivreCommandes.DataSource = null;
             }
         }
+        
         /// <summary>
         /// Récupère et affiche les commandes d'un livre
         /// </summary>
@@ -2229,7 +2242,7 @@ txbLivresAuteur.Text,
             lesCommandesLivres = nouvelleCommandes;
             RemplirCommandesLivreListe(lesCommandesLivres);
         }
-       
+
 
         /// <summary>
         /// Quand on clique sur "Commandes de Livres" on veut charger la liste des livres
@@ -2303,7 +2316,6 @@ txbLivresAuteur.Text,
 
 
         }
-
 
 
         /// <summary>
@@ -2420,7 +2432,7 @@ txbLivresAuteur.Text,
 
             if (result == DialogResult.Yes)
             {
-                
+
 
                 // supprimer dans commande (table mère)
                 bool step2 = controller.SupprimerCommande(commandesLivres.Id);
@@ -2473,8 +2485,8 @@ txbLivresAuteur.Text,
                 string ancienIdSuivi = commandesLivres.IdSuivi;
                 string nouveauIdSuivi = nouveauSuivi.Id;
 
-                
-                if(int.Parse(nouveauIdSuivi) > int.Parse(ancienIdSuivi))
+
+                if (int.Parse(nouveauIdSuivi) > int.Parse(ancienIdSuivi))
                 {
                     if (int.Parse(nouveauIdSuivi) == int.Parse(reglee) && int.Parse(ancienIdSuivi) != int.Parse(livree))
                     {
@@ -2499,20 +2511,20 @@ txbLivresAuteur.Text,
                     else
                     {
                         MessageBox.Show("Erreur dans la création de la commande", "Erreur");
-                        
+
                     }
                 }
                 else
                 {
                     MessageBox.Show("une commande ne peut pas revenir à une étape précédente", "Erreur");
-                    
+
 
                 }
 
-                
+
 
             }
-           
+
 
 
         }
@@ -2947,6 +2959,281 @@ txbLivresAuteur.Text,
 
             }
         }
+
+
+        #endregion
+        #region Onglet Commandes Revues
+
+        private readonly BindingSource bdgCommandesRevuesDatagrid = new BindingSource();
+        private readonly BindingSource bdgCommandesRevuesCombobox = new BindingSource();
+        private List<Revue> lesRevuesCommandes = new List<Revue>();
+        private List<Abonnement> lesAbonnements = new List<Abonnement>();
+        private List<Exemplaire> lesCommandesRevuesExemplaires = new List<Exemplaire>();
+        private bool chargementCommandesRevues = false;
+
+
+        /// <summary>
+        /// Quand on clique sur "Commandes de Revues" on veut charger la liste des revues
+
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+
+
+        private void tabCommandesRevues_Enter(object sender, EventArgs e)
+        {
+            chargementCommandesRevues = true;
+
+            VideRevueCommandesInfos();
+
+            // charge les revues
+            lesRevuesCommandes = controller.GetAllRevues();
+
+            // bindSource est l'intermediare entre la liste et
+            // le composant visuel 
+            //Sans BindingSource en cas de modification le ComboBox ne se met pas à jour !
+
+
+
+            // Remplit ComboBox revues 
+
+            //On met les données dans la BindingSource
+            bdgCommandesRevuesCombobox.DataSource = lesRevuesCommandes;
+
+            // On relie le ComboBox à la BindingSource
+
+            cbxTitreRevuesCommande.DataSource = bdgCommandesRevuesCombobox;
+            cbxTitreRevuesCommande.DisplayMember = "Titre";
+            cbxTitreRevuesCommande.SelectedIndex = -1;
+
+
+            chargementCommandesRevues = false;
+        }
+
+        /// <summary>
+        /// Vide les zones d'affichage des informations de la revue
+        /// </summary>
+        private void VideRevueCommandesInfos()
+        {
+            txtPeriodiciteRevuesCommandes.Text = "";
+            txtDelaiRevuesCommandes.Text = "";
+            txtIdRevuesCommandes.Text = "";
+            txtGenreRevuesCommandes.Text ="";
+            txtPublicRevuesCommandes.Text = "";
+            txtRayonRevuesCommandes.Text = "";
+            txtTitreRevuesCommandes.Text = "";
+            pcbRevuesImage.Image = null;
+            dgvListeRevuesAbo.DataSource = null;
+        }
+
+        /// <summary>
+        /// Affichage des informations de la revue sélectionnée
+        /// </summary>
+        /// <param name="revue">la revue</param>
+        private void AfficheCommandeRevuesInfos(Revue revue)
+        {
+
+            txtPeriodiciteRevuesCommandes.Text = revue.Periodicite;
+            txtDelaiRevuesCommandes.Text = revue.DelaiMiseADispo.ToString();
+            txtIdRevuesCommandes.Text = revue.Id;
+            txtGenreRevuesCommandes.Text = revue.Genre;
+            txtPublicRevuesCommandes.Text = revue.Public;
+            txtRayonRevuesCommandes.Text = revue.Rayon;
+            txtTitreRevuesCommandes.Text = revue.Titre;
+            string image = revue.Image;
+            try
+            {
+                pcbRevuesImage.Image = Image.FromFile(image);
+            }
+            catch
+            {
+                pcbRevuesImage.Image = null;
+            }
+            // affiche les abonnements de cette revue
+            AfficheCommandesRevuesListe();
+        }
+
+
+        /// <summary>
+        /// Remplit le dategrid des Abonnements avec la liste reçue en paramètre
+        /// </summary>
+        ///  /// <param name="lesAbonnements">liste des abonnements</param>
+
+
+        private void RemplirAbonnementsRevuesListe(List<Abonnement> lesAbonnements)
+        {
+            if (lesAbonnements != null)
+            {
+                dgvListeRevuesAbo.AutoGenerateColumns = false;
+                bdgCommandesRevuesDatagrid.DataSource = lesAbonnements;
+                dgvListeRevuesAbo.DataSource = bdgCommandesRevuesDatagrid;
+
+                dgvListeRevuesAbo.Columns["colDateAbo"].DisplayIndex = 0;
+                dgvListeRevuesAbo.Columns["colMontantAbo"].DisplayIndex = 1;
+                dgvListeRevuesAbo.Columns["colFinAbo"].DisplayIndex = 2;
+
+
+                dgvListeRevuesAbo.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            }
+            else
+            {
+                bdgCommandesRevuesDatagrid.DataSource = null;
+                dgvListeRevuesAbo.DataSource = null;
+            }
+        }
+
+        /// <summary>
+        /// Récupère et affiche les abonnement d'une revue
+        /// </summary>
+        private void AfficheCommandesRevuesListe()
+        {
+            // id de la revue selectionne
+            string idRevues = txtIdRevuesCommandes.Text;
+
+            //recupere les lignes d'abonnement pour cette revue
+            List<Abonnement> abonnements = controller.GetAbonnements(idRevues);
+
+            // tous les abonnements de la table abonnement
+            List<Abonnement> tousLesAbonnementsDeLaRevue = new List<Abonnement>();
+            // toutes les commandes
+            List<Commande> commandes = controller.GetAllCommandes();
+
+            foreach (Abonnement abo in abonnements)
+            {
+                // On cherche dans commandes la commande qui a le même id que abo
+                Commande commande = commandes.Find(c => c.Id == abo.Id);
+
+                if (commande != null)
+                {
+                    Abonnement nouvelAbo = new Abonnement(
+                        abo.Id,
+                        abo.DateFinAbonnement,
+                        abo.IdRevue,
+                        // ces proprietes sont heritees de commande
+                        commande.DateCommande,
+                        commande.Montant
+
+                    );
+
+                    tousLesAbonnementsDeLaRevue.Add(nouvelAbo);
+                }
+            }
+
+            lesAbonnements = tousLesAbonnementsDeLaRevue;
+            RemplirAbonnementsRevuesListe(lesAbonnements);
+
+
+        }
+
+        /// <summary>
+        /// Filtre sur l'Id selectionne dans le comboBox
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void cbxTitreRevuesCommande_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (chargementCommandesRevues) return;
+
+          
+
+            if (cbxTitreRevuesCommande.SelectedIndex >= 0)
+            {
+                // on fait un cast pour acceder a Revue, si pas de cast on 
+                //peut pas acceder a Revue.Titre
+                Revue revue = (Revue)cbxTitreRevuesCommande.SelectedItem;
+
+
+                if (revue != null)
+                {
+                    AfficheCommandeRevuesInfos(revue);
+                    
+
+
+                }
+                else
+                {
+                    MessageBox.Show("revue introuvable");
+                }
+            }
+
+
+        }
+
+
+        /// <summary>
+        /// Enregistrement d'un nouvel Abonnement
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// 
+
+        /// private List<Revue> lesRevuesCommandes = new List<Revue>();
+        /// private List<Commande> toutesLesCommandes = new List<Commande>();
+
+        private void btnEnregistrerRevuesAbo_Click(object sender, EventArgs e)
+        {
+
+
+            List<Commande> toutesLesCommandes = controller.GetAllCommandes();
+
+            string idRevue = txtIdRevuesCommandes.Text;
+
+            if (!idRevue.Equals(""))
+            {
+                try
+                {
+
+                    DateTime dateCommande = dtpDateCommandeNouvelAboRevues.Value;
+                    DateTime dateFin = dtpDateFinNouvelAboRevues.Value;
+                    if (!double.TryParse(txtboxMontantRevuesAbo.Text, out double montant))
+                    {
+                        MessageBox.Show("Le montant doit être un nombre valide.", "Erreur");
+                        return;
+                    }
+
+                    // Generer un nouvel id
+
+                    string idAbo = toutesLesCommandes.Count > 0 ? (toutesLesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
+                : "00001";
+
+
+                    // Creer un nouvel objet Abonnement
+                    Abonnement nouvelAbonnement = new Abonnement(
+        idAbo,
+       dateFin,
+       idRevue,
+        dateCommande,
+        montant);
+
+                    // Appeller le controlleur
+                    if (controller.CreerAbonnement(nouvelAbonnement))
+                    {
+                        AfficheCommandesRevuesListe();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Erreur dans la création de l'abonnement", "Erreur");
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Erreur");
+
+                }
+
+            }
+            else
+            {
+                MessageBox.Show("Veuillez sélectionner une revue", "Information");
+            }
+
+
+        }
+
+
 
 
         #endregion

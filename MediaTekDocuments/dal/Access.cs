@@ -160,16 +160,6 @@ namespace MediaTekDocuments.dal
         }
 
 
-        /// <summary>
-        /// Retourne toutes les commandes dvd à partir de la BDD
-        /// </summary>
-        /// <returns>Liste d'objets CommandeDocument</returns>
-        public List<CommandeDocument> GetAllCommandesDvd()
-        {
-            List<CommandeDocument> lesCommandesDvd = TraitementRecup<CommandeDocument>
-                (GET, "commandedocument", null);
-            return lesCommandesDvd;
-        }
 
         /// <summary>
         /// Retourne les exemplaires d'une revue
@@ -181,6 +171,19 @@ namespace MediaTekDocuments.dal
             String jsonIdDocument = convertToJson("id", idDocument);
             List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdDocument, null);
             return lesExemplaires;
+        }
+
+
+        /// <summary>
+        /// Retourne les abonnements d'une revue
+        /// </summary>
+        /// <param name="idRevue">id de la revue concernée</param>
+        /// <returns>Liste d'objets Abonnements</returns>
+        public List<Abonnement> GetAbonnements(string idRevue)
+        {
+            String jsonIdRevue = convertToJson("id", idRevue);
+            List<Abonnement> lesAbonnements = TraitementRecup<Abonnement>(GET, "abonnement/" + jsonIdRevue, null);
+            return lesAbonnements;
         }
 
         /// <summary>
@@ -389,7 +392,7 @@ namespace MediaTekDocuments.dal
                     return false;
                 }
 
-                // Suppression dans livre
+                // Suppression dans livre , on commence par les enfants puis les parents
 
                 List<Livre> liste1 = TraitementRecup<Livre>
                     (DELETE, "livre/" + jsonIdLivre, null);

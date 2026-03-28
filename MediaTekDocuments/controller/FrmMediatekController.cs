@@ -206,7 +206,15 @@ namespace MediaTekDocuments.controller
             return access.GetAllSuivis();
         }
 
-     
+        /// <summary>
+        /// Retourne tous les abonnements
+        /// </summary>
+        /// <returns>Liste d'objets Abonnement</returns>
+        public List<Abonnement> GetAbonnements(string idRevues)
+        {
+            return access.GetAbonnements(idRevues);
+        }
+
 
 
         /// <summary>
@@ -225,6 +233,16 @@ namespace MediaTekDocuments.controller
         public bool CreerCommande(CommandeDocument commandedoc)
         {
             return access.CreerCommande(commandedoc);
+        }
+
+        /// <summary>
+        /// Crée un abonnement dans la bdd
+        /// </summary>
+        /// <param name="abonnementRevue">abonnement à créer</param>
+        /// <returns>True si la création a pu se faire</returns>
+        public bool CreerAbonnement(Abonnement abonnementRevue)
+        {
+            return access.CreerAbonnement(abonnementRevue);
         }
 
         /// <summary>
