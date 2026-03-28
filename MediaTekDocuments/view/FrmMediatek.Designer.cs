@@ -109,6 +109,7 @@ namespace MediaTekDocuments.view
             this.btnReceptionRechercher = new System.Windows.Forms.Button();
             this.tabRevues = new System.Windows.Forms.TabPage();
             this.grpRevuesInfos = new System.Windows.Forms.GroupBox();
+            this.txbRevuesNumero = new System.Windows.Forms.MaskedTextBox();
             this.cbxRevueGenresEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxRevuePublicsEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxRevueRayonsEditAdd = new System.Windows.Forms.ComboBox();
@@ -152,6 +153,7 @@ namespace MediaTekDocuments.view
             this.txbRevuesTitreRecherche = new System.Windows.Forms.TextBox();
             this.tabDvd = new System.Windows.Forms.TabPage();
             this.grpDvdInfos = new System.Windows.Forms.GroupBox();
+            this.txbDvdNumero = new System.Windows.Forms.MaskedTextBox();
             this.cbxDvdRayonsEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxDvdPublicsEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxDvdGenresEditAdd = new System.Windows.Forms.ComboBox();
@@ -197,6 +199,7 @@ namespace MediaTekDocuments.view
             this.txbDvdTitreRecherche = new System.Windows.Forms.TextBox();
             this.tabLivres = new System.Windows.Forms.TabPage();
             this.grpLivresInfos = new System.Windows.Forms.GroupBox();
+            this.txbLivresNumero = new System.Windows.Forms.MaskedTextBox();
             this.cbxLivresRayonsEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxLivresPublicsEditAdd = new System.Windows.Forms.ComboBox();
             this.cbxLivresGenresEditAdd = new System.Windows.Forms.ComboBox();
@@ -286,10 +289,9 @@ namespace MediaTekDocuments.view
             this.tabCommandesRevues = new System.Windows.Forms.TabPage();
             this.grpListeRevuesAbo = new System.Windows.Forms.GroupBox();
             this.dgvListeRevuesAbo = new System.Windows.Forms.DataGridView();
-            this.colDateAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMontantAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFinAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpNouvelAboRevues = new System.Windows.Forms.GroupBox();
+            this.dtpDateFinNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
+            this.label70 = new System.Windows.Forms.Label();
             this.dtpDateCommandeNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
             this.label69 = new System.Windows.Forms.Label();
             this.btnEnregistrerRevuesAbo = new System.Windows.Forms.Button();
@@ -315,11 +317,9 @@ namespace MediaTekDocuments.view
             this.labelDelaiRevuesCommandes = new System.Windows.Forms.Label();
             this.cbxTitreRevuesCommande = new System.Windows.Forms.ComboBox();
             this.labelSelectionRevueCommandes = new System.Windows.Forms.Label();
-            this.label70 = new System.Windows.Forms.Label();
-            this.dtpDateFinNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
-            this.txbLivresNumero = new System.Windows.Forms.MaskedTextBox();
-            this.txbDvdNumero = new System.Windows.Forms.MaskedTextBox();
-            this.txbRevuesNumero = new System.Windows.Forms.MaskedTextBox();
+            this.colDateAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMontantAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFinAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -1303,6 +1303,15 @@ namespace MediaTekDocuments.view
             this.grpRevuesInfos.TabStop = false;
             this.grpRevuesInfos.Text = "Informations détaillées";
             // 
+            // txbRevuesNumero
+            // 
+            this.txbRevuesNumero.Location = new System.Drawing.Point(225, 31);
+            this.txbRevuesNumero.Mask = "00000";
+            this.txbRevuesNumero.Name = "txbRevuesNumero";
+            this.txbRevuesNumero.Size = new System.Drawing.Size(148, 26);
+            this.txbRevuesNumero.TabIndex = 36;
+            this.txbRevuesNumero.ValidatingType = typeof(int);
+            // 
             // cbxRevueGenresEditAdd
             // 
             this.cbxRevueGenresEditAdd.FormattingEnabled = true;
@@ -1799,6 +1808,15 @@ namespace MediaTekDocuments.view
             this.grpDvdInfos.TabIndex = 21;
             this.grpDvdInfos.TabStop = false;
             this.grpDvdInfos.Text = "Informations détaillées";
+            // 
+            // txbDvdNumero
+            // 
+            this.txbDvdNumero.Location = new System.Drawing.Point(225, 27);
+            this.txbDvdNumero.Mask = "00000";
+            this.txbDvdNumero.Name = "txbDvdNumero";
+            this.txbDvdNumero.Size = new System.Drawing.Size(149, 26);
+            this.txbDvdNumero.TabIndex = 37;
+            this.txbDvdNumero.ValidatingType = typeof(int);
             // 
             // cbxDvdRayonsEditAdd
             // 
@@ -2330,6 +2348,15 @@ namespace MediaTekDocuments.view
             this.grpLivresInfos.TabIndex = 19;
             this.grpLivresInfos.TabStop = false;
             this.grpLivresInfos.Text = "Informations détaillées";
+            // 
+            // txbLivresNumero
+            // 
+            this.txbLivresNumero.Location = new System.Drawing.Point(225, 25);
+            this.txbLivresNumero.Mask = "00000";
+            this.txbLivresNumero.Name = "txbLivresNumero";
+            this.txbLivresNumero.Size = new System.Drawing.Size(153, 26);
+            this.txbLivresNumero.TabIndex = 37;
+            this.txbLivresNumero.ValidatingType = typeof(int);
             // 
             // cbxLivresRayonsEditAdd
             // 
@@ -3354,30 +3381,6 @@ namespace MediaTekDocuments.view
             this.dgvListeRevuesAbo.Size = new System.Drawing.Size(1269, 217);
             this.dgvListeRevuesAbo.TabIndex = 1;
             // 
-            // colDateAbo
-            // 
-            this.colDateAbo.DataPropertyName = "DateCommande";
-            this.colDateAbo.HeaderText = "Date de Commande";
-            this.colDateAbo.MinimumWidth = 8;
-            this.colDateAbo.Name = "colDateAbo";
-            this.colDateAbo.ReadOnly = true;
-            // 
-            // colMontantAbo
-            // 
-            this.colMontantAbo.DataPropertyName = "Montant";
-            this.colMontantAbo.HeaderText = "Montant";
-            this.colMontantAbo.MinimumWidth = 8;
-            this.colMontantAbo.Name = "colMontantAbo";
-            this.colMontantAbo.ReadOnly = true;
-            // 
-            // colFinAbo
-            // 
-            this.colFinAbo.DataPropertyName = "DateDeFinAbo";
-            this.colFinAbo.HeaderText = "Date de Fin d\'Abonnement";
-            this.colFinAbo.MinimumWidth = 8;
-            this.colFinAbo.Name = "colFinAbo";
-            this.colFinAbo.ReadOnly = true;
-            // 
             // grpNouvelAboRevues
             // 
             this.grpNouvelAboRevues.Controls.Add(this.dtpDateFinNouvelAboRevues);
@@ -3394,6 +3397,25 @@ namespace MediaTekDocuments.view
             this.grpNouvelAboRevues.TabIndex = 25;
             this.grpNouvelAboRevues.TabStop = false;
             this.grpNouvelAboRevues.Text = "Nouvel Abonnement";
+            // 
+            // dtpDateFinNouvelAboRevues
+            // 
+            this.dtpDateFinNouvelAboRevues.Format = System.Windows.Forms.DateTimePickerFormat.Short;
+            this.dtpDateFinNouvelAboRevues.Location = new System.Drawing.Point(272, 85);
+            this.dtpDateFinNouvelAboRevues.Name = "dtpDateFinNouvelAboRevues";
+            this.dtpDateFinNouvelAboRevues.Size = new System.Drawing.Size(132, 26);
+            this.dtpDateFinNouvelAboRevues.TabIndex = 35;
+            // 
+            // label70
+            // 
+            this.label70.AutoSize = true;
+            this.label70.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label70.Location = new System.Drawing.Point(12, 91);
+            this.label70.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(216, 20);
+            this.label70.TabIndex = 34;
+            this.label70.Text = "Date fin d\'abonnement  :";
             // 
             // dtpDateCommandeNouvelAboRevues
             // 
@@ -3420,6 +3442,7 @@ namespace MediaTekDocuments.view
             this.btnEnregistrerRevuesAbo.TabIndex = 30;
             this.btnEnregistrerRevuesAbo.Text = "Enregistrer";
             this.btnEnregistrerRevuesAbo.UseVisualStyleBackColor = true;
+            this.btnEnregistrerRevuesAbo.Click += new System.EventHandler(this.btnEnregistrerRevuesAbo_Click);
             // 
             // txtboxMontantRevuesAbo
             // 
@@ -3522,25 +3545,31 @@ namespace MediaTekDocuments.view
             // 
             // txtDelaiRevuesCommandes
             // 
+            this.txtDelaiRevuesCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtDelaiRevuesCommandes.Location = new System.Drawing.Point(225, 146);
             this.txtDelaiRevuesCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtDelaiRevuesCommandes.Name = "txtDelaiRevuesCommandes";
+            this.txtDelaiRevuesCommandes.ReadOnly = true;
             this.txtDelaiRevuesCommandes.Size = new System.Drawing.Size(148, 26);
             this.txtDelaiRevuesCommandes.TabIndex = 27;
             // 
             // txtPeriodiciteRevuesCommandes
             // 
+            this.txtPeriodiciteRevuesCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtPeriodiciteRevuesCommandes.Location = new System.Drawing.Point(225, 108);
             this.txtPeriodiciteRevuesCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtPeriodiciteRevuesCommandes.Name = "txtPeriodiciteRevuesCommandes";
+            this.txtPeriodiciteRevuesCommandes.ReadOnly = true;
             this.txtPeriodiciteRevuesCommandes.Size = new System.Drawing.Size(148, 26);
             this.txtPeriodiciteRevuesCommandes.TabIndex = 26;
             // 
             // txtTitreRevuesCommandes
             // 
+            this.txtTitreRevuesCommandes.BackColor = System.Drawing.SystemColors.ControlLightLight;
             this.txtTitreRevuesCommandes.Location = new System.Drawing.Point(225, 69);
             this.txtTitreRevuesCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtTitreRevuesCommandes.Name = "txtTitreRevuesCommandes";
+            this.txtTitreRevuesCommandes.ReadOnly = true;
             this.txtTitreRevuesCommandes.Size = new System.Drawing.Size(584, 26);
             this.txtTitreRevuesCommandes.TabIndex = 25;
             // 
@@ -3550,6 +3579,7 @@ namespace MediaTekDocuments.view
             this.txtIdRevuesCommandes.Location = new System.Drawing.Point(225, 31);
             this.txtIdRevuesCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.txtIdRevuesCommandes.Name = "txtIdRevuesCommandes";
+            this.txtIdRevuesCommandes.ReadOnly = true;
             this.txtIdRevuesCommandes.Size = new System.Drawing.Size(148, 26);
             this.txtIdRevuesCommandes.TabIndex = 24;
             // 
@@ -3660,51 +3690,29 @@ namespace MediaTekDocuments.view
             this.labelSelectionRevueCommandes.TabIndex = 9;
             this.labelSelectionRevueCommandes.Text = "Sélectionner une revue :";
             // 
-            // label70
+            // colDateAbo
             // 
-            this.label70.AutoSize = true;
-            this.label70.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label70.Location = new System.Drawing.Point(12, 91);
-            this.label70.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(216, 20);
-            this.label70.TabIndex = 34;
-            this.label70.Text = "Date fin d\'abonnement  :";
+            this.colDateAbo.DataPropertyName = "DateCommande";
+            this.colDateAbo.HeaderText = "Date de Commande";
+            this.colDateAbo.MinimumWidth = 8;
+            this.colDateAbo.Name = "colDateAbo";
+            this.colDateAbo.ReadOnly = true;
             // 
-            // dtpDateFinNouvelAboRevues
+            // colMontantAbo
             // 
-            this.dtpDateFinNouvelAboRevues.Format = System.Windows.Forms.DateTimePickerFormat.Short;
-            this.dtpDateFinNouvelAboRevues.Location = new System.Drawing.Point(272, 85);
-            this.dtpDateFinNouvelAboRevues.Name = "dtpDateFinNouvelAboRevues";
-            this.dtpDateFinNouvelAboRevues.Size = new System.Drawing.Size(132, 26);
-            this.dtpDateFinNouvelAboRevues.TabIndex = 35;
+            this.colMontantAbo.DataPropertyName = "Montant";
+            this.colMontantAbo.HeaderText = "Montant";
+            this.colMontantAbo.MinimumWidth = 8;
+            this.colMontantAbo.Name = "colMontantAbo";
+            this.colMontantAbo.ReadOnly = true;
             // 
-            // txbLivresNumero
+            // colFinAbo
             // 
-            this.txbLivresNumero.Location = new System.Drawing.Point(225, 25);
-            this.txbLivresNumero.Mask = "00000";
-            this.txbLivresNumero.Name = "txbLivresNumero";
-            this.txbLivresNumero.Size = new System.Drawing.Size(153, 26);
-            this.txbLivresNumero.TabIndex = 37;
-            this.txbLivresNumero.ValidatingType = typeof(int);
-            // 
-            // txbDvdNumero
-            // 
-            this.txbDvdNumero.Location = new System.Drawing.Point(225, 27);
-            this.txbDvdNumero.Mask = "00000";
-            this.txbDvdNumero.Name = "txbDvdNumero";
-            this.txbDvdNumero.Size = new System.Drawing.Size(149, 26);
-            this.txbDvdNumero.TabIndex = 37;
-            this.txbDvdNumero.ValidatingType = typeof(int);
-            // 
-            // txbRevuesNumero
-            // 
-            this.txbRevuesNumero.Location = new System.Drawing.Point(225, 31);
-            this.txbRevuesNumero.Mask = "00000";
-            this.txbRevuesNumero.Name = "txbRevuesNumero";
-            this.txbRevuesNumero.Size = new System.Drawing.Size(148, 26);
-            this.txbRevuesNumero.TabIndex = 36;
-            this.txbRevuesNumero.ValidatingType = typeof(int);
+            this.colFinAbo.DataPropertyName = "DateFinAbonnement";
+            this.colFinAbo.HeaderText = "Date de Fin d\'Abonnement";
+            this.colFinAbo.MinimumWidth = 8;
+            this.colFinAbo.Name = "colFinAbo";
+            this.colFinAbo.ReadOnly = true;
             // 
             // FrmMediatek
             // 
@@ -4066,14 +4074,14 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.Label label72;
         private System.Windows.Forms.GroupBox grpListeRevuesAbo;
         private System.Windows.Forms.DataGridView dgvListeRevuesAbo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDateAbo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colMontantAbo;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colFinAbo;
         private System.Windows.Forms.DateTimePicker dtpDateFinNouvelAboRevues;
         private System.Windows.Forms.Label label70;
         private System.Windows.Forms.MaskedTextBox txbLivresNumero;
         private System.Windows.Forms.MaskedTextBox txbDvdNumero;
         private System.Windows.Forms.MaskedTextBox txbRevuesNumero;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colDateAbo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colMontantAbo;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colFinAbo;
     }
 }
 

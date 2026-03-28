@@ -3062,6 +3062,7 @@ txbLivresAuteur.Text,
 
         private void RemplirAbonnementsRevuesListe(List<Abonnement> lesAbonnements)
         {
+            
             if (lesAbonnements != null)
             {
                 dgvListeRevuesAbo.AutoGenerateColumns = false;
@@ -3089,10 +3090,12 @@ txbLivresAuteur.Text,
         private void AfficheCommandesRevuesListe()
         {
             // id de la revue selectionne
-            string idRevues = txtIdRevuesCommandes.Text;
+            string idRevue = txtIdRevuesCommandes.Text;
 
             //recupere les lignes d'abonnement pour cette revue
-            List<Abonnement> abonnements = controller.GetAbonnements(idRevues);
+            List<Abonnement> abonnements = controller.GetAbonnements(idRevue);
+
+            
 
             // tous les abonnements de la table abonnement
             List<Abonnement> tousLesAbonnementsDeLaRevue = new List<Abonnement>();
@@ -3168,8 +3171,7 @@ txbLivresAuteur.Text,
         /// <param name="e"></param>
         /// 
 
-        /// private List<Revue> lesRevuesCommandes = new List<Revue>();
-        /// private List<Commande> toutesLesCommandes = new List<Commande>();
+       
 
         private void btnEnregistrerRevuesAbo_Click(object sender, EventArgs e)
         {
@@ -3192,12 +3194,18 @@ txbLivresAuteur.Text,
                         return;
                     }
 
+                    if (dateFin <= dateCommande)
+                    {
+                        MessageBox.Show("La date de fin d'abonnement doit être postérieure à la date de commande.", "Erreur");
+                        return;
+                    }
+
                     // Generer un nouvel id
 
                     string idAbo = toutesLesCommandes.Count > 0 ? (toutesLesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
                 : "00001";
 
-
+                    
                     // Creer un nouvel objet Abonnement
                     Abonnement nouvelAbonnement = new Abonnement(
         idAbo,
@@ -3205,6 +3213,8 @@ txbLivresAuteur.Text,
        idRevue,
         dateCommande,
         montant);
+
+                   
 
                     // Appeller le controlleur
                     if (controller.CreerAbonnement(nouvelAbonnement))

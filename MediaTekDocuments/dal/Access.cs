@@ -181,7 +181,7 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets Abonnements</returns>
         public List<Abonnement> GetAbonnements(string idRevue)
         {
-            String jsonIdRevue = convertToJson("id", idRevue);
+            String jsonIdRevue = convertToJson("idRevue", idRevue);
             List<Abonnement> lesAbonnements = TraitementRecup<Abonnement>(GET, "abonnement/" + jsonIdRevue, null);
             return lesAbonnements;
         }
