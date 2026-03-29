@@ -289,6 +289,9 @@ namespace MediaTekDocuments.view
             this.tabCommandesRevues = new System.Windows.Forms.TabPage();
             this.grpListeRevuesAbo = new System.Windows.Forms.GroupBox();
             this.dgvListeRevuesAbo = new System.Windows.Forms.DataGridView();
+            this.colDateAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colMontantAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFinAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpNouvelAboRevues = new System.Windows.Forms.GroupBox();
             this.dtpDateFinNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
             this.label70 = new System.Windows.Forms.Label();
@@ -317,9 +320,7 @@ namespace MediaTekDocuments.view
             this.labelDelaiRevuesCommandes = new System.Windows.Forms.Label();
             this.cbxTitreRevuesCommande = new System.Windows.Forms.ComboBox();
             this.labelSelectionRevueCommandes = new System.Windows.Forms.Label();
-            this.colDateAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colMontantAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colFinAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.btnSupprimerRevuesAbo = new System.Windows.Forms.Button();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -3381,8 +3382,33 @@ namespace MediaTekDocuments.view
             this.dgvListeRevuesAbo.Size = new System.Drawing.Size(1269, 217);
             this.dgvListeRevuesAbo.TabIndex = 1;
             // 
+            // colDateAbo
+            // 
+            this.colDateAbo.DataPropertyName = "DateCommande";
+            this.colDateAbo.HeaderText = "Date de Commande";
+            this.colDateAbo.MinimumWidth = 8;
+            this.colDateAbo.Name = "colDateAbo";
+            this.colDateAbo.ReadOnly = true;
+            // 
+            // colMontantAbo
+            // 
+            this.colMontantAbo.DataPropertyName = "Montant";
+            this.colMontantAbo.HeaderText = "Montant";
+            this.colMontantAbo.MinimumWidth = 8;
+            this.colMontantAbo.Name = "colMontantAbo";
+            this.colMontantAbo.ReadOnly = true;
+            // 
+            // colFinAbo
+            // 
+            this.colFinAbo.DataPropertyName = "DateFinAbonnement";
+            this.colFinAbo.HeaderText = "Date de Fin d\'Abonnement";
+            this.colFinAbo.MinimumWidth = 8;
+            this.colFinAbo.Name = "colFinAbo";
+            this.colFinAbo.ReadOnly = true;
+            // 
             // grpNouvelAboRevues
             // 
+            this.grpNouvelAboRevues.Controls.Add(this.btnSupprimerRevuesAbo);
             this.grpNouvelAboRevues.Controls.Add(this.dtpDateFinNouvelAboRevues);
             this.grpNouvelAboRevues.Controls.Add(this.label70);
             this.grpNouvelAboRevues.Controls.Add(this.dtpDateCommandeNouvelAboRevues);
@@ -3690,29 +3716,15 @@ namespace MediaTekDocuments.view
             this.labelSelectionRevueCommandes.TabIndex = 9;
             this.labelSelectionRevueCommandes.Text = "Sélectionner une revue :";
             // 
-            // colDateAbo
+            // btnSupprimerRevuesAbo
             // 
-            this.colDateAbo.DataPropertyName = "DateCommande";
-            this.colDateAbo.HeaderText = "Date de Commande";
-            this.colDateAbo.MinimumWidth = 8;
-            this.colDateAbo.Name = "colDateAbo";
-            this.colDateAbo.ReadOnly = true;
-            // 
-            // colMontantAbo
-            // 
-            this.colMontantAbo.DataPropertyName = "Montant";
-            this.colMontantAbo.HeaderText = "Montant";
-            this.colMontantAbo.MinimumWidth = 8;
-            this.colMontantAbo.Name = "colMontantAbo";
-            this.colMontantAbo.ReadOnly = true;
-            // 
-            // colFinAbo
-            // 
-            this.colFinAbo.DataPropertyName = "DateFinAbonnement";
-            this.colFinAbo.HeaderText = "Date de Fin d\'Abonnement";
-            this.colFinAbo.MinimumWidth = 8;
-            this.colFinAbo.Name = "colFinAbo";
-            this.colFinAbo.ReadOnly = true;
+            this.btnSupprimerRevuesAbo.Location = new System.Drawing.Point(540, 135);
+            this.btnSupprimerRevuesAbo.Name = "btnSupprimerRevuesAbo";
+            this.btnSupprimerRevuesAbo.Size = new System.Drawing.Size(97, 41);
+            this.btnSupprimerRevuesAbo.TabIndex = 36;
+            this.btnSupprimerRevuesAbo.Text = "Supprimer";
+            this.btnSupprimerRevuesAbo.UseVisualStyleBackColor = true;
+            this.btnSupprimerRevuesAbo.Click += new System.EventHandler(this.btnSupprimerRevuesAbo_Click);
             // 
             // FrmMediatek
             // 
@@ -4082,6 +4094,7 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.DataGridViewTextBoxColumn colDateAbo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMontantAbo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFinAbo;
+        private System.Windows.Forms.Button btnSupprimerRevuesAbo;
     }
 }
 

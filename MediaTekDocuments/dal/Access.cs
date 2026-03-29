@@ -160,6 +160,17 @@ namespace MediaTekDocuments.dal
         }
 
 
+        /// <summary>
+        /// Retourne tous les abonnement à partir de la BDD
+        /// </summary>
+        /// <returns>Liste d'objets Abonnement</returns>
+        public List<Abonnement> GetAllAbonnements()
+        {
+            List<Abonnement> lesAbonnements = TraitementRecup<Abonnement>(GET, "abonnement", null);
+            return lesAbonnements;
+        }
+
+
 
         /// <summary>
         /// Retourne les exemplaires d'une revue
@@ -367,7 +378,7 @@ namespace MediaTekDocuments.dal
 
             try
             {
-                // Vérifier exemplaires
+                // On verifie les exemplaires
                 // GET exemplaire avec id = livre.Id
                 // Si liste non vide → return false
 
@@ -384,7 +395,7 @@ namespace MediaTekDocuments.dal
                 // GET commande avec id = livre.Id
                 // Si liste non vide → return false
 
-                List<JObject> lesCommandes = TraitementRecup<JObject>
+                List<Commande> lesCommandes = TraitementRecup<Commande>
                 (GET, "commande/" + jsonIdLivre, null);
 
                 if (lesCommandes != null && lesCommandes.Count > 0)
@@ -799,6 +810,37 @@ namespace MediaTekDocuments.dal
             }
             return false;
         }
+
+        /// <summary>
+        /// Supprime dans Abonnement
+        /// </summary>
+        public bool SupprimerAbonnement(string id)
+        {
+
+            try
+            {
+                String jsonId = convertToJson("id", id);
+
+
+                // Suppression dans abonnement, on commence par les enfants puis les parents
+
+                List<Abonnement> liste1 = TraitementRecup<Abonnement>
+                    (DELETE, "abonnement/" + jsonId, null);
+
+                // Suppression dans commande
+                List<Commande> liste2 = TraitementRecup<Commande>
+                   (DELETE, "commande/" + jsonId, null);
+
+
+                return (liste1 != null && liste2 != null);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return false;
+        }
+
 
 
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)

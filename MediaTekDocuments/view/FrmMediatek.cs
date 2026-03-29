@@ -52,6 +52,15 @@ namespace MediaTekDocuments.view
             this.controller = new FrmMediatekController();
         }
 
+        /// <summary>
+        ///  Dès l'ouverture de l'application, ouvrir une petite 
+        ///  fenêtre d'alerte rappelant la liste des revues expirant dans moins d'un mois
+        /// </summary>
+        private void FrmMediatek_Load(object sender, EventArgs e)
+        {
+            // Your code to run on form load goes here
+            // e.g., setting control properties, initializing data
+        }
 
         /// <summary>
         /// Rempli un des 3 combo (genre, public, rayon)
@@ -514,7 +523,7 @@ namespace MediaTekDocuments.view
 
                 if (result == DialogResult.Yes)
                 {
-                    // fais appel au controller pour supprimer
+                    // on fait appel au controller pour supprimer
                     // controller.SupprimerLivre(livre) envoie la demande de suppression
                     // à la base de données.
                     // retourne true  si la suppression a réussi
@@ -2435,9 +2444,9 @@ txbLivresAuteur.Text,
 
 
                 // supprimer dans commande (table mère)
-                bool step2 = controller.SupprimerCommande(commandesLivres.Id);
+                bool suppression1 = controller.SupprimerCommande(commandesLivres.Id);
 
-                if (step2)
+                if (suppression1)
                 {
                     //  Recharge la liste depuis la BDD
                     AfficheCommandesLivreListe();
@@ -2869,9 +2878,9 @@ txbLivresAuteur.Text,
 
 
                 // supprimer dans commande (table mère)
-                bool step = controller.SupprimerCommande(commandesDvd.Id);
+               bool suppression = controller.SupprimerCommande(commandesDvd.Id);
 
-                if (step)
+                if (suppression)
                 {
                     //  Recharge la liste depuis la BDD
                     AfficheCommandesDvdListe();
@@ -3050,7 +3059,7 @@ txbLivresAuteur.Text,
                 pcbRevuesImage.Image = null;
             }
             // affiche les abonnements de cette revue
-            AfficheCommandesRevuesListe();
+            AfficheAbonnementRevuesListe();
         }
 
 
@@ -3087,7 +3096,7 @@ txbLivresAuteur.Text,
         /// <summary>
         /// Récupère et affiche les abonnement d'une revue
         /// </summary>
-        private void AfficheCommandesRevuesListe()
+        private void AfficheAbonnementRevuesListe()
         {
             // id de la revue selectionne
             string idRevue = txtIdRevuesCommandes.Text;
@@ -3219,7 +3228,7 @@ txbLivresAuteur.Text,
                     // Appeller le controlleur
                     if (controller.CreerAbonnement(nouvelAbonnement))
                     {
-                        AfficheCommandesRevuesListe();
+                        AfficheAbonnementRevuesListe();
                     }
                     else
                     {
@@ -3243,7 +3252,117 @@ txbLivresAuteur.Text,
 
         }
 
+        /// <summary>
+        /// Retourne vrai si la date de parution de l'exemplaire est entre les 2 autres dates
+        /// </summary>
 
+        private bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
+        {
+            return dateParution >= dateCommande && dateParution <= dateFinAbonnement;
+        }
+
+        private void btnSupprimerRevuesAbo_Click(object sender, EventArgs e)
+        {
+            // on verifie qu'un abonnement est selectionnee 
+            if (bdgCommandesRevuesDatagrid.Position < 0)
+            {
+                MessageBox.Show("Veuillez sélectionner un abonnement.", "Information");
+                return;
+            }
+
+            // on recupere l'objet selectionne et on fait un cast pour dire 
+            // cet objet est un abonnement
+
+            Abonnement abonnementRevues =
+                 (Abonnement)bdgCommandesRevuesDatagrid.List[bdgCommandesRevuesDatagrid.Position];
+
+            if (abonnementRevues == null)
+            {
+                MessageBox.Show("Aucun abonnement sélectionné.", "Information");
+                return;
+            }
+
+            // impossible de supprimer un abonnement ayant des exemplaires
+            List<Exemplaire> exemplairesDeRevue = controller.GetExemplairesRevue(abonnementRevues.IdRevue);
+            
+            DateTime dateCommande = abonnementRevues.DateCommande;
+            DateTime dateFin = abonnementRevues.DateFinAbonnement;
+            foreach (Exemplaire exempl in exemplairesDeRevue)
+            {
+                if (ParutionDansAbonnement(dateCommande, dateFin, exempl.DateAchat))
+                {
+                    MessageBox.Show("Des exemplaires sont  rattachés à cet abonnement. Impossible de le supprimer. ", "Erreur");
+                    return;
+                }
+               
+                  
+            }
+
+            // Demande de confirmation
+            DialogResult result = MessageBox.Show(
+                $"Voulez-vous supprimer l'abonnement {abonnementRevues.Id} ?",
+                "Confirmation",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Yes)
+            {
+
+
+                // supprimer dans commande (table mère)
+                bool suppression2 = controller.SupprimerAbonnement(abonnementRevues.Id);
+
+                if (suppression2)
+                {
+                    //  Recharge la liste depuis la BDD
+                    AfficheAbonnementRevuesListe();
+                    MessageBox.Show(
+                        $"Abonnement {abonnementRevues.Id} supprimée avec succès !",
+                        "Succès",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Information);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        $"Erreur lors de la suppression de l'abonnement {abonnementRevues.Id}.",
+                        "Erreur",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Retourne les abonnements qui expirent dans moins de 30 jours
+        /// </summary>
+        public List<Abonnement> RecupererAbonnementsExpirants()
+        {
+
+            List<Abonnement> abonnementsExpirants = new List<Abonnement>();
+            // on recupere tous les abonnements    
+            List<Abonnement> tousAbonnements = controller.GetAllAbonnements();
+
+
+            DateTime aujourdhui = DateTime.Today;
+            DateTime dansUnMois = aujourdhui.AddDays(30);
+
+            //on filtre ceux qui expirent dans < 30 jours
+            foreach (Abonnement abo in tousAbonnements)
+            {
+                if (abo.DateFinAbonnement >= aujourdhui && abo.DateFinAbonnement < dansUnMois)
+                {
+                    abonnementsExpirants.Add(abo);
+                }
+            }
+
+            //on trie par date (ordre chronologique)
+
+
+            abonnementsExpirants = abonnementsExpirants.OrderBy(a => a.DateFinAbonnement).ToList();
+
+            return abonnementsExpirants;
+        }
 
 
         #endregion

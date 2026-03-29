@@ -226,6 +226,14 @@ namespace MediaTekDocuments.controller
         }
 
         /// <summary>
+        /// Retourne tous les abonnements
+        /// </summary>
+        public List<Abonnement> GetAllAbonnements()
+        {
+            return access.GetAllAbonnements();
+        }
+
+        /// <summary>
         /// Crée une commande dans la bdd
         /// </summary>
         /// <param name="commandedoc">commande à créer</param>
@@ -266,13 +274,23 @@ namespace MediaTekDocuments.controller
         }
 
         /// <summary>
-        /// Supprime une commande dans la bdd (table mère)
+        /// Supprime une commande dans la bdd 
         /// </summary>
         /// <param name="id">id de la commande à supprimer</param>
         /// <returns>True si la suppression a pu se faire</returns>
         public bool SupprimerCommande(string id)
         {
             return access.SupprimerCommande(id);
+        }
+
+        /// <summary>
+        /// Supprime un abonnement dans la bdd 
+        /// </summary>
+        /// <param name="id">id de l'abonnement à supprimer</param>
+        /// <returns>True si la suppression a pu se faire</returns>
+        public bool SupprimerAbonnement(string id)
+        {
+            return access.SupprimerAbonnement(id);
         }
     }
 }
