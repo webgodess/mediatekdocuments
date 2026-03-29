@@ -3735,6 +3735,7 @@ namespace MediaTekDocuments.view
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.Name = "FrmMediatek";
             this.Text = "Gestion des documents de la médiathèque";
+            this.Load += new System.EventHandler(this.FrmMediatek_Load);
             this.tabCommandesLivres.ResumeLayout(false);
             this.tabCommandesLivres.PerformLayout();
             this.grpGestionLivreCommandes.ResumeLayout(false);

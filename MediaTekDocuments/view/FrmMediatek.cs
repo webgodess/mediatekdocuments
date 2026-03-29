@@ -58,8 +58,18 @@ namespace MediaTekDocuments.view
         /// </summary>
         private void FrmMediatek_Load(object sender, EventArgs e)
         {
-            // Your code to run on form load goes here
-            // e.g., setting control properties, initializing data
+            // on apelle notre methode RecupererAbonnementsExpirants() 
+            // pour recuperer la liste des abonnements expirants
+
+            List<Abonnement> abonnementsExpirants = RecupererAbonnementsExpirants();
+            List<Revue> revues = controller.GetAllRevues();
+            // verifier que la liste n'est pas vide
+            if (abonnementsExpirants.Count >0)
+            {
+                FormulaireAlerte alerte = new FormulaireAlerte(abonnementsExpirants, revues);
+                alerte.ShowDialog();
+                
+            }
         }
 
         /// <summary>
