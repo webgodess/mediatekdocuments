@@ -210,6 +210,21 @@ namespace MediaTekDocuments.dal
             return lesCommandesLives;
         }
 
+
+
+        /// <summary>
+        /// Retourne un utilisateur de la BDD selon son login et son mot de passe 
+        /// </summary>
+        /// <param name="login">login de l'utilisateur' concerné</param>
+        /// <param name="pwd">mot de passe de l'utilisateur</param>
+        /// <returns>L'objet utilisateur sinon null</returns>
+        public Utilisateur GetUtilisateur(string login, string pwd)
+        {
+            String jsonLogin = convertToJson("login", login);
+            List<Utilisateur> lesUtilisateurs = TraitementRecup<Utilisateur>(GET, "utilisateur/" + jsonLogin, null);
+            return lesUtilisateurs.Find(u => u.Login == login && u.Pwd == pwd);
+        }
+
         /// <summary>
         /// ecriture d'un exemplaire en base de données
         /// </summary>
