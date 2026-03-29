@@ -3139,10 +3139,11 @@ txbLivresAuteur.Text,
                     );
 
                     tousLesAbonnementsDeLaRevue.Add(nouvelAbo);
+                 
                 }
             }
 
-            lesAbonnements = tousLesAbonnementsDeLaRevue;
+            lesAbonnements = tousLesAbonnementsDeLaRevue.OrderByDescending(a => a.DateCommande).ToList();
             RemplirAbonnementsRevuesListe(lesAbonnements);
 
 
