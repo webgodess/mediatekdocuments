@@ -43,15 +43,49 @@ namespace MediaTekDocuments.view
         private readonly BindingSource bdgRevuesPublicsEditAdd = new BindingSource();
         private readonly BindingSource bdgRevuesRayonsEditAdd = new BindingSource();
 
+
+        private readonly Utilisateur utilisateurConnecte;
+
         /// <summary>
         /// Constructeur : création du contrôleur lié à ce formulaire
         /// </summary>
-        internal FrmMediatek()
+        internal FrmMediatek(Utilisateur utilisateur)
         {
             InitializeComponent();
             this.controller = new FrmMediatekController();
+            this.utilisateurConnecte = utilisateur;
         }
 
+        private void GererDroits()
+        {
+
+            if (utilisateurConnecte.IdService == "2")
+            {
+                AppliquerDroitsPrets();
+            }
+
+            
+        }
+
+        private void AppliquerDroitsPrets()
+        {
+            btnAjoutLivre.Visible = false;
+            btnModifierLivre.Visible = false;
+            btnSupprimerLivre.Visible = false;
+
+            btnAjoutDvd.Visible = false;
+            btnModifierDvd.Visible = false;
+            btnSupprimerDvd.Visible = false;
+
+            btnAjoutRevue.Visible = false;
+            btnModifierRevue.Visible = false;
+            btnSupprimerRevue.Visible = false;
+
+            tabCommandesLivres.Parent = null;
+            tabCommandesDvd.Parent = null;
+            tabCommandesRevues.Parent = null;
+            tabReceptionRevue.Parent = null;
+        }
         /// <summary>
         ///  Dès l'ouverture de l'application, ouvrir une petite 
         ///  fenêtre d'alerte rappelant la liste des revues expirant dans moins d'un mois
@@ -61,10 +95,13 @@ namespace MediaTekDocuments.view
             // on apelle notre methode RecupererAbonnementsExpirants() 
             // pour recuperer la liste des abonnements expirants
 
+            // gere les droits des utilisateurs
+            GererDroits();
+
             List<Abonnement> abonnementsExpirants = RecupererAbonnementsExpirants();
             List<Revue> revues = controller.GetAllRevues();
-            // verifier que la liste n'est pas vide
-            if (abonnementsExpirants.Count >0)
+            // verifier que la liste n'est pas vide et que l'utilisateur a acces aux commandes
+            if (abonnementsExpirants.Count >0  && utilisateurConnecte.IdService != "2" )
             {
                 FormulaireAlerte alerte = new FormulaireAlerte(abonnementsExpirants, revues);
                 alerte.ShowDialog();

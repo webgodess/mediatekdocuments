@@ -14,7 +14,8 @@ namespace MediaTekDocuments
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new FrmMediatek());
+            // on change de Application.Run(new FrmMediatek()) à Application.Run(new loginPage())
+            Application.Run(new loginPage());
         }
     }
 }

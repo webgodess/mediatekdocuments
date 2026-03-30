@@ -131,7 +131,15 @@
     <Compile Include="model\Abonnement.cs" />
     <Compile Include="model\Commande.cs" />
     <Compile Include="model\CommandeDocument.cs" />
+    <Compile Include="model\Service.cs" />
     <Compile Include="model\Suivi.cs" />
+    <Compile Include="model\Utilisateur.cs" />
+    <Compile Include="view\loginPage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="view\loginPage.Designer.cs">
+      <DependentUpon>loginPage.cs</DependentUpon>
+    </Compile>
     <Compile Include="view\FormulaireAlerte.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -171,6 +179,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="view\FrmMediatek.resx">
       <DependentUpon>FrmMediatek.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="view\loginPage.resx">
+      <DependentUpon>loginPage.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">

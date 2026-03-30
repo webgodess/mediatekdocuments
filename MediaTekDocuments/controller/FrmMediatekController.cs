@@ -198,6 +198,20 @@ namespace MediaTekDocuments.controller
         }
 
         /// <summary>
+        /// Retourne l'utilisateur correspondant dans la BDD
+        /// </summary>
+        /// <param name="login">Login de l'utilisateur concerné</param>
+        /// <param name="pwd">Mot de passe de l'utilisateur</param>
+        /// <returns>L'utilisateur trouvé, sinon null</returns>
+        public Utilisateur GetUtilisateur(string login, string pwd)
+        {
+            return access.GetUtilisateur(login, pwd);
+
+        }
+
+
+
+        /// <summary>
         /// Retourne tous les suivis
         /// </summary>
         /// <returns>Liste d'objets Suivi</returns>
