@@ -1766,7 +1766,7 @@ txbLivresAuteur.Text,
         /// sender = l'objet qui a déclenché l'événement
         ///  → ici c'est le bouton btnValiderRevue
         /// e = les informations sur l'événement
-        ///     → ici c'est un simple clic
+        /// → ici c'est un simple clic
         /// <param name="e"></param>
 
         private void btnValiderRevue_Click(object sender, EventArgs e)
