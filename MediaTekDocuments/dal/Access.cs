@@ -6,6 +6,11 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 
+// ajout pour utiliser App.config
+using System.Configuration;
+
+
+
 namespace MediaTekDocuments.dal
 {
     /// <summary>
@@ -13,10 +18,7 @@ namespace MediaTekDocuments.dal
     /// </summary>
     public class Access
     {
-        /// <summary>
-        /// adresse de l'API
-        /// </summary>
-        private static readonly string uriApi = "http://localhost/rest_mediatekdocuments/";
+        
         /// <summary>
         /// instance unique de la classe
         /// </summary>
@@ -55,8 +57,15 @@ namespace MediaTekDocuments.dal
             String authenticationString;
             try
             {
-                authenticationString = "admin:adminpwd";
-                api = ApiRest.GetInstance(uriApi, authenticationString);
+                // pour recuperer les clés du App.config
+                string apiUrl = ConfigurationManager.AppSettings["ApiUrl"];
+                string login = ConfigurationManager.AppSettings["ApiLogin"];
+                string pwd = ConfigurationManager.AppSettings["ApiPwd"];
+
+                // on remplace dans l'authentification string
+                authenticationString = $"{login}:{pwd}";
+
+                api = ApiRest.GetInstance(apiUrl, authenticationString);
             }
             catch (Exception e)
             {
