@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+// ajout pour utiliser App.config
+using System.Configuration;
 using MediaTekDocuments.manager;
 using MediaTekDocuments.model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
-
-// ajout pour utiliser App.config
-using System.Configuration;
+using Serilog;
 
 
 
@@ -18,7 +18,7 @@ namespace MediaTekDocuments.dal
     /// </summary>
     public class Access
     {
-        
+
         /// <summary>
         /// instance unique de la classe
         /// </summary>
@@ -47,7 +47,7 @@ namespace MediaTekDocuments.dal
         /// Constante de "champs"
         /// </summary>
         private const string CHAMPS = "champs=";
-      
+
         /// <summary>
         /// Méthode privée pour créer un singleton
         /// initialise l'accès à l'API
@@ -55,6 +55,13 @@ namespace MediaTekDocuments.dal
         private Access()
         {
             String authenticationString;
+            // point de départ du log
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .WriteTo.Console()
+                .WriteTo.File("logs/log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
+
             try
             {
                 // pour recuperer les clés du App.config
@@ -66,10 +73,12 @@ namespace MediaTekDocuments.dal
                 authenticationString = $"{login}:{pwd}";
 
                 api = ApiRest.GetInstance(apiUrl, authenticationString);
+                Log.Information("Accès API initialisé avec succès.");
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+
+                Log.Error(e, "Erreur fatale lors de l'initialisation de l'accès API");
                 Environment.Exit(0);
             }
         }
@@ -249,8 +258,10 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+
+                Log.Error(ex, "Access.CreerExemplaire : erreur lors de la création");
             }
+
             return false;
         }
 
@@ -292,7 +303,9 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+
+
+                Log.Error(ex, "Access.CreerCommande : Erreur de création pour l'ID {Id}", commandedoc.Id);
             }
             return false;
         }
@@ -343,7 +356,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.CreerLivre : Erreur de création pour l'ID {Id}", livre.Id);
             }
             return false;
         }
@@ -387,7 +400,8 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+
+                Log.Error(ex, "Access.ModifierLivre : Erreur de modification pour l'ID {Id}", livre.Id);
             }
             return false;
         }
@@ -445,7 +459,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.SupprimerLivre : Erreur de suppression pour l'ID {Id}", livre.Id);
             }
             return false;
         }
@@ -496,7 +510,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.CreerDvd : Erreur de création pour l'ID {Id}", dvd.Id);
             }
             return false;
         }
@@ -541,7 +555,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.ModifierDvd : Erreur de modification pour l'ID {Id}", dvd.Id);
             }
             return false;
         }
@@ -599,7 +613,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.SupprimerDvd : Erreur de suppression pour l'ID {Id}", dvd.Id);
             }
             return false;
         }
@@ -639,7 +653,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.CreerRevue : Erreur de création pour l'ID {Id}", revue.Id);
             }
             return false;
         }
@@ -669,14 +683,14 @@ namespace MediaTekDocuments.dal
             {"periodicite",     revue.Periodicite },
             {"delaiMiseADispo", revue.DelaiMiseADispo }
         };
-                String jsonRevue = JsonConvert.SerializeObject(infoRevue); 
-                List<Revue> liste2 = TraitementRecup<Revue>(PUT, "revue/" + revue.Id, CHAMPS + jsonRevue); 
+                String jsonRevue = JsonConvert.SerializeObject(infoRevue);
+                List<Revue> liste2 = TraitementRecup<Revue>(PUT, "revue/" + revue.Id, CHAMPS + jsonRevue);
 
                 return (liste1 != null && liste2 != null);
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.ModifierRevue : Erreur de modification pour l'ID {Id}", revue.Id);
             }
             return false;
         }
@@ -709,7 +723,7 @@ namespace MediaTekDocuments.dal
                 List<Revue> liste1 = TraitementRecup<Revue>
                     (DELETE, "revue/" + jsonIdRevue, null);
 
-                
+
                 // Suppression dans document
                 List<Revue> liste2 = TraitementRecup<Revue>
                     (DELETE, "document/" + jsonIdRevue, null);
@@ -718,7 +732,8 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.SupprimerRevue : Erreur de suppression pour l'ID {Id}", revue.Id);
+
             }
             return false;
         }
@@ -748,7 +763,8 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.ModifierSuiviCommande : Erreur pour l'ID {Id}", cmd.Id);
+
             }
             return false;
         }
@@ -768,9 +784,10 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                Log.Error(ex, "Access.SupprimerCommandeDocument : Erreur pour l'ID {Id}", id);
+
             }
+            return false;
         }
 
         /// <summary>
@@ -787,9 +804,10 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
-                return false;
+                Log.Error(ex, "Access.SupprimerCommande : Erreur pour l'ID {Id}", id);
+
             }
+            return false;
         }
 
         /// <summary>
@@ -830,7 +848,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.CreerAbonnement : Erreur pour l'ID {Id}", abonnement.Id);
             }
             return false;
         }
@@ -860,7 +878,7 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex.Message);
+                Log.Error(ex, "Access.SupprimerAbonnement : Erreur pour l'ID {Id}", id);
             }
             return false;
         }
@@ -895,12 +913,15 @@ namespace MediaTekDocuments.dal
                 }
                 else
                 {
-                    Console.WriteLine("code erreur = " + code + " message = " + (String)retour["message"]);
+
+                    Log.Warning("code erreur = {Code} message = {Message}",
+      code, (String)retour["message"]);
                 }
             }
             catch (Exception e)
             {
-                Console.WriteLine("Erreur lors de l'accès à l'API : " + e.Message);
+                Log.Error(e, "Erreur lors de l'accès à l'API : {Message}", e.Message);
+
                 Environment.Exit(0);
             }
             return liste;
