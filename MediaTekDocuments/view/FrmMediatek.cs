@@ -14,6 +14,7 @@ using MediaTekDocuments.controller;
 using MediaTekDocuments.model;
 using Org.BouncyCastle.Bcpg.Sig;
 
+
 namespace MediaTekDocuments.view
 
 {
@@ -23,7 +24,34 @@ namespace MediaTekDocuments.view
     public partial class FrmMediatek : Form
     {
         #region Commun
+
+        // Constante pour Selectionner une Commande
+        private const string SELECTION_COMMANDE = "Veuillez sélectionner une commande.";
+
+        // Constante pour numéro introuvable
+        private const string NUMERO_INTROUVABLE = "numéro introuvable";
+
+        // Constante pour "Titre"
+        private const string TITRE = "Titre";
+
+        // Constante pour "Confirmation"
+        private const string CONFIRMATION = "Confirmation";
+
+        // Constante pour "Erreur"
+        private const string MSG_ERREUR = "Erreur";
+
+        // Constante pour "Information"
+        private const string MSG_INFO = "Information";
+
+        // Constante pour "Erreur dans la création de la commande"
+        private const string MSG_ERRCOMMANDE = "Erreur dans la création de la commande";
+
+        // Constante pour "10002"
+        private const string NUM_SUIVI = "10002";
+
+
         private readonly FrmMediatekController controller;
+
         private readonly BindingSource bdgGenres = new BindingSource();
         private readonly BindingSource bdgPublics = new BindingSource();
         private readonly BindingSource bdgRayons = new BindingSource();
@@ -64,7 +92,7 @@ namespace MediaTekDocuments.view
                 AppliquerDroitsPrets();
             }
 
-            
+
         }
 
         private void AppliquerDroitsPrets()
@@ -101,11 +129,11 @@ namespace MediaTekDocuments.view
             List<Abonnement> abonnementsExpirants = RecupererAbonnementsExpirants();
             List<Revue> revues = controller.GetAllRevues();
             // verifier que la liste n'est pas vide et que l'utilisateur a acces aux commandes
-            if (abonnementsExpirants.Count >0  && utilisateurConnecte.IdService != "2" )
+            if (abonnementsExpirants.Count > 0 && utilisateurConnecte.IdService != "2")
             {
                 FormulaireAlerte alerte = new FormulaireAlerte(abonnementsExpirants, revues);
                 alerte.ShowDialog();
-                
+
             }
         }
 
@@ -115,7 +143,7 @@ namespace MediaTekDocuments.view
         /// <param name="lesCategories">liste des objets de type Genre ou Public ou Rayon</param>
         /// <param name="bdg">bindingsource contenant les informations</param>
         /// <param name="cbx">combobox à remplir</param>
-        public void RemplirComboCategorie(List<Categorie> lesCategories, BindingSource bdg, ComboBox cbx)
+        public static void RemplirComboCategorie(List<Categorie> lesCategories, BindingSource bdg, ComboBox cbx)
         {
             bdg.DataSource = lesCategories;
             cbx.DataSource = bdg;
@@ -202,7 +230,7 @@ namespace MediaTekDocuments.view
             dgvLivresListe.Columns["image"].Visible = false;
             dgvLivresListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvLivresListe.Columns["id"].DisplayIndex = 0;
-            dgvLivresListe.Columns["titre"].DisplayIndex = 1;
+            dgvLivresListe.Columns[TITRE].DisplayIndex = 1;
         }
 
         /// <summary>
@@ -227,7 +255,7 @@ namespace MediaTekDocuments.view
                 }
                 else
                 {
-                    MessageBox.Show("numéro introuvable");
+                    MessageBox.Show(NUMERO_INTROUVABLE);
                     RemplirLivresListeComplete();
                 }
             }
@@ -465,7 +493,7 @@ namespace MediaTekDocuments.view
                 case "Id":
                     sortedList = lesLivres.OrderBy(o => o.Id).ToList();
                     break;
-                case "Titre":
+                case TITRE:
                     sortedList = lesLivres.OrderBy(o => o.Titre).ToList();
                     break;
                 case "Collection":
@@ -565,7 +593,7 @@ namespace MediaTekDocuments.view
 
                 DialogResult result = MessageBox.Show(
                 $"Voulez-vous supprimer {livre.Titre} ?",
-                "Confirmation",
+                CONFIRMATION,
                 MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
@@ -618,20 +646,20 @@ namespace MediaTekDocuments.view
             if (txbLivresNumero.Text.Equals("") ||
         txbLivresTitre.Text.Equals(""))
             {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                MessageBox.Show("Numéro et titre obligatoires !", MSG_ERREUR);
                 return;
             }
 
             if (genre == null || lePublic == null || rayon == null)
             {
                 MessageBox.Show("Genre, Public et Rayon obligatoires !",
-                                "Erreur");
+                                MSG_ERREUR);
                 return;
             }
 
             if (!txbLivresNumero.Text.All(char.IsDigit))
             {
-                MessageBox.Show("Le numéro ne doit contenir que des chiffres !", "Erreur");
+                MessageBox.Show("Le numéro ne doit contenir que des chiffres !", MSG_ERREUR);
                 return;
             }
 
@@ -672,7 +700,7 @@ txbLivresAuteur.Text,
                 else
                 {
                     MessageBox.Show("Erreur lors de la modification !",
-                                    "Erreur");
+                                    MSG_ERREUR);
                 }
             }
             else
@@ -684,7 +712,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Le numéro {txbLivresNumero.Text} existe déjà !",
-                        "Erreur");
+                        MSG_ERREUR);
                     return;
                 }
 
@@ -697,7 +725,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                    MessageBox.Show("Erreur lors de l'ajout !", MSG_ERREUR);
                 }
             }
 
@@ -761,7 +789,7 @@ txbLivresAuteur.Text,
             dgvDvdListe.Columns["synopsis"].Visible = false;
             dgvDvdListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvDvdListe.Columns["id"].DisplayIndex = 0;
-            dgvDvdListe.Columns["titre"].DisplayIndex = 1;
+            dgvDvdListe.Columns[TITRE].DisplayIndex = 1;
         }
 
         /// <summary>
@@ -817,7 +845,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("numéro introuvable");
+                    MessageBox.Show(NUMERO_INTROUVABLE);
                     RemplirDvdListeComplete();
                 }
             }
@@ -1089,7 +1117,7 @@ txbLivresAuteur.Text,
 
                 DialogResult result = MessageBox.Show(
                 $"Voulez-vous supprimer {dvd.Titre} ?",
-                "Confirmation",
+                CONFIRMATION,
                 MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
@@ -1164,14 +1192,14 @@ txbLivresAuteur.Text,
 
             if (txbDvdNumero.Text.Equals("") || txbDvdTitre.Text.Equals(""))
             {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                MessageBox.Show("Numéro et titre obligatoires !", MSG_ERREUR);
                 return;
             }
 
             if (genre == null || lePublic == null || rayon == null)
             {
                 MessageBox.Show("Genre, Public et Rayon obligatoires !",
-                                "Erreur");
+                                MSG_ERREUR);
                 return;
             }
 
@@ -1181,7 +1209,7 @@ txbLivresAuteur.Text,
 
             if (!int.TryParse(txbDvdDuree.Text, out int duree))
             {
-                MessageBox.Show("La durée doit être un nombre !", "Erreur");
+                MessageBox.Show("La durée doit être un nombre !", MSG_ERREUR);
                 return;
             }
 
@@ -1221,7 +1249,7 @@ txbLivresAuteur.Text,
                 else
                 {
                     MessageBox.Show("Erreur lors de la modification !",
-                                    "Erreur");
+                                    MSG_ERREUR);
                 }
             }
             else
@@ -1232,7 +1260,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Le numéro {txbDvdNumero.Text} existe déjà !",
-                        "Erreur");
+                        MSG_ERREUR);
                     return;
                 }
 
@@ -1245,7 +1273,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                    MessageBox.Show("Erreur lors de l'ajout !", MSG_ERREUR);
                 }
             }
 
@@ -1284,7 +1312,7 @@ txbLivresAuteur.Text,
                 case "Id":
                     sortedList = lesDvd.OrderBy(o => o.Id).ToList();
                     break;
-                case "Titre":
+                case TITRE:
                     sortedList = lesDvd.OrderBy(o => o.Titre).ToList();
                     break;
                 case "Duree":
@@ -1390,7 +1418,7 @@ txbLivresAuteur.Text,
             dgvRevuesListe.Columns["image"].Visible = false;
             dgvRevuesListe.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
             dgvRevuesListe.Columns["id"].DisplayIndex = 0;
-            dgvRevuesListe.Columns["titre"].DisplayIndex = 1;
+            dgvRevuesListe.Columns[TITRE].DisplayIndex = 1;
         }
 
         /// <summary>
@@ -1415,7 +1443,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("numéro introuvable");
+                    MessageBox.Show(NUMERO_INTROUVABLE);
                     RemplirRevuesListeComplete();
                 }
             }
@@ -1703,7 +1731,7 @@ txbLivresAuteur.Text,
                 // result = DialogResult.No   si l'utilisateur clique Non
                 DialogResult result = MessageBox.Show(
                     $"Voulez-vous supprimer {revue.Titre} ?",
-                    "Confirmation",
+                    CONFIRMATION,
                     MessageBoxButtons.YesNo);
 
                 if (result == DialogResult.Yes)
@@ -1755,14 +1783,14 @@ txbLivresAuteur.Text,
             if (txbRevuesNumero.Text.Equals("") ||
                 txbRevuesTitre.Text.Equals(""))
             {
-                MessageBox.Show("Numéro et titre obligatoires !", "Erreur");
+                MessageBox.Show("Numéro et titre obligatoires !", MSG_ERREUR);
                 return;
             }
 
             // 2. Vérification combos obligatoires
             if (genre == null || lePublic == null || rayon == null)
             {
-                MessageBox.Show("Genre, Public et Rayon obligatoires !", "Erreur");
+                MessageBox.Show("Genre, Public et Rayon obligatoires !", MSG_ERREUR);
                 return;
             }
 
@@ -1771,14 +1799,14 @@ txbLivresAuteur.Text,
             // et l'utilisateur peut saisir n'importe quoi
             if (!int.TryParse(txbRevuesDateMiseADispo.Text, out int delaiMiseADispo))
             {
-                MessageBox.Show("Le délai de mise à disposition doit être un nombre !", "Erreur");
+                MessageBox.Show("Le délai de mise à disposition doit être un nombre !", MSG_ERREUR);
                 return;
             }
 
             // on converti d'abord en int
             if (!int.TryParse(txbRevuesNumero.Text, out int idInt))
             {
-                MessageBox.Show("Le numéro doit être numérique.", "Erreur");
+                MessageBox.Show("Le numéro doit être numérique.", MSG_ERREUR);
                 return;
             }
             String idConvertiString = idInt.ToString("D5");
@@ -1818,7 +1846,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("Erreur lors de la modification !", "Erreur");
+                    MessageBox.Show("Erreur lors de la modification !", MSG_ERREUR);
                 }
             }
             else
@@ -1830,7 +1858,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Le numéro {txbRevuesNumero.Text} existe déjà !",
-                        "Erreur");
+                        MSG_ERREUR);
                     return;
                 }
 
@@ -1843,7 +1871,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("Erreur lors de l'ajout !", "Erreur");
+                    MessageBox.Show("Erreur lors de l'ajout !", MSG_ERREUR);
                 }
             }
         }
@@ -1880,7 +1908,7 @@ txbLivresAuteur.Text,
                 case "Id":
                     sortedList = lesRevues.OrderBy(o => o.Id).ToList();
                     break;
-                case "Titre":
+                case TITRE:
                     sortedList = lesRevues.OrderBy(o => o.Titre).ToList();
                     break;
                 case "Periodicite":
@@ -1957,7 +1985,7 @@ txbLivresAuteur.Text,
                 }
                 else
                 {
-                    MessageBox.Show("numéro introuvable");
+                    MessageBox.Show(NUMERO_INTROUVABLE);
                 }
             }
         }
@@ -2087,19 +2115,19 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("numéro de publication déjà existant", "Erreur");
+                        MessageBox.Show("numéro de publication déjà existant", MSG_ERREUR);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("le numéro de parution doit être numérique", "Information");
+                    MessageBox.Show("le numéro de parution doit être numérique", MSG_INFO);
                     txbReceptionExemplaireNumero.Text = "";
                     txbReceptionExemplaireNumero.Focus();
                 }
             }
             else
             {
-                MessageBox.Show("numéro de parution obligatoire", "Information");
+                MessageBox.Show("numéro de parution obligatoire", MSG_INFO);
             }
         }
 
@@ -2164,11 +2192,10 @@ txbLivresAuteur.Text,
         private List<Livre> lesLivresCommandes = new List<Livre>();
         private List<Suivi> lesSuivis = new List<Suivi>();
         private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
-        private List<CommandeDocument> toutesCommandeslivres = new List<CommandeDocument>();
         private bool chargementCommandesLivres = false;
 
 
-        //utilise pour le combobox des livres : bdgLivresCommandesCombo = new BindingSource();
+        // on utilise pour le combobox des livres : bdgLivresCommandesCombo
         // utilise pour le datagridview of bookorders bdgCommandesLivresListe
 
         /// <summary>
@@ -2260,7 +2287,7 @@ txbLivresAuteur.Text,
                 dgvListeLivreCommandes.DataSource = null;
             }
         }
-        
+
         /// <summary>
         /// Récupère et affiche les commandes d'un livre
         /// </summary>
@@ -2328,7 +2355,7 @@ txbLivresAuteur.Text,
 
             // On relie le ComboBox à la BindingSource
             cbxTitreLivreCommandes.DataSource = bdgLivresCommandesCombo;
-            cbxTitreLivreCommandes.DisplayMember = "Titre";
+            cbxTitreLivreCommandes.DisplayMember = TITRE;
             cbxTitreLivreCommandes.SelectedIndex = -1;
             // charge les etapes 
             lesSuivis = controller.GetAllSuivis();
@@ -2397,12 +2424,12 @@ txbLivresAuteur.Text,
                     DateTime dateCommande = dtpNouvelleLivreCommandes.Value;
                     if (!double.TryParse(txtboxMontantLivresCommandes.Text, out double montant))
                     {
-                        MessageBox.Show("Le montant doit être un nombre valide.", "Erreur");
+                        MessageBox.Show("Le montant doit être un nombre valide.", MSG_ERREUR);
                         return;
                     }
                     if (!int.TryParse(txtboxQuantiteLivresCommandes.Text, out int nbExemplaire))
                     {
-                        MessageBox.Show("La quantité doit être un nombre valide.", "Erreur");
+                        MessageBox.Show("La quantité doit être un nombre valide.", MSG_ERREUR);
                         return;
                     }
 
@@ -2416,7 +2443,7 @@ txbLivresAuteur.Text,
 
                     string id = toutesCommandes.Count > 0
                 ? (toutesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
-                : "00001";
+                : ETATNEUF;
 
                     CommandeDocument commandedoc = new CommandeDocument(
                         id,
@@ -2432,17 +2459,17 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                        MessageBox.Show(MSG_ERRCOMMANDE, MSG_ERREUR);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Montant et quantité doivent être numériques", "Information");
+                    MessageBox.Show("Montant et quantité doivent être numériques", MSG_INFO);
                 }
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner un livre !", "Information");
+                MessageBox.Show("Veuillez sélectionner un livre !", MSG_INFO);
             }
         }
 
@@ -2452,7 +2479,7 @@ txbLivresAuteur.Text,
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesLivresListe.Position < 0)
             {
-                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                MessageBox.Show(SELECTION_COMMANDE, MSG_INFO);
                 return;
             }
 
@@ -2464,16 +2491,16 @@ txbLivresAuteur.Text,
 
             if (commandesLivres == null)
             {
-                MessageBox.Show("Aucune commande sélectionnée.", "Information");
+                MessageBox.Show("Aucune commande sélectionnée.", MSG_INFO);
                 return;
             }
 
             // impossible de supprimer une commande deja livree
-            if (commandesLivres.IdSuivi == "10002")
+            if (commandesLivres.IdSuivi == NUM_SUIVI)
             {
                 MessageBox.Show(
                     "Impossible de supprimer une commande déjà livrée.",
-                    "Erreur",
+                    MSG_ERREUR,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
@@ -2482,7 +2509,7 @@ txbLivresAuteur.Text,
             // Demande de confirmation
             DialogResult result = MessageBox.Show(
                 $"Voulez-vous supprimer la commande {commandesLivres.Id} ?",
-                "Confirmation",
+                CONFIRMATION,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -2507,7 +2534,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Erreur lors de la suppression de la commande {commandesLivres.Id}.",
-                        "Erreur",
+                        MSG_ERREUR,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -2516,15 +2543,13 @@ txbLivresAuteur.Text,
 
         private void btnModifierLivresCommandes_Click(object sender, EventArgs e)
         {
-            string en_cours = "10000";
-            string relancee = "10001";
-            string livree = "10002";
+            string livree = NUM_SUIVI;
             string reglee = "10003";
 
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesLivresListe.Position < 0)
             {
-                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                MessageBox.Show(SELECTION_COMMANDE, MSG_INFO);
                 return;
             }
 
@@ -2546,7 +2571,7 @@ txbLivresAuteur.Text,
                 {
                     if (int.Parse(nouveauIdSuivi) == int.Parse(reglee) && int.Parse(ancienIdSuivi) != int.Parse(livree))
                     {
-                        MessageBox.Show("Une commande ne peut pas être réglée si elle n'est pas livrée. ", "Erreur");
+                        MessageBox.Show("Une commande ne peut pas être réglée si elle n'est pas livrée. ", MSG_ERREUR);
                         return;
                     }
 
@@ -2566,13 +2591,13 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                        MessageBox.Show(MSG_ERRCOMMANDE, MSG_ERREUR);
 
                     }
                 }
                 else
                 {
-                    MessageBox.Show("une commande ne peut pas revenir à une étape précédente", "Erreur");
+                    MessageBox.Show("une commande ne peut pas revenir à une étape précédente", MSG_ERREUR);
 
 
                 }
@@ -2590,11 +2615,9 @@ txbLivresAuteur.Text,
 
         #region Onglet Commandes Dvd
         private readonly BindingSource bdgCommandesDvdListe = new BindingSource();
-        private readonly BindingSource bdgSuivisDvdListe = new BindingSource();
         private readonly BindingSource bdgDvdCommandesCombo = new BindingSource();
         private List<Dvd> lesDvdCommandes = new List<Dvd>();
         private List<CommandeDocument> lesCommandesDvd = new List<CommandeDocument>();
-        private List<CommandeDocument> toutesCommandesdvd = new List<CommandeDocument>();
         private bool chargementCommandesDvd = false;
 
         //bdgCommandesDvdListe : pour le datagridview des commandes
@@ -2643,7 +2666,6 @@ txbLivresAuteur.Text,
             cbxRayonDvdCommandes.Text = "";
             txtTitreDvdCommandes.Text = "";
             txtIdDvdCommandes.Text = "";
-            string image = "";
             pcbImageDvdCommandes.Image = null;
             bdgCommandesDvdListe.DataSource = null;
             dgvListeDvdCommandes.DataSource = null;
@@ -2759,7 +2781,7 @@ txbLivresAuteur.Text,
 
             // On relie le ComboBox à la BindingSource
             cbxTitreDvdCommandes.DataSource = bdgDvdCommandesCombo;
-            cbxTitreDvdCommandes.DisplayMember = "Titre";
+            cbxTitreDvdCommandes.DisplayMember = TITRE;
             cbxTitreDvdCommandes.SelectedIndex = -1;
             // charge les etapes 
             lesSuivis = controller.GetAllSuivis();
@@ -2831,12 +2853,12 @@ txbLivresAuteur.Text,
                     DateTime dateCommande = dtpNouvelleDvdCommandes.Value;
                     if (!double.TryParse(txtboxMontantDvdCommandes.Text, out double montant))
                     {
-                        MessageBox.Show("Le montant doit être un nombre valide.", "Erreur");
+                        MessageBox.Show("Le montant doit être un nombre valide.", MSG_ERREUR);
                         return;
                     }
                     if (!int.TryParse(txtboxQuantiteDvdCommandes.Text, out int nbExemplaire))
                     {
-                        MessageBox.Show("La quantité doit être un nombre valide.", "Erreur");
+                        MessageBox.Show("La quantité doit être un nombre valide.", MSG_ERREUR);
                         return;
                     }
 
@@ -2850,7 +2872,7 @@ txbLivresAuteur.Text,
 
                     string id = toutesCommandes.Count > 0
                 ? (toutesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
-                : "00001";
+                : ETATNEUF;
 
                     CommandeDocument commandedoc = new CommandeDocument(
                         id,
@@ -2866,17 +2888,17 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                        MessageBox.Show(MSG_ERRCOMMANDE, MSG_ERREUR);
                     }
                 }
                 catch
                 {
-                    MessageBox.Show("Montant et quantité doivent être numériques", "Information");
+                    MessageBox.Show("Montant et quantité doivent être numériques", MSG_INFO);
                 }
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner un dvd !", "Information");
+                MessageBox.Show("Veuillez sélectionner un dvd !", MSG_INFO);
             }
         }
 
@@ -2886,7 +2908,7 @@ txbLivresAuteur.Text,
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesDvdListe.Position < 0)
             {
-                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                MessageBox.Show(SELECTION_COMMANDE, MSG_INFO);
                 return;
             }
 
@@ -2898,16 +2920,16 @@ txbLivresAuteur.Text,
 
             if (commandesDvd == null)
             {
-                MessageBox.Show("Aucune commande sélectionnée.", "Information");
+                MessageBox.Show("Aucune commande sélectionnée.", MSG_INFO);
                 return;
             }
 
             // impossible de supprimer une commande deja livree
-            if (commandesDvd.IdSuivi == "10002")
+            if (commandesDvd.IdSuivi == NUM_SUIVI)
             {
                 MessageBox.Show(
                     "Impossible de supprimer une commande déjà livrée.",
-                    "Erreur",
+                    MSG_ERREUR,
                     MessageBoxButtons.OK,
                     MessageBoxIcon.Error);
                 return;
@@ -2916,7 +2938,7 @@ txbLivresAuteur.Text,
             // Demande de confirmation
             DialogResult result = MessageBox.Show(
                 $"Voulez-vous supprimer la commande {commandesDvd.Id} ?",
-                "Confirmation",
+                CONFIRMATION,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -2925,7 +2947,7 @@ txbLivresAuteur.Text,
 
 
                 // supprimer dans commande (table mère)
-               bool suppression = controller.SupprimerCommande(commandesDvd.Id);
+                bool suppression = controller.SupprimerCommande(commandesDvd.Id);
 
                 if (suppression)
                 {
@@ -2941,7 +2963,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Erreur lors de la suppression de la commande {commandesDvd.Id}.",
-                        "Erreur",
+                        MSG_ERREUR,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }
@@ -2950,15 +2972,14 @@ txbLivresAuteur.Text,
 
         private void btnModifierDvdCommandes_Click(object sender, EventArgs e)
         {
-            string en_cours = "10000";
-            string relancee = "10001";
-            string livree = "10002";
+
+            string livree = NUM_SUIVI;
             string reglee = "10003";
 
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesDvdListe.Position < 0)
             {
-                MessageBox.Show("Veuillez sélectionner une commande.", "Information");
+                MessageBox.Show(SELECTION_COMMANDE, MSG_INFO);
                 return;
             }
 
@@ -2980,7 +3001,7 @@ txbLivresAuteur.Text,
                 {
                     if (int.Parse(nouveauIdSuivi) == int.Parse(reglee) && int.Parse(ancienIdSuivi) != int.Parse(livree))
                     {
-                        MessageBox.Show("Une commande ne peut pas être réglée si elle n'est pas livrée. ", "Erreur");
+                        MessageBox.Show("Une commande ne peut pas être réglée si elle n'est pas livrée. ", MSG_ERREUR);
                         return;
                     }
 
@@ -3000,13 +3021,13 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("Erreur dans la création de la commande", "Erreur");
+                        MessageBox.Show(MSG_ERRCOMMANDE, MSG_ERREUR);
 
                     }
                 }
                 else
                 {
-                    MessageBox.Show("une commande ne peut pas revenir à une étape précédente", "Erreur");
+                    MessageBox.Show("une commande ne peut pas revenir à une étape précédente", MSG_ERREUR);
 
 
                 }
@@ -3024,7 +3045,6 @@ txbLivresAuteur.Text,
         private readonly BindingSource bdgCommandesRevuesCombobox = new BindingSource();
         private List<Revue> lesRevuesCommandes = new List<Revue>();
         private List<Abonnement> lesAbonnements = new List<Abonnement>();
-        private List<Exemplaire> lesCommandesRevuesExemplaires = new List<Exemplaire>();
         private bool chargementCommandesRevues = false;
 
 
@@ -3059,7 +3079,7 @@ txbLivresAuteur.Text,
             // On relie le ComboBox à la BindingSource
 
             cbxTitreRevuesCommande.DataSource = bdgCommandesRevuesCombobox;
-            cbxTitreRevuesCommande.DisplayMember = "Titre";
+            cbxTitreRevuesCommande.DisplayMember = TITRE;
             cbxTitreRevuesCommande.SelectedIndex = -1;
 
 
@@ -3074,7 +3094,7 @@ txbLivresAuteur.Text,
             txtPeriodiciteRevuesCommandes.Text = "";
             txtDelaiRevuesCommandes.Text = "";
             txtIdRevuesCommandes.Text = "";
-            txtGenreRevuesCommandes.Text ="";
+            txtGenreRevuesCommandes.Text = "";
             txtPublicRevuesCommandes.Text = "";
             txtRayonRevuesCommandes.Text = "";
             txtTitreRevuesCommandes.Text = "";
@@ -3118,7 +3138,7 @@ txbLivresAuteur.Text,
 
         private void RemplirAbonnementsRevuesListe(List<Abonnement> lesAbonnements)
         {
-            
+
             if (lesAbonnements != null)
             {
                 dgvListeRevuesAbo.AutoGenerateColumns = false;
@@ -3151,7 +3171,7 @@ txbLivresAuteur.Text,
             //recupere les lignes d'abonnement pour cette revue
             List<Abonnement> abonnements = controller.GetAbonnements(idRevue);
 
-            
+
 
             // tous les abonnements de la table abonnement
             List<Abonnement> tousLesAbonnementsDeLaRevue = new List<Abonnement>();
@@ -3176,7 +3196,7 @@ txbLivresAuteur.Text,
                     );
 
                     tousLesAbonnementsDeLaRevue.Add(nouvelAbo);
-                 
+
                 }
             }
 
@@ -3195,7 +3215,7 @@ txbLivresAuteur.Text,
         {
             if (chargementCommandesRevues) return;
 
-          
+
 
             if (cbxTitreRevuesCommande.SelectedIndex >= 0)
             {
@@ -3207,7 +3227,7 @@ txbLivresAuteur.Text,
                 if (revue != null)
                 {
                     AfficheCommandeRevuesInfos(revue);
-                    
+
 
 
                 }
@@ -3228,7 +3248,7 @@ txbLivresAuteur.Text,
         /// <param name="e"></param>
         /// 
 
-       
+
 
         private void btnEnregistrerRevuesAbo_Click(object sender, EventArgs e)
         {
@@ -3247,22 +3267,22 @@ txbLivresAuteur.Text,
                     DateTime dateFin = dtpDateFinNouvelAboRevues.Value;
                     if (!double.TryParse(txtboxMontantRevuesAbo.Text, out double montant))
                     {
-                        MessageBox.Show("Le montant doit être un nombre valide.", "Erreur");
+                        MessageBox.Show("Le montant doit être un nombre valide.", MSG_ERREUR);
                         return;
                     }
 
                     if (dateFin <= dateCommande)
                     {
-                        MessageBox.Show("La date de fin d'abonnement doit être postérieure à la date de commande.", "Erreur");
+                        MessageBox.Show("La date de fin d'abonnement doit être postérieure à la date de commande.", MSG_ERREUR);
                         return;
                     }
 
                     // Generer un nouvel id
 
                     string idAbo = toutesLesCommandes.Count > 0 ? (toutesLesCommandes.Max(x => int.Parse(x.Id)) + 1).ToString("D5")
-                : "00001";
+                : ETATNEUF;
 
-                    
+
                     // Creer un nouvel objet Abonnement
                     Abonnement nouvelAbonnement = new Abonnement(
         idAbo,
@@ -3271,7 +3291,7 @@ txbLivresAuteur.Text,
         dateCommande,
         montant);
 
-                   
+
 
                     // Appeller le controlleur
                     if (controller.CreerAbonnement(nouvelAbonnement))
@@ -3280,21 +3300,21 @@ txbLivresAuteur.Text,
                     }
                     else
                     {
-                        MessageBox.Show("Erreur dans la création de l'abonnement", "Erreur");
+                        MessageBox.Show("Erreur dans la création de l'abonnement", MSG_ERREUR);
                     }
 
 
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message, "Erreur");
+                    MessageBox.Show(ex.Message, MSG_ERREUR);
 
                 }
 
             }
             else
             {
-                MessageBox.Show("Veuillez sélectionner une revue", "Information");
+                MessageBox.Show("Veuillez sélectionner une revue", MSG_INFO);
             }
 
 
@@ -3304,7 +3324,7 @@ txbLivresAuteur.Text,
         /// Retourne vrai si la date de parution de l'exemplaire est entre les 2 autres dates
         /// </summary>
 
-        private bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
+        private static bool ParutionDansAbonnement(DateTime dateCommande, DateTime dateFinAbonnement, DateTime dateParution)
         {
             return dateParution >= dateCommande && dateParution <= dateFinAbonnement;
         }
@@ -3314,7 +3334,7 @@ txbLivresAuteur.Text,
             // on verifie qu'un abonnement est selectionnee 
             if (bdgCommandesRevuesDatagrid.Position < 0)
             {
-                MessageBox.Show("Veuillez sélectionner un abonnement.", "Information");
+                MessageBox.Show("Veuillez sélectionner un abonnement.", MSG_INFO);
                 return;
             }
 
@@ -3326,30 +3346,30 @@ txbLivresAuteur.Text,
 
             if (abonnementRevues == null)
             {
-                MessageBox.Show("Aucun abonnement sélectionné.", "Information");
+                MessageBox.Show("Aucun abonnement sélectionné.", MSG_INFO);
                 return;
             }
 
             // impossible de supprimer un abonnement ayant des exemplaires
             List<Exemplaire> exemplairesDeRevue = controller.GetExemplairesRevue(abonnementRevues.IdRevue);
-            
+
             DateTime dateCommande = abonnementRevues.DateCommande;
             DateTime dateFin = abonnementRevues.DateFinAbonnement;
             foreach (Exemplaire exempl in exemplairesDeRevue)
             {
                 if (ParutionDansAbonnement(dateCommande, dateFin, exempl.DateAchat))
                 {
-                    MessageBox.Show("Des exemplaires sont  rattachés à cet abonnement. Impossible de le supprimer. ", "Erreur");
+                    MessageBox.Show("Des exemplaires sont  rattachés à cet abonnement. Impossible de le supprimer. ", MSG_ERREUR);
                     return;
                 }
-               
-                  
+
+
             }
 
             // Demande de confirmation
             DialogResult result = MessageBox.Show(
                 $"Voulez-vous supprimer l'abonnement {abonnementRevues.Id} ?",
-                "Confirmation",
+                CONFIRMATION,
                 MessageBoxButtons.YesNo,
                 MessageBoxIcon.Warning);
 
@@ -3374,7 +3394,7 @@ txbLivresAuteur.Text,
                 {
                     MessageBox.Show(
                         $"Erreur lors de la suppression de l'abonnement {abonnementRevues.Id}.",
-                        "Erreur",
+                        MSG_ERREUR,
                         MessageBoxButtons.OK,
                         MessageBoxIcon.Error);
                 }

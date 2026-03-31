@@ -19,8 +19,8 @@ namespace MediaTekDocuments.view
 {
     public partial class FormulaireAlerte : Form
     {
-        private List<Abonnement> abonnementsExpirants;
-        private List<Revue> lesRevues;
+        private readonly List<Abonnement> abonnementsExpirants;
+        private readonly List<Revue> lesRevues;
 
 
         /// <summary>

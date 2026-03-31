@@ -293,6 +293,7 @@ namespace MediaTekDocuments.view
             this.colMontantAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colFinAbo = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpNouvelAboRevues = new System.Windows.Forms.GroupBox();
+            this.btnSupprimerRevuesAbo = new System.Windows.Forms.Button();
             this.dtpDateFinNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
             this.label70 = new System.Windows.Forms.Label();
             this.dtpDateCommandeNouvelAboRevues = new System.Windows.Forms.DateTimePicker();
@@ -320,7 +321,6 @@ namespace MediaTekDocuments.view
             this.labelDelaiRevuesCommandes = new System.Windows.Forms.Label();
             this.cbxTitreRevuesCommande = new System.Windows.Forms.ComboBox();
             this.labelSelectionRevueCommandes = new System.Windows.Forms.Label();
-            this.btnSupprimerRevuesAbo = new System.Windows.Forms.Button();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -3424,6 +3424,16 @@ namespace MediaTekDocuments.view
             this.grpNouvelAboRevues.TabStop = false;
             this.grpNouvelAboRevues.Text = "Nouvel Abonnement";
             // 
+            // btnSupprimerRevuesAbo
+            // 
+            this.btnSupprimerRevuesAbo.Location = new System.Drawing.Point(540, 135);
+            this.btnSupprimerRevuesAbo.Name = "btnSupprimerRevuesAbo";
+            this.btnSupprimerRevuesAbo.Size = new System.Drawing.Size(97, 41);
+            this.btnSupprimerRevuesAbo.TabIndex = 36;
+            this.btnSupprimerRevuesAbo.Text = "Supprimer";
+            this.btnSupprimerRevuesAbo.UseVisualStyleBackColor = true;
+            this.btnSupprimerRevuesAbo.Click += new System.EventHandler(this.btnSupprimerRevuesAbo_Click);
+            // 
             // dtpDateFinNouvelAboRevues
             // 
             this.dtpDateFinNouvelAboRevues.Format = System.Windows.Forms.DateTimePickerFormat.Short;
@@ -3715,16 +3725,6 @@ namespace MediaTekDocuments.view
             this.labelSelectionRevueCommandes.Size = new System.Drawing.Size(204, 20);
             this.labelSelectionRevueCommandes.TabIndex = 9;
             this.labelSelectionRevueCommandes.Text = "Sélectionner une revue :";
-            // 
-            // btnSupprimerRevuesAbo
-            // 
-            this.btnSupprimerRevuesAbo.Location = new System.Drawing.Point(540, 135);
-            this.btnSupprimerRevuesAbo.Name = "btnSupprimerRevuesAbo";
-            this.btnSupprimerRevuesAbo.Size = new System.Drawing.Size(97, 41);
-            this.btnSupprimerRevuesAbo.TabIndex = 36;
-            this.btnSupprimerRevuesAbo.Text = "Supprimer";
-            this.btnSupprimerRevuesAbo.UseVisualStyleBackColor = true;
-            this.btnSupprimerRevuesAbo.Click += new System.EventHandler(this.btnSupprimerRevuesAbo_Click);
             // 
             // FrmMediatek
             // 
