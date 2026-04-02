@@ -9,8 +9,6 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Linq;
 using Serilog;
 
-
-
 namespace MediaTekDocuments.dal
 {
     /// <summary>
@@ -49,6 +47,46 @@ namespace MediaTekDocuments.dal
         private const string CHAMPS = "champs=";
 
         /// <summary>
+        /// Constante de "commande/"
+        /// </summary>
+        private const string COMMANDE = "commande/";
+
+        /// <summary>
+        /// Constante de "idRayon"
+        /// </summary>
+        private const string IDRAYON = "idRayon";
+
+        /// <summary>
+        /// Constante de "image"
+        /// </summary>
+        private const string IMAGE = "image";
+
+        /// <summary>
+        /// Constante de "titre"
+        /// </summary>
+        private const string TITRE = "titre";
+
+        /// <summary>
+        /// Constante de "idGenre"
+        /// </summary>
+        private const string ID_GENRE = "idGenre";
+
+        /// <summary>
+        /// Constante de "idPublic"
+        /// </summary>
+        private const string ID_PUBLIC = "idPublic";
+
+        /// <summary>
+        /// Constante de "document/"
+        /// </summary>
+        private const string DOCUMENT = "document/";
+
+        /// <summary>
+        /// Constante de "exemplaire/"
+        /// </summary>
+        private const string EXEMPLAIRE = "exemplaire/";
+
+        /// <summary>
         /// Méthode privée pour créer un singleton
         /// initialise l'accès à l'API
         /// </summary>
@@ -73,7 +111,7 @@ namespace MediaTekDocuments.dal
                 authenticationString = $"{login}:{pwd}";
 
                 api = ApiRest.GetInstance(apiUrl, authenticationString);
-                Log.Information("Accès API initialisé avec succès.");
+                Log.Information("Accès API initialisé avec succès. URL API : {ApiUrl}", apiUrl);
             }
             catch (Exception e)
             {
@@ -166,7 +204,6 @@ namespace MediaTekDocuments.dal
             return lesSuivis;
         }
 
-
         /// <summary>
         /// Retourne toutes les commandes à partir de la BDD
         /// </summary>
@@ -176,7 +213,6 @@ namespace MediaTekDocuments.dal
             List<Commande> lesCommandes = TraitementRecup<Commande>(GET, "commande", null);
             return lesCommandes;
         }
-
 
         /// <summary>
         /// Retourne tous les abonnement à partir de la BDD
@@ -188,8 +224,6 @@ namespace MediaTekDocuments.dal
             return lesAbonnements;
         }
 
-
-
         /// <summary>
         /// Retourne les exemplaires d'une revue
         /// </summary>
@@ -197,11 +231,10 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets Exemplaire</returns>
         public List<Exemplaire> GetExemplairesRevue(string idDocument)
         {
-            String jsonIdDocument = convertToJson("id", idDocument);
-            List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdDocument, null);
+            String jsonIdDocument = ConvertToJson("id", idDocument);
+            List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, EXEMPLAIRE + jsonIdDocument, null);
             return lesExemplaires;
         }
-
 
         /// <summary>
         /// Retourne les abonnements d'une revue
@@ -210,7 +243,7 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets Abonnements</returns>
         public List<Abonnement> GetAbonnements(string idRevue)
         {
-            String jsonIdRevue = convertToJson("idRevue", idRevue);
+            String jsonIdRevue = ConvertToJson("idRevue", idRevue);
             List<Abonnement> lesAbonnements = TraitementRecup<Abonnement>(GET, "abonnement/" + jsonIdRevue, null);
             return lesAbonnements;
         }
@@ -222,13 +255,11 @@ namespace MediaTekDocuments.dal
         /// <returns>Liste d'objets CommandeDocument</returns>
         public List<CommandeDocument> GetCommandeDocument(string idLivreDvd)
         {
-            String jsonIdLivre = convertToJson("idLivreDvd", idLivreDvd);
+            String jsonIdLivre = ConvertToJson("idLivreDvd", idLivreDvd);
             List<CommandeDocument> lesCommandesLives = TraitementRecup<CommandeDocument>
                 (GET, "commandedocument/" + jsonIdLivre, null);
             return lesCommandesLives;
         }
-
-
 
         /// <summary>
         /// Retourne un utilisateur de la BDD selon son login et son mot de passe 
@@ -238,7 +269,7 @@ namespace MediaTekDocuments.dal
         /// <returns>L'objet utilisateur sinon null</returns>
         public Utilisateur GetUtilisateur(string login, string pwd)
         {
-            String jsonLogin = convertToJson("login", login);
+            String jsonLogin = ConvertToJson("login", login);
             List<Utilisateur> lesUtilisateurs = TraitementRecup<Utilisateur>(GET, "utilisateur/" + jsonLogin, null);
             return lesUtilisateurs.Find(u => u.Login == login && u.Pwd == pwd);
         }
@@ -277,11 +308,11 @@ namespace MediaTekDocuments.dal
             {
                 // 1. Insérer dans commande
                 var infoCommande = new Dictionary<string, Object>
-        {
-            {"id", commandedoc.Id},
-            {"dateCommande", commandedoc.DateCommande},
-            {"montant", commandedoc.Montant}
-        };
+                {
+                    {"id", commandedoc.Id},
+                    {"dateCommande", commandedoc.DateCommande},
+                    {"montant", commandedoc.Montant}
+                };
                 String jsonCommande = JsonConvert.SerializeObject(
                     infoCommande, new CustomDateTimeConverter());
                 List<CommandeDocument> liste1 = TraitementRecup<CommandeDocument>
@@ -289,12 +320,12 @@ namespace MediaTekDocuments.dal
 
                 // 2. Insérer dans commandedocument
                 var infoCommandeDoc = new Dictionary<string, Object>
-        {
-            {"id", commandedoc.Id},
-            {"nbExemplaire", commandedoc.NbExemplaire},
-            {"idLivreDvd", commandedoc.IdLivreDvd},
-            {"idSuivi", commandedoc.IdSuivi}
-        };
+                {
+                    {"id", commandedoc.Id},
+                    {"nbExemplaire", commandedoc.NbExemplaire},
+                    {"idLivreDvd", commandedoc.IdLivreDvd},
+                    {"idSuivi", commandedoc.IdSuivi}
+                };
                 String jsonCommandeDoc = JsonConvert.SerializeObject(infoCommandeDoc);
                 List<CommandeDocument> liste2 = TraitementRecup<CommandeDocument>
                     (POST, "commandedocument", CHAMPS + jsonCommandeDoc);
@@ -303,8 +334,6 @@ namespace MediaTekDocuments.dal
             }
             catch (Exception ex)
             {
-
-
                 Log.Error(ex, "Access.CreerCommande : Erreur de création pour l'ID {Id}", commandedoc.Id);
             }
             return false;
@@ -317,18 +346,17 @@ namespace MediaTekDocuments.dal
         /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
         public bool CreerLivre(Livre livre)
         {
-
             try
             {
                 var infoDocument = new Dictionary<string, Object>
-           {
-             {"id",livre.Id },
-            {"titre",livre.Titre },
-            {"image",livre.Image },
-            {"idGenre",livre.IdGenre },
-            {"idPublic",livre.IdPublic },
-            {"idRayon",livre.IdRayon },
-           };
+                {
+                    {"id",livre.Id },
+                    {TITRE,livre.Titre },
+                    {IMAGE,livre.Image },
+                    {ID_GENRE,livre.IdGenre },
+                    {ID_PUBLIC,livre.IdPublic },
+                    {IDRAYON,livre.IdRayon },
+                };
 
                 // Insértion dans document d'abord
                 // on utilise pas CustomDateTimeConverter() car un livre ne contient PAS de date !
@@ -336,21 +364,18 @@ namespace MediaTekDocuments.dal
                 List<Livre> liste1 = TraitementRecup<Livre>(POST, "document", CHAMPS + jsonDocument);
 
                 // Insértion dans livres_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
-                String jsonLivreDvd = convertToJson("id", livre.Id);
+                String jsonLivreDvd = ConvertToJson("id", livre.Id);
                 List<Livre> liste2 = TraitementRecup<Livre>(POST, "livres_dvd", CHAMPS + jsonLivreDvd);
 
                 // Insértion dans livre
-
                 var infoLivre = new Dictionary<string, Object> {
                     {"id",livre.Id},
                     {"isbn",livre.Isbn },
-            {"auteur",livre.Auteur },
-            {"collection",livre.Collection }
-
+                    {"auteur",livre.Auteur },
+                    {"collection",livre.Collection }
                 };
                 String jsonLivre = JsonConvert.SerializeObject(infoLivre);
                 List<Livre> liste3 = TraitementRecup<Livre>(POST, "livre", CHAMPS + jsonLivre);
-
 
                 return (liste1 != null && liste2 != null && liste3 != null);
             }
@@ -368,39 +393,33 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la modification a pu se faire (retour != null)</returns>
         public bool ModifierLivre(Livre livre)
         {
-
-
             try
             {
                 // Modification dans document
                 var infoDocument = new Dictionary<string, Object>
-           {
-
-            {"titre",livre.Titre },
-            {"image",livre.Image },
-            {"idGenre",livre.IdGenre },
-            {"idPublic",livre.IdPublic },
-            {"idRayon",livre.IdRayon },
-           };
+                {
+                    {TITRE,livre.Titre },
+                    {IMAGE,livre.Image },
+                    {ID_GENRE,livre.IdGenre },
+                    {ID_PUBLIC,livre.IdPublic },
+                    {IDRAYON,livre.IdRayon },
+                };
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
-                List<Livre> liste1 = TraitementRecup<Livre>(PUT, "document/" + livre.Id, CHAMPS + jsonDocument);
+                List<Livre> liste1 = TraitementRecup<Livre>(PUT, DOCUMENT + livre.Id, CHAMPS + jsonDocument);
                 // Modification dans livres_dvd
                 // Modification dans livre
                 var infoLivre = new Dictionary<string, Object> {
                     {"isbn",livre.Isbn },
-            {"auteur",livre.Auteur },
-            {"collection",livre.Collection }
-
+                    {"auteur",livre.Auteur },
+                    {"collection",livre.Collection }
                 };
                 String jsonLivre = JsonConvert.SerializeObject(infoLivre);
                 List<Livre> liste2 = TraitementRecup<Livre>(PUT, "livre/" + livre.Id, CHAMPS + jsonLivre);
-
 
                 return (liste1 != null && liste2 != null);
             }
             catch (Exception ex)
             {
-
                 Log.Error(ex, "Access.ModifierLivre : Erreur de modification pour l'ID {Id}", livre.Id);
             }
             return false;
@@ -413,16 +432,14 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la suppression a pu se faire</returns>
         public bool SupprimerLivre(Livre livre)
         {
-
             try
             {
                 // On verifie les exemplaires
                 // GET exemplaire avec id = livre.Id
                 // Si liste non vide → return false
 
-                String jsonIdLivre = convertToJson("id", livre.Id);
-                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdLivre, null);
-
+                String jsonIdLivre = ConvertToJson("id", livre.Id);
+                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, EXEMPLAIRE + jsonIdLivre, null);
 
                 if (lesExemplaires != null && lesExemplaires.Count > 0)
                 {
@@ -434,7 +451,7 @@ namespace MediaTekDocuments.dal
                 // Si liste non vide → return false
 
                 List<Commande> lesCommandes = TraitementRecup<Commande>
-                (GET, "commande/" + jsonIdLivre, null);
+                (GET, COMMANDE + jsonIdLivre, null);
 
                 if (lesCommandes != null && lesCommandes.Count > 0)
                 {
@@ -442,7 +459,6 @@ namespace MediaTekDocuments.dal
                 }
 
                 // Suppression dans livre , on commence par les enfants puis les parents
-
                 List<Livre> liste1 = TraitementRecup<Livre>
                     (DELETE, "livre/" + jsonIdLivre, null);
 
@@ -453,7 +469,7 @@ namespace MediaTekDocuments.dal
                 // Suppression dans document
                 // Suppression dans livres_dvd
                 List<Livre> liste3 = TraitementRecup<Livre>
-                   (DELETE, "document/" + jsonIdLivre, null);
+                   (DELETE, DOCUMENT + jsonIdLivre, null);
 
                 return (liste1 != null && liste2 != null && liste3 != null);
             }
@@ -471,18 +487,17 @@ namespace MediaTekDocuments.dal
         /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
         public bool CreerDvd(Dvd dvd)
         {
-
             try
             {
                 var infoDocument = new Dictionary<string, Object>
-       {
-         {"id",dvd.Id },
-        {"titre",dvd.Titre },
-        {"image",dvd.Image },
-        {"idGenre",dvd.IdGenre },
-        {"idPublic",dvd.IdPublic },
-        {"idRayon", dvd.IdRayon },
-       };
+                {
+                    {"id",dvd.Id },
+                    {TITRE,dvd.Titre },
+                    {IMAGE,dvd.Image },
+                    {ID_GENRE,dvd.IdGenre },
+                    {ID_PUBLIC,dvd.IdPublic },
+                    {IDRAYON, dvd.IdRayon },
+                };
 
                 // Insértion dans document d'abord
                 // on utilise pas CustomDateTimeConverter() car un dvd ne contient PAS de date !
@@ -490,21 +505,18 @@ namespace MediaTekDocuments.dal
                 List<Dvd> liste1 = TraitementRecup<Dvd>(POST, "document", CHAMPS + jsonDocument);
 
                 // Insértion dans livres_dvd, on ne transmet que l'id vu que livre_dvd n'a pas de propriétés supplémentaires
-                String jsonLivreDvd = convertToJson("id", dvd.Id);
+                String jsonLivreDvd = ConvertToJson("id", dvd.Id);
                 List<Dvd> liste2 = TraitementRecup<Dvd>(POST, "livres_dvd", CHAMPS + jsonLivreDvd);
 
                 // Insértion dans dvd
-
                 var infoDvd = new Dictionary<string, Object> {
-                {"id",dvd.Id},
-                {"duree",dvd.Duree },
-        {"realisateur",dvd.Realisateur },
-        {"synopsis",dvd.Synopsis }
-
-            };
+                    {"id",dvd.Id},
+                    {"duree",dvd.Duree },
+                    {"realisateur",dvd.Realisateur },
+                    {"synopsis",dvd.Synopsis }
+                };
                 String jsonDvd = JsonConvert.SerializeObject(infoDvd);
                 List<Dvd> liste3 = TraitementRecup<Dvd>(POST, "dvd", CHAMPS + jsonDvd);
-
 
                 return (liste1 != null && liste2 != null && liste3 != null);
             }
@@ -522,34 +534,28 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la modification a pu se faire (retour != null)</returns>
         public bool ModifierDvd(Dvd dvd)
         {
-
-
             try
             {
                 // Modification dans document
                 var infoDocument = new Dictionary<string, Object>
-    {
-
-     {"titre",dvd.Titre },
-     {"image",dvd.Image },
-     {"idGenre",dvd.IdGenre },
-     {"idPublic",dvd.IdPublic },
-     {"idRayon",dvd.IdRayon },
-    };
+                {
+                    {TITRE,dvd.Titre },
+                    {IMAGE,dvd.Image },
+                    {ID_GENRE,dvd.IdGenre },
+                    {ID_PUBLIC,dvd.IdPublic },
+                    {IDRAYON,dvd.IdRayon },
+                };
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
-                List<Dvd> liste1 = TraitementRecup<Dvd>(PUT, "document/" + dvd.Id, CHAMPS + jsonDocument);
+                List<Dvd> liste1 = TraitementRecup<Dvd>(PUT, DOCUMENT + dvd.Id, CHAMPS + jsonDocument);
                 // Modification dans livres_dvd
                 //Modification dans dvd
                 var infoDvd = new Dictionary<string, Object> {
-
-        {"duree",dvd.Duree },
-{"realisateur",dvd.Realisateur },
-{"synopsis",dvd.Synopsis }
-
-         };
+                    {"duree",dvd.Duree },
+                    {"realisateur",dvd.Realisateur },
+                    {"synopsis",dvd.Synopsis }
+                };
                 String jsonDvd = JsonConvert.SerializeObject(infoDvd);
                 List<Dvd> liste2 = TraitementRecup<Dvd>(PUT, "dvd/" + dvd.Id, CHAMPS + jsonDvd);
-
 
                 return (liste1 != null && liste2 != null);
             }
@@ -567,16 +573,14 @@ namespace MediaTekDocuments.dal
         /// <returns>true si la suppression a pu se faire</returns>
         public bool SupprimerDvd(Dvd dvd)
         {
-
             try
             {
                 // Vérifier exemplaires
                 // GET exemplaire avec id = dvd.Id
                 // Si liste non vide → return false
 
-                String jsonIdDvd = convertToJson("id", dvd.Id);
-                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, "exemplaire/" + jsonIdDvd, null);
-
+                String jsonIdDvd = ConvertToJson("id", dvd.Id);
+                List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>(GET, EXEMPLAIRE + jsonIdDvd, null);
 
                 if (lesExemplaires != null && lesExemplaires.Count > 0)
                 {
@@ -588,7 +592,7 @@ namespace MediaTekDocuments.dal
                 // Si liste non vide → return false
 
                 List<JObject> lesCommandes = TraitementRecup<JObject>
-                (GET, "commande/" + jsonIdDvd, null);
+                (GET, COMMANDE + jsonIdDvd, null);
 
                 if (lesCommandes != null && lesCommandes.Count > 0)
                 {
@@ -596,7 +600,6 @@ namespace MediaTekDocuments.dal
                 }
 
                 // Suppression dans dvd
-
                 List<Dvd> liste1 = TraitementRecup<Dvd>
                     (DELETE, "dvd/" + jsonIdDvd, null);
 
@@ -607,7 +610,7 @@ namespace MediaTekDocuments.dal
                 // Suppression dans document
                 // Suppression dans livres_dvd
                 List<Dvd> liste3 = TraitementRecup<Dvd>
-                   (DELETE, "document/" + jsonIdDvd, null);
+                   (DELETE, DOCUMENT + jsonIdDvd, null);
 
                 return (liste1 != null && liste2 != null && liste3 != null);
             }
@@ -628,24 +631,23 @@ namespace MediaTekDocuments.dal
             try
             {
                 var infoDocument = new Dictionary<string, Object>
-        {
-            {"id",    revue.Id },
-            {"titre", revue.Titre },
-            {"image", revue.Image },
-            {"idGenre",  revue.IdGenre },
-            {"idPublic", revue.IdPublic },
-            {"idRayon",  revue.IdRayon }
-        };
+                {
+                    {"id",    revue.Id },
+                    {TITRE, revue.Titre },
+                    {IMAGE, revue.Image },
+                    {ID_GENRE,  revue.IdGenre },
+                    {ID_PUBLIC, revue.IdPublic },
+                    {IDRAYON,  revue.IdRayon }
+                };
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
                 List<Revue> liste1 = TraitementRecup<Revue>(POST, "document", CHAMPS + jsonDocument);
 
-
                 var infoRevue = new Dictionary<string, Object>
-        {
-            {"id",              revue.Id },
-            {"periodicite",     revue.Periodicite },
-            {"delaiMiseADispo", revue.DelaiMiseADispo }
-        };
+                {
+                    {"id",              revue.Id },
+                    {"periodicite",     revue.Periodicite },
+                    {"delaiMiseADispo", revue.DelaiMiseADispo }
+                };
                 String jsonRevue = JsonConvert.SerializeObject(infoRevue);
                 List<Revue> liste2 = TraitementRecup<Revue>(POST, "revue", CHAMPS + jsonRevue);
 
@@ -668,21 +670,21 @@ namespace MediaTekDocuments.dal
             try
             {
                 var infoDocument = new Dictionary<string, Object>
-        {
-            {"titre",    revue.Titre },
-            {"image",    revue.Image },
-            {"idGenre",  revue.IdGenre },
-            {"idPublic", revue.IdPublic },
-            {"idRayon",  revue.IdRayon }
-        };
+                {
+                    {TITRE,    revue.Titre },
+                    {IMAGE,    revue.Image },
+                    {ID_GENRE,  revue.IdGenre },
+                    {ID_PUBLIC, revue.IdPublic },
+                    {IDRAYON,  revue.IdRayon }
+                };
                 String jsonDocument = JsonConvert.SerializeObject(infoDocument);
-                List<Revue> liste1 = TraitementRecup<Revue>(PUT, "document/" + revue.Id, CHAMPS + jsonDocument);
+                List<Revue> liste1 = TraitementRecup<Revue>(PUT, DOCUMENT + revue.Id, CHAMPS + jsonDocument);
 
                 var infoRevue = new Dictionary<string, Object>
-        {
-            {"periodicite",     revue.Periodicite },
-            {"delaiMiseADispo", revue.DelaiMiseADispo }
-        };
+                {
+                    {"periodicite",     revue.Periodicite },
+                    {"delaiMiseADispo", revue.DelaiMiseADispo }
+                };
                 String jsonRevue = JsonConvert.SerializeObject(infoRevue);
                 List<Revue> liste2 = TraitementRecup<Revue>(PUT, "revue/" + revue.Id, CHAMPS + jsonRevue);
 
@@ -700,22 +702,21 @@ namespace MediaTekDocuments.dal
         /// </summary>
         /// <param name="revue">revue à supprimer</param>
         /// <returns>true si la suppression a pu se faire</returns>
-
         public bool SupprimerRevue(Revue revue)
         {
             try
             {
-                String jsonIdRevue = convertToJson("id", revue.Id);
+                String jsonIdRevue = ConvertToJson("id", revue.Id);
 
                 // Vérifier exemplaires
                 List<Exemplaire> lesExemplaires = TraitementRecup<Exemplaire>
-                    (GET, "exemplaire/" + jsonIdRevue, null);
+                    (GET, EXEMPLAIRE + jsonIdRevue, null);
                 if (lesExemplaires != null && lesExemplaires.Count > 0)
                     return false;
 
                 // Vérifier commandes
                 List<JObject> lesCommandes = TraitementRecup<JObject>
-                    (GET, "commande/" + jsonIdRevue, null);
+                    (GET, COMMANDE + jsonIdRevue, null);
                 if (lesCommandes != null && lesCommandes.Count > 0)
                     return false;
 
@@ -723,17 +724,15 @@ namespace MediaTekDocuments.dal
                 List<Revue> liste1 = TraitementRecup<Revue>
                     (DELETE, "revue/" + jsonIdRevue, null);
 
-
                 // Suppression dans document
                 List<Revue> liste2 = TraitementRecup<Revue>
-                    (DELETE, "document/" + jsonIdRevue, null);
+                    (DELETE, DOCUMENT + jsonIdRevue, null);
 
                 return (liste1 != null && liste2 != null); // ✅ 2 listes seulement
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Access.SupprimerRevue : Erreur de suppression pour l'ID {Id}", revue.Id);
-
             }
             return false;
         }
@@ -750,9 +749,9 @@ namespace MediaTekDocuments.dal
                 // On modifie SEULEMENT idSuivi
                 // dans commandedocument
                 var infoCommande = new Dictionary<string, Object>
-        {
-            {"idSuivi", cmd.IdSuivi}
-        };
+                {
+                    {"idSuivi", cmd.IdSuivi}
+                };
 
                 String jsonCommande = JsonConvert.SerializeObject(infoCommande);
 
@@ -764,11 +763,9 @@ namespace MediaTekDocuments.dal
             catch (Exception ex)
             {
                 Log.Error(ex, "Access.ModifierSuiviCommande : Erreur pour l'ID {Id}", cmd.Id);
-
             }
             return false;
         }
-
 
         /// <summary>
         /// Supprime dans commandedocument
@@ -777,7 +774,7 @@ namespace MediaTekDocuments.dal
         {
             try
             {
-                String jsonId = convertToJson("id", id);
+                String jsonId = ConvertToJson("id", id);
                 List<CommandeDocument> liste = TraitementRecup<CommandeDocument>
                     (DELETE, "commandedocument/" + jsonId, null);
                 return (liste != null);
@@ -785,7 +782,6 @@ namespace MediaTekDocuments.dal
             catch (Exception ex)
             {
                 Log.Error(ex, "Access.SupprimerCommandeDocument : Erreur pour l'ID {Id}", id);
-
             }
             return false;
         }
@@ -797,15 +793,14 @@ namespace MediaTekDocuments.dal
         {
             try
             {
-                String jsonId = convertToJson("id", id);
+                String jsonId = ConvertToJson("id", id);
                 List<Commande> liste = TraitementRecup<Commande>
-                    (DELETE, "commande/" + jsonId, null);
+                    (DELETE, COMMANDE + jsonId, null);
                 return (liste != null);
             }
             catch (Exception ex)
             {
                 Log.Error(ex, "Access.SupprimerCommande : Erreur pour l'ID {Id}", id);
-
             }
             return false;
         }
@@ -817,29 +812,26 @@ namespace MediaTekDocuments.dal
         /// <returns>true si l'insertion a pu se faire (retour != null)</returns>
         public bool CreerAbonnement(Abonnement abonnement)
         {
-
             try
             {
                 var infoCommande = new Dictionary<string, Object>
-        {
-            {"id",abonnement.Id},
-            {"dateCommande",abonnement.DateCommande},
-            {"montant",abonnement.Montant}
-
-        };
+                {
+                    {"id",abonnement.Id},
+                    {"dateCommande",abonnement.DateCommande},
+                    {"montant",abonnement.Montant}
+                };
 
                 // est necessaire ici car il convertis les dates : CustomDateTimeConverter()
-
                 String jsonCommande = JsonConvert.SerializeObject(infoCommande, new CustomDateTimeConverter());
                 // inserer d'abord dans la classe mere Commande
                 List<Abonnement> liste1 = TraitementRecup<Abonnement>(POST, "commande", CHAMPS + jsonCommande);
 
                 var infoAbonnement = new Dictionary<string, Object>
-    {
-        {"id",abonnement.Id},
-       {"dateFinAbonnement",abonnement.DateFinAbonnement },
-       {"idRevue",abonnement.IdRevue}
-    };
+                {
+                    {"id",abonnement.Id},
+                    {"dateFinAbonnement",abonnement.DateFinAbonnement },
+                    {"idRevue",abonnement.IdRevue}
+                };
 
                 String jsonAbonnement = JsonConvert.SerializeObject(infoAbonnement, new CustomDateTimeConverter());
                 // inserer dans l'abonnement 
@@ -858,21 +850,17 @@ namespace MediaTekDocuments.dal
         /// </summary>
         public bool SupprimerAbonnement(string id)
         {
-
             try
             {
-                String jsonId = convertToJson("id", id);
-
+                String jsonId = ConvertToJson("id", id);
 
                 // Suppression dans abonnement, on commence par les enfants puis les parents
-
                 List<Abonnement> liste1 = TraitementRecup<Abonnement>
                     (DELETE, "abonnement/" + jsonId, null);
 
                 // Suppression dans commande
                 List<Commande> liste2 = TraitementRecup<Commande>
-                   (DELETE, "commande/" + jsonId, null);
-
+                   (DELETE, COMMANDE + jsonId, null);
 
                 return (liste1 != null && liste2 != null);
             }
@@ -882,8 +870,6 @@ namespace MediaTekDocuments.dal
             }
             return false;
         }
-
-
 
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
@@ -898,6 +884,8 @@ namespace MediaTekDocuments.dal
             List<T> liste = new List<T>();
             try
             {
+                Log.Information("Appel API - Méthode : {Methode}, Ressource : {Message}, Paramètres : {Parametres}",
+                    methode, message, parametres);
                 JObject retour = api.RecupDistant(methode, message, parametres);
                 // extraction du code retourné
                 String code = (String)retour["code"];
@@ -913,15 +901,13 @@ namespace MediaTekDocuments.dal
                 }
                 else
                 {
-
                     Log.Warning("code erreur = {Code} message = {Message}",
-      code, (String)retour["message"]);
+                        code, (String)retour["message"]);
                 }
             }
             catch (Exception e)
             {
                 Log.Error(e, "Erreur lors de l'accès à l'API : {Message}", e.Message);
-
                 Environment.Exit(0);
             }
             return liste;
@@ -933,10 +919,12 @@ namespace MediaTekDocuments.dal
         /// <param name="nom"></param>
         /// <param name="valeur"></param>
         /// <returns>couple au format json</returns>
-        private String convertToJson(Object nom, Object valeur)
+        private static String ConvertToJson(Object nom, Object valeur)
         {
-            Dictionary<Object, Object> dictionary = new Dictionary<Object, Object>();
-            dictionary.Add(nom, valeur);
+            var dictionary = new Dictionary<object, object>
+            {
+                { nom, valeur }
+            };
             return JsonConvert.SerializeObject(dictionary);
         }
 
