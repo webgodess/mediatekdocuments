@@ -5,9 +5,11 @@ namespace FrmMediatek.Tests
         [Fact]
         public void ParutionDansAbonnementTestTrue()
         {
-            DateTime dateCommande = new DateTime(2026, 03, 26);
-            DateTime dateFinAbonnement = new DateTime(2026, 04, 22);
-            DateTime dateParution = new DateTime(2026, 04, 16);
+    
+
+            var dateCommande = new DateTime(2026, 03, 26, 0, 0, 0, DateTimeKind.Local);
+            var dateFinAbonnement = new DateTime(2026, 04, 22, 0, 0, 0, DateTimeKind.Local);
+            var dateParution = new DateTime(2026, 04, 16, 0, 0, 0, DateTimeKind.Local);
 
             bool result = dateParution >= dateCommande && dateParution <= dateFinAbonnement;
             Assert.True(result);
@@ -17,9 +19,9 @@ namespace FrmMediatek.Tests
         [Fact]
         public void ParutionHorsAbonnementTestFalse()
         {
-            DateTime dateCommande = new DateTime(2026, 03, 26);
-            DateTime dateFinAbonnement = new DateTime(2026, 04, 22);
-            DateTime dateParution = new DateTime(2026, 05, 16); 
+            var dateCommande = new DateTime(2026, 03, 26, 0, 0, 0, DateTimeKind.Local);
+            var dateFinAbonnement = new DateTime(2026, 04, 22, 0, 0, 0, DateTimeKind.Local);
+            var dateParution = new DateTime(2026, 05, 16, 0, 0, 0, DateTimeKind.Local);
 
             bool result = dateParution >= dateCommande && dateParution <= dateFinAbonnement;
             Assert.False(result);

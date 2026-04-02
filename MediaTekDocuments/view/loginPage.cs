@@ -13,7 +13,9 @@ using MediaTekDocuments.model;
 namespace MediaTekDocuments.view
 {
 
+#pragma warning disable IDE1006 // Naming Styles
     public partial class loginPage : Form
+#pragma warning restore IDE1006 // Naming Styles
     {
         
         private readonly FrmMediatekController controller;
@@ -29,7 +31,9 @@ namespace MediaTekDocuments.view
             this.Load += loginPage_Load;
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void loginPage_Load(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             videChamps();
             
@@ -38,14 +42,18 @@ namespace MediaTekDocuments.view
         /// <summary>
         /// Pour vider les champs du formulaire
         /// </summary>
+#pragma warning disable IDE1006 // Naming Styles
         private void videChamps()
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on vide le formulaire
             txtLogin.Text = string.Empty;
             txtPwd.Text = string.Empty;
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSubmit_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             string login = txtLogin.Text;
             string pwd = txtPwd.Text;

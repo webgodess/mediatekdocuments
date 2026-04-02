@@ -127,10 +127,6 @@
     <Reference Include="Ubiety.Logging.Core, Version=1.2.2.0, Culture=neutral, PublicKeyToken=133e143470e66433, processorArchitecture=MSIL">
       <HintPath>..\packages\Ubiety.Logging.Core.1.2.2\lib\net452\Ubiety.Logging.Core.dll</HintPath>
     </Reference>
-    <Reference Include="ZstdNet, Version=1.4.5.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d">
-      <HintPath>..\packages\ZstdNet.1.5.7\lib\netstandard2.0\ZstdNet.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="ZstdSharp, Version=0.8.7.0, Culture=neutral, PublicKeyToken=8d151af33a4ad5cf, processorArchitecture=MSIL">
       <HintPath>..\packages\ZstdSharp.Port.0.8.7\lib\net462\ZstdSharp.dll</HintPath>
     </Reference>

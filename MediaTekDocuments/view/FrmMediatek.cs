@@ -357,7 +357,9 @@ namespace MediaTekDocuments.view
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxLivresGenresEditAdd_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // to be filled?
         }
@@ -528,7 +530,9 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAjoutLivre_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {   // Vide les champs
             VideLivresInfos();
             // Passe en mode édition
@@ -554,7 +558,9 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnModifierLivre_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {   // on passe en mode édition
             ModeEditionLivres(true);
             //on ne peut changer l'id
@@ -575,7 +581,9 @@ namespace MediaTekDocuments.view
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerLivre_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // bdgLivresListe.List : la liste de tous les livres affichés dans le datagrid
             // bdgLivresListe.Position : l'index de la ligne sélectionnée dans le datagrid
@@ -632,7 +640,9 @@ namespace MediaTekDocuments.view
         /// e = les informations sur l'événement
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnValiderLivre_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // (Genre) est un cast ici
             // sans ce cast genre est juste un "object"
@@ -741,7 +751,9 @@ txbLivresAuteur.Text,
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAnnulerLivre_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             ModeEditionLivres(false);
             RemplirLivresListeComplete();
@@ -759,7 +771,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void tabDvd_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             lesDvd = controller.GetAllDvd();
             RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxDvdGenres);
@@ -829,7 +843,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnDvdNumRecherche_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbDvdNumRecherche.Text.Equals(""))
             {
@@ -862,7 +878,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void txbDvdTitreRecherche_TextChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbDvdTitreRecherche.Text.Equals(""))
             {
@@ -933,7 +951,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxDvdGenres_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxDvdGenres.SelectedIndex >= 0)
             {
@@ -952,7 +972,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxDvdPublics_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxDvdPublics.SelectedIndex >= 0)
             {
@@ -971,7 +993,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxDvdRayons_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxDvdRayons.SelectedIndex >= 0)
             {
@@ -991,7 +1015,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvDvdListe_SelectionChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (dgvDvdListe.CurrentCell != null)
             {
@@ -1016,7 +1042,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnDvdAnnulPublics_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirDvdListeComplete();
         }
@@ -1026,7 +1054,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnDvdAnnulRayons_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirDvdListeComplete();
         }
@@ -1036,7 +1066,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnDvdAnnulGenres_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirDvdListeComplete();
         }
@@ -1075,7 +1107,9 @@ txbLivresAuteur.Text,
         /// Les informations sur l'événement
         /// → ici c'est un simple clic sur le bouton
         /// </param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAjoutDvd_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // Vide les champs
             VideDvdInfos();
@@ -1099,7 +1133,9 @@ txbLivresAuteur.Text,
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerDvd_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // bdgDvdListe.List : la liste de tous les dvd affichés dans le datagrid
             // bdgDvdListe.Position : l'index de la ligne sélectionnée dans le datagrid
@@ -1162,7 +1198,9 @@ txbLivresAuteur.Text,
         /// → ici c'est un simple clic sur le bouton
         /// </param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnModifierDvd_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {   // on passe en mode édition
             ModeEditionDvd(true);
             //on ne peut changer l'id
@@ -1179,7 +1217,9 @@ txbLivresAuteur.Text,
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnValiderDvd_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // (Genre) est un cast ici
             // sans ce cast genre est juste un "object"
@@ -1289,7 +1329,9 @@ txbLivresAuteur.Text,
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAnnulerDvd_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             ModeEditionDvd(false);
             RemplirDvdListeComplete();
@@ -1302,7 +1344,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvDvdListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             VideDvdZones();
             string titreColonne = dgvDvdListe.Columns[e.ColumnIndex].HeaderText;
@@ -1345,7 +1389,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void tabRevues_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             lesRevues = controller.GetAllRevues();
             RemplirComboCategorie(controller.GetAllGenres(), bdgGenres, cbxRevuesGenres);
@@ -1427,7 +1473,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnRevuesNumRecherche_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbRevuesNumRecherche.Text.Equals(""))
             {
@@ -1460,7 +1508,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void txbRevuesTitreRecherche_TextChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbRevuesTitreRecherche.Text.Equals(""))
             {
@@ -1529,7 +1579,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxRevuesGenres_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxRevuesGenres.SelectedIndex >= 0)
             {
@@ -1548,7 +1600,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxRevuesPublics_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxRevuesPublics.SelectedIndex >= 0)
             {
@@ -1567,7 +1621,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxRevuesRayons_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (cbxRevuesRayons.SelectedIndex >= 0)
             {
@@ -1587,7 +1643,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvRevuesListe_SelectionChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (dgvRevuesListe.CurrentCell != null)
             {
@@ -1612,7 +1670,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnRevuesAnnulPublics_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirRevuesListeComplete();
         }
@@ -1622,7 +1682,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnRevuesAnnulRayons_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirRevuesListeComplete();
         }
@@ -1632,7 +1694,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnRevuesAnnulGenres_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             RemplirRevuesListeComplete();
         }
@@ -1671,7 +1735,9 @@ txbLivresAuteur.Text,
         /// Les informations sur l'événement
         /// → ici c'est un simple clic sur le bouton
         /// </param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAjoutRevue_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // Vide les champs
             VideRevuesInfos();
@@ -1695,7 +1761,9 @@ txbLivresAuteur.Text,
         /// Les informations sur l'événement
         /// → ici c'est un simple clic sur le bouton
         /// </param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnModifierRevue_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on passe en mode édition
             ModeEditionRevue(true);
@@ -1715,7 +1783,9 @@ txbLivresAuteur.Text,
         /// Les informations sur l'événement
         /// → ici c'est un simple clic sur le bouton
         /// </param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerRevue_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // bdgRevuesListe.List : la liste de toutes les revues affichées dans le datagrid
             // bdgRevuesListe.Position : l'index de la ligne sélectionnée dans le datagrid
@@ -1769,7 +1839,9 @@ txbLivresAuteur.Text,
         /// → ici c'est un simple clic
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnValiderRevue_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // (Genre) est un cast ici
             // sans ce cast genre est juste un "object"
@@ -1885,7 +1957,9 @@ txbLivresAuteur.Text,
         /// e = les informations sur l'événement
         ///     → ici c'est un simple clic
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnAnnulerRevue_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             ModeEditionRevue(false);
             RemplirRevuesListeComplete();
@@ -1898,7 +1972,9 @@ txbLivresAuteur.Text,
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvRevuesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             VideRevuesZones();
             string titreColonne = dgvRevuesListe.Columns[e.ColumnIndex].HeaderText;
@@ -1941,7 +2017,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void tabReceptionRevue_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             lesRevues = controller.GetAllRevues();
             txbReceptionRevueNumero.Text = "";
@@ -1974,7 +2052,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnReceptionRechercher_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbReceptionRevueNumero.Text.Equals(""))
             {
@@ -1996,7 +2076,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void txbReceptionRevueNumero_TextChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             txbReceptionRevuePeriodicite.Text = "";
             txbReceptionRevueImage.Text = "";
@@ -2068,7 +2150,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnReceptionExemplaireImage_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             string filePath = "";
             OpenFileDialog openFileDialog = new OpenFileDialog()
@@ -2097,7 +2181,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void btnReceptionExemplaireValider_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (!txbReceptionExemplaireNumero.Text.Equals(""))
             {
@@ -2136,7 +2222,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvExemplairesListe_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             string titreColonne = dgvReceptionExemplairesListe.Columns[e.ColumnIndex].HeaderText;
             List<Exemplaire> sortedList = new List<Exemplaire>();
@@ -2161,7 +2249,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void dgvReceptionExemplairesListe_SelectionChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (dgvReceptionExemplairesListe.CurrentCell != null)
             {
@@ -2334,7 +2424,9 @@ txbLivresAuteur.Text,
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void tabCommandesLivres_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             chargementCommandesLivres = true;
 
@@ -2375,7 +2467,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxTitreLivreCommandes_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (chargementCommandesLivres) return;
 
@@ -2409,7 +2503,9 @@ txbLivresAuteur.Text,
         /// 
         /// private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnEnregistrerLivreCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on genere un id
 
@@ -2474,7 +2570,9 @@ txbLivresAuteur.Text,
         }
 
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerLivresCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesLivresListe.Position < 0)
@@ -2541,7 +2639,9 @@ txbLivresAuteur.Text,
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnModifierLivresCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             string livree = NUM_SUIVI;
             string reglee = "10003";
@@ -2760,7 +2860,9 @@ txbLivresAuteur.Text,
         /// <param name="sender"></param>
         /// <param name="e"></param>
 
+#pragma warning disable IDE1006 // Naming Styles
         private void tabCommandesDvd_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             chargementCommandesDvd = true;
 
@@ -2801,7 +2903,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxTitreDvdCommandes_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (chargementCommandesDvd) return;
 
@@ -2838,7 +2942,9 @@ txbLivresAuteur.Text,
         /// 
         /// private List<CommandeDocument> lesCommandesDvd = new List<CommandeDocument>();
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnEnregistrerDvdCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on genere un id
 
@@ -2903,7 +3009,9 @@ txbLivresAuteur.Text,
         }
 
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerDvdCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on verifie qu'une commande est selectionnee 
             if (bdgCommandesDvdListe.Position < 0)
@@ -2970,7 +3078,9 @@ txbLivresAuteur.Text,
             }
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnModifierDvdCommandes_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
 
             string livree = NUM_SUIVI;
@@ -3056,7 +3166,9 @@ txbLivresAuteur.Text,
         /// <param name="e"></param>
 
 
+#pragma warning disable IDE1006 // Naming Styles
         private void tabCommandesRevues_Enter(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             chargementCommandesRevues = true;
 
@@ -3211,7 +3323,9 @@ txbLivresAuteur.Text,
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
+#pragma warning disable IDE1006 // Naming Styles
         private void cbxTitreRevuesCommande_SelectedIndexChanged(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             if (chargementCommandesRevues) return;
 
@@ -3250,7 +3364,9 @@ txbLivresAuteur.Text,
 
 
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnEnregistrerRevuesAbo_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
 
 
@@ -3329,7 +3445,9 @@ txbLivresAuteur.Text,
             return dateParution >= dateCommande && dateParution <= dateFinAbonnement;
         }
 
+#pragma warning disable IDE1006 // Naming Styles
         private void btnSupprimerRevuesAbo_Click(object sender, EventArgs e)
+#pragma warning restore IDE1006 // Naming Styles
         {
             // on verifie qu'un abonnement est selectionnee 
             if (bdgCommandesRevuesDatagrid.Position < 0)
@@ -3355,16 +3473,13 @@ txbLivresAuteur.Text,
 
             DateTime dateCommande = abonnementRevues.DateCommande;
             DateTime dateFin = abonnementRevues.DateFinAbonnement;
-            foreach (Exemplaire exempl in exemplairesDeRevue)
-            {
-                if (ParutionDansAbonnement(dateCommande, dateFin, exempl.DateAchat))
-                {
-                    MessageBox.Show("Des exemplaires sont  rattachés à cet abonnement. Impossible de le supprimer. ", MSG_ERREUR);
-                    return;
-                }
+       
+            if (exemplairesDeRevue.Any(exempl => ParutionDansAbonnement(dateCommande, dateFin, exempl.DateAchat)))
+                                      {
+                                          MessageBox.Show("Des exemplaires sont rattachés à cet abonnement. Impossible de le supprimer.", MSG_ERREUR);
+                                          return;
+                                      }
 
-
-            }
 
             // Demande de confirmation
             DialogResult result = MessageBox.Show(
