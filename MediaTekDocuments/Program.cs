@@ -9,9 +9,15 @@ namespace MediaTekDocuments
     /// <summary>
     /// Application Gestion de MediaTekDocuments
     /// </summary>
+    
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class NamespaceDoc
     {
     }
+
+    /// <summary>
+    /// Classe principale de l'application MediaTekDocuments
+    /// </summary>
 
     static class Program
     {

@@ -21,6 +21,14 @@ namespace MediaTekDocuments.view
     /// <summary>
     /// Classe d'affichage
     /// </summary>
+
+    /// <summary>Contient les classes d'interface utilisateur de l'application MediaTekDocuments.</summary>
+    [System.Runtime.CompilerServices.CompilerGenerated]
+
+    internal class NamespaceDoc
+    {
+    }
+
     public partial class FrmMediatek : Form
     {
         #region Commun
@@ -2250,7 +2258,7 @@ txbLivresAuteur.Text,
         /// Remplit le dategrid des exemplaires avec la liste reçue en paramètre
         /// Remplit le dategrid des commandes avec la liste reçue en paramètre
         /// </summary>
-        ///  /// <param name=lesCommandesLivres"">liste des commandes de livres</param>
+        /// <param name="lesCommandesLivres">liste des commandes de livres</param>
 
 
         private void RemplirCommandesLivreListe(List<CommandeDocument> lesCommandesLivres)
@@ -2407,8 +2415,7 @@ txbLivresAuteur.Text,
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
-        /// private List<CommandeDocument> lesCommandesLivres = new List<CommandeDocument>();
-
+       
         private void btnEnregistrerLivreCommandes_Click(object sender, EventArgs e)
         {
             // on genere un id
@@ -2625,7 +2632,7 @@ txbLivresAuteur.Text,
         /// <summary>
         /// Affichage des informations du Dvd sélectionné
         /// </summary>
-        /// <param name="Dvd">le Dvd</param>
+        /// <param name="dvd">le Dvd</param>
         private void AfficheCommandeDvdInfos(Dvd dvd)
         {
 
@@ -2675,7 +2682,7 @@ txbLivresAuteur.Text,
         /// Remplit le dategrid des exemplaires avec la liste reçue en paramètre
         /// Remplit le dategrid des commandes avec la liste reçue en paramètre
         /// </summary>
-        ///  /// <param name=lesCommandesDvd"">liste des commandes de dvd</param>
+        ///  /// <param name="lesCommandesDvd">liste des commandes de dvd</param>
 
 
         private void RemplirCommandesDvdListe(List<CommandeDocument> lesCommandesDvd)
@@ -2835,8 +2842,7 @@ txbLivresAuteur.Text,
         /// <param name="sender"></param>
         /// <param name="e"></param>
         /// 
-        /// private List<CommandeDocument> lesCommandesDvd = new List<CommandeDocument>();
-
+      
         private void btnEnregistrerDvdCommandes_Click(object sender, EventArgs e)
         {
             // on genere un id
@@ -3048,7 +3054,6 @@ txbLivresAuteur.Text,
 
         /// <summary>
         /// Quand on clique sur "Commandes de Revues" on veut charger la liste des revues
-
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -3131,7 +3136,7 @@ txbLivresAuteur.Text,
         /// <summary>
         /// Remplit le dategrid des Abonnements avec la liste reçue en paramètre
         /// </summary>
-        ///  /// <param name="lesAbonnements">liste des abonnements</param>
+        /// <param name="lesAbonnements">liste des abonnements</param>
 
 
         private void RemplirAbonnementsRevuesListe(List<Abonnement> lesAbonnements)

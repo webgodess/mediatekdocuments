@@ -11,9 +11,10 @@ using Serilog;
 
 namespace MediaTekDocuments.dal
 {
-       /// <summary>
+    /// <summary>
     /// Couche d'accès aux données de l'application MediaTekDocuments
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class NamespaceDoc
     {
     }

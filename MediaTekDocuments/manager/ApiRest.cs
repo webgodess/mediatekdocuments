@@ -7,6 +7,11 @@ namespace MediaTekDocuments.manager
     /// <summary>
     /// Classe indépendante d'accès à une api rest avec éventuellement une "basic authorization"
     /// </summary>
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    internal class NamespaceDoc
+    {
+    }
+
     class ApiRest
     {
         /// <summary>
