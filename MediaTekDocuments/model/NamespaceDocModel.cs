@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace MediaTekDocuments.model
 {
-    internal class NamespaceDocModel
+    /// <summary>Contient les classes métier de l'application MediaTekDocuments.</summary>
+    [System.Runtime.CompilerServices.CompilerGenerated]
+    internal class NamespaceDoc
     {
     }
 }

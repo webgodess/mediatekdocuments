@@ -28,6 +28,7 @@ namespace MediaTekDocuments.view
     internal class NamespaceDoc
     {
     }
+    /// <summary>Classe d'affichage.</summary>
 
     public partial class FrmMediatek : Form
     {

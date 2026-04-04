@@ -11,6 +11,12 @@ namespace MediaTekDocuments.controller
     internal class NamespaceDoc
     {
     }
+
+    /// <summary>
+    /// Contrôleur de l'application MediaTekDocuments.
+    /// Gère les interactions entre la vue (FrmMediatek) et la couche d'accès aux données.
+    /// Permet la gestion des livres, DVD, revues, commandes, abonnements et exemplaires.
+    /// </summary>
     class FrmMediatekController
     {
         /// <summary>
