@@ -6,9 +6,21 @@ namespace MediaTekDocuments.model
     /// </summary>
     public class Categorie
     {
+        /// <summary>
+        /// Identifiant de la catégorie
+        /// </summary>
         public string Id { get; }
+
+        /// <summary>
+        /// Libellé de la catégorie
+        /// </summary>
         public string Libelle { get; }
 
+        /// <summary>
+        /// Constructeur de la catégorie
+        /// </summary>
+        /// <param name="id">Identifiant de la catégorie</param>
+        /// <param name="libelle">Libellé de la catégorie</param>
         public Categorie(string id, string libelle)
         {
             this.Id = id;

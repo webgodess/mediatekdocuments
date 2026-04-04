@@ -1,13 +1,27 @@
-﻿namespace MediaTekDocuments.model
+﻿
+namespace MediaTekDocuments.model
 {
-    /// <summary>
+    /// <summary>
     /// Classe métier Suivi  
-    /// </summary>
-    public class Suivi 
+    /// </summary>
+    public class Suivi
     {
+        /// <summary>
+        /// Identifiant du suivi
+        /// </summary>
         public string Id { get; }
+
+        /// <summary>
+        /// Libellé du suivi
+        /// </summary>
         public string Libelle { get; }
-        public Suivi(string id, string libelle) 
+
+        /// <summary>
+        /// Constructeur du suivi
+        /// </summary>
+        /// <param name="id">Identifiant du suivi</param>
+        /// <param name="libelle">Libellé du suivi</param>
+        public Suivi(string id, string libelle)
         {
             Id = id;
             Libelle = libelle;

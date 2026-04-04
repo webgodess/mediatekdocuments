@@ -11,6 +11,12 @@ using Serilog;
 
 namespace MediaTekDocuments.dal
 {
+       /// <summary>
+    /// Couche d'accès aux données de l'application MediaTekDocuments
+    /// </summary>
+    internal class NamespaceDoc
+    {
+    }
     /// <summary>
     /// Classe d'accès aux données
     /// </summary>
@@ -871,12 +877,13 @@ namespace MediaTekDocuments.dal
             return false;
         }
 
+        /// <summary>
         /// Traitement de la récupération du retour de l'api, avec conversion du json en liste pour les select (GET)
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="methode">verbe HTTP (GET, POST, PUT, DELETE)</param>
         /// <param name="message">information envoyée dans l'url</param>
-        /// <param name="parametres">paramètres à envoyer dans le body, au format "chp1=val1&chp2=val2&..."</param>
+        /// <param name="parametres">paramètres à envoyer dans le body, au format "chp1=val1&amp;chp2=val2&amp;..."</param>
         /// <returns>liste d'objets récupérés (ou liste vide)</returns>
         private List<T> TraitementRecup<T>(String methode, String message, String parametres)
         {

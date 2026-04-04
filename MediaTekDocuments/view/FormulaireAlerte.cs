@@ -1,4 +1,5 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -17,6 +18,9 @@ using Org.BouncyCastle.Bcpg.Sig;
 
 namespace MediaTekDocuments.view
 {
+    /// <summary>
+    /// Formulaire d'alerte affichant les abonnements arrivant à expiration
+    /// </summary>
     public partial class FormulaireAlerte : Form
     {
         private readonly List<Abonnement> abonnementsExpirants;
@@ -26,6 +30,8 @@ namespace MediaTekDocuments.view
         /// <summary>
         /// Constructeur du formulaire
         /// </summary>
+        /// <param name="abonnementsExpirants">Liste des abonnements arrivant à expiration</param>
+        /// <param name="lesRevues">Liste de toutes les revues</param>
         public FormulaireAlerte(List<Abonnement> abonnementsExpirants, List<Revue> lesRevues)
         {
             InitializeComponent();
@@ -49,7 +55,7 @@ namespace MediaTekDocuments.view
 
                 if (revue != null)
                 {
-                    
+
 
                     listBxAboEx.Items.Add($"{revue.Titre} - {aboex.DateFinAbonnement:dd/MM/yyyy}");
                 }
@@ -61,9 +67,9 @@ namespace MediaTekDocuments.view
 
 
 
-}
-
-       
-
-
     }
+
+
+
+
+}
