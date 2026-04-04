@@ -18,14 +18,14 @@
         /// <summary>
         /// Constructeur de la revue
         /// </summary>
-        /// <param name="id">Identifiant de la revue</param>
+        /// <param name="id">Id de la revue</param>
         /// <param name="titre">Titre de la revue</param>
         /// <param name="image">Chemin de l'image de la revue</param>
-        /// <param name="idGenre">Identifiant du genre</param>
+        /// <param name="idGenre">Id du genre</param>
         /// <param name="genre">Libellé du genre</param>
-        /// <param name="idPublic">Identifiant du public</param>
+        /// <param name="idPublic">Id du public</param>
         /// <param name="lePublic">Libellé du public</param>
-        /// <param name="idRayon">Identifiant du rayon</param>
+        /// <param name="idRayon">Id du rayon</param>
         /// <param name="rayon">Libellé du rayon</param>
         /// <param name="periodicite">Périodicité de la revue</param>
         /// <param name="delaiMiseADispo">Délai de mise à disposition en jours</param>

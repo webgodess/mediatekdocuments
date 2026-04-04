@@ -7,7 +7,7 @@ namespace MediaTekDocuments.model
     public class Suivi
     {
         /// <summary>
-        /// Identifiant du suivi
+        /// Id du suivi
         /// </summary>
         public string Id { get; }
 
@@ -19,7 +19,7 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur du suivi
         /// </summary>
-        /// <param name="id">Identifiant du suivi</param>
+        /// <param name="id">Id du suivi</param>
         /// <param name="libelle">Libellé du suivi</param>
         public Suivi(string id, string libelle)
         {

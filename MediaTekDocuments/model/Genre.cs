@@ -9,7 +9,7 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur du genre
         /// </summary>
-        /// <param name="id">Identifiant du genre</param>
+        /// <param name="id">Id du genre</param>
         /// <param name="libelle">Libellé du genre</param>
         public Genre(string id, string libelle) : base(id, libelle)
         {

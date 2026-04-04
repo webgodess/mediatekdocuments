@@ -24,17 +24,17 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur du livre
         /// </summary>
-        /// <param name="id">Identifiant du livre</param>
+        /// <param name="id">Id du livre</param>
         /// <param name="titre">Titre du livre</param>
         /// <param name="image">Chemin de l'image du livre</param>
         /// <param name="isbn">ISBN du livre</param>
         /// <param name="auteur">Auteur du livre</param>
         /// <param name="collection">Collection du livre</param>
-        /// <param name="idGenre">Identifiant du genre</param>
+        /// <param name="idGenre">Id du genre</param>
         /// <param name="genre">Libellé du genre</param>
-        /// <param name="idPublic">Identifiant du public</param>
+        /// <param name="idPublic">Id du public</param>
         /// <param name="lePublic">Libellé du public</param>
-        /// <param name="idRayon">Identifiant du rayon</param>
+        /// <param name="idRayon">Id du rayon</param>
         /// <param name="rayon">Libellé du rayon</param>
         public Livre(string id, string titre, string image, string isbn, string auteur, string collection,
             string idGenre, string genre, string idPublic, string lePublic, string idRayon, string rayon)

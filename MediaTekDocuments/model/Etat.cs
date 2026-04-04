@@ -6,7 +6,7 @@
     public class Etat
     {
         /// <summary>
-        /// Identifiant de l'état
+        /// Id de l'état
         /// </summary>
         public string Id { get; set; }
 
@@ -18,7 +18,7 @@
         /// <summary>
         /// Constructeur de l'état
         /// </summary>
-        /// <param name="id">Identifiant de l'état</param>
+        /// <param name="id">Id de l'état</param>
         /// <param name="libelle">Libellé de l'état</param>
         public Etat(string id, string libelle)
         {

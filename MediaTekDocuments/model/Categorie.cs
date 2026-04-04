@@ -7,7 +7,7 @@ namespace MediaTekDocuments.model
     public class Categorie
     {
         /// <summary>
-        /// Identifiant de la catégorie
+        /// Id de la catégorie
         /// </summary>
         public string Id { get; }
 
@@ -19,7 +19,7 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur de la catégorie
         /// </summary>
-        /// <param name="id">Identifiant de la catégorie</param>
+        /// <param name="id">Id de la catégorie</param>
         /// <param name="libelle">Libellé de la catégorie</param>
         public Categorie(string id, string libelle)
         {

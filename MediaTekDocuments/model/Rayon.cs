@@ -9,7 +9,7 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur du rayon
         /// </summary>
-        /// <param name="id">Identifiant du rayon</param>
+        /// <param name="id">Id du rayon</param>
         /// <param name="libelle">Libellé du rayon</param>
         public Rayon(string id, string libelle) : base(id, libelle)
         {

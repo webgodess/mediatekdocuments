@@ -9,7 +9,7 @@ namespace MediaTekDocuments.model
     public class Commande
     {
         /// <summary>
-        /// Identifiant de la commande
+        /// Id de la commande
         /// </summary>
         public string Id { get; }
 
@@ -26,7 +26,7 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur de la commande
         /// </summary>
-        /// <param name="id">Identifiant de la commande</param>
+        /// <param name="id">Id de la commande</param>
         /// <param name="dateCommande">Date de la commande</param>
         /// <param name="montant">Montant de la commande</param>
         public Commande(string id, DateTime dateCommande, double montant)

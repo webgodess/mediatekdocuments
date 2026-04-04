@@ -24,17 +24,17 @@ namespace MediaTekDocuments.model
         /// <summary>
         /// Constructeur du DVD
         /// </summary>
-        /// <param name="id">Identifiant du DVD</param>
+        /// <param name="id">Id du DVD</param>
         /// <param name="titre">Titre du DVD</param>
         /// <param name="image">Chemin de l'image du DVD</param>
         /// <param name="duree">Durée du DVD en minutes</param>
         /// <param name="realisateur">Réalisateur du DVD</param>
         /// <param name="synopsis">Synopsis du DVD</param>
-        /// <param name="idGenre">Identifiant du genre</param>
+        /// <param name="idGenre">Id du genre</param>
         /// <param name="genre">Libellé du genre</param>
-        /// <param name="idPublic">Identifiant du public</param>
+        /// <param name="idPublic">Id du public</param>
         /// <param name="lePublic">Libellé du public</param>
-        /// <param name="idRayon">Identifiant du rayon</param>
+        /// <param name="idRayon">Id du rayon</param>
         /// <param name="rayon">Libellé du rayon</param>
         public Dvd(string id, string titre, string image, int duree, string realisateur, string synopsis,
             string idGenre, string genre, string idPublic, string lePublic, string idRayon, string rayon)

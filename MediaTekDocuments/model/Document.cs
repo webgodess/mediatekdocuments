@@ -6,7 +6,7 @@
     public class Document
     {
         /// <summary>
-        /// Identifiant du document
+        /// Id du document
         /// </summary>
         public string Id { get; }
 
@@ -21,7 +21,7 @@
         public string Image { get; }
 
         /// <summary>
-        /// Identifiant du genre du document
+        /// Id du genre du document
         /// </summary>
         public string IdGenre { get; }
 
@@ -41,7 +41,7 @@
         public string Public { get; }
 
         /// <summary>
-        /// Identifiant du rayon du document
+        /// Id du rayon du document
         /// </summary>
         public string IdRayon { get; }
 

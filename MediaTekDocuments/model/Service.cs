@@ -6,7 +6,7 @@
     public class Service
     {
         /// <summary>
-        /// Identifiant du service
+        /// Id du service
         /// </summary>
         public string Id { get; }
 
@@ -18,7 +18,7 @@
         /// <summary>
         /// Constructeur du service
         /// </summary>
-        /// <param name="id">Identifiant du service</param>
+        /// <param name="id">Id du service</param>
         /// <param name="libelle">Libellé du service</param>
         public Service(string id, string libelle)
         {

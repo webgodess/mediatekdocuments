@@ -14,22 +14,22 @@ namespace MediaTekDocuments.model
         public int NbExemplaire { get; }
 
         /// <summary>
-        /// Identifiant du livre ou DVD associé à la commande
+        /// Id du livre ou DVD associé à la commande
         /// </summary>
         public string IdLivreDvd { get; }
 
         /// <summary>
-        /// Identifiant de l'étape de suivi de la commande
+        /// Id de l'étape de suivi de la commande
         /// </summary>
         public string IdSuivi { get; }
 
         /// <summary>
         /// Constructeur de la commande de document
         /// </summary>
-        /// <param name="id">Identifiant de la commande</param>
+        /// <param name="id">Id de la commande</param>
         /// <param name="nbExemplaire">Nombre d'exemplaires commandés</param>
-        /// <param name="idLivreDvd">Identifiant du livre ou DVD</param>
-        /// <param name="idSuivi">Identifiant de l'étape de suivi</param>
+        /// <param name="idLivreDvd">Id du livre ou DVD</param>
+        /// <param name="idSuivi">Id de l'étape de suivi</param>
         /// <param name="dateCommande">Date de la commande</param>
         /// <param name="montant">Montant de la commande</param>
         public CommandeDocument(string id, int nbExemplaire,
