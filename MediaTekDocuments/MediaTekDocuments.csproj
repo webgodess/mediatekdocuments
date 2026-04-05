@@ -143,6 +143,7 @@
     <Compile Include="model\Service.cs" />
     <Compile Include="model\Suivi.cs" />
     <Compile Include="model\Utilisateur.cs" />
+    <Compile Include="view\NameSpaceView.cs" />
     <Compile Include="view\LoginPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -155,7 +156,9 @@
     <Compile Include="view\FormulaireAlerte.Designer.cs">
       <DependentUpon>FormulaireAlerte.cs</DependentUpon>
     </Compile>
-    <Compile Include="view\FrmMediatek.cs" />
+    <Compile Include="view\FrmMediatek.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="view\FrmMediatek.Designer.cs">
       <DependentUpon>FrmMediatek.cs</DependentUpon>
     </Compile>

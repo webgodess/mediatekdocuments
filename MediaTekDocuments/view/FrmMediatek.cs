@@ -22,12 +22,7 @@ namespace MediaTekDocuments.view
     /// Classe d'affichage
     /// </summary>
 
-    /// <summary>Contient les classes d'interface utilisateur de l'application MediaTekDocuments.</summary>
-    [System.Runtime.CompilerServices.CompilerGenerated]
-
-    internal class NamespaceDoc
-    {
-    }
+  
     /// <summary>Classe d'affichage.</summary>
 
     public partial class FrmMediatek : Form
