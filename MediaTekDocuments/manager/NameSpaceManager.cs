@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MediaTekDocuments.model
+namespace MediaTekDocuments.manager
 {
+
     /// <summary>
-    /// Contient les classes métier de l'application MediaTekDocuments.
+    /// Classe indépendante d'accès à l'api rest 
     /// </summary>
     [System.Runtime.CompilerServices.CompilerGenerated]
     internal class NamespaceDoc

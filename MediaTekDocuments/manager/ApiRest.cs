@@ -5,13 +5,6 @@ using Newtonsoft.Json.Linq;
 namespace MediaTekDocuments.manager
 {
     /// <summary>
-    /// Classe indépendante d'accès à l'api rest 
-    /// </summary>
-    [System.Runtime.CompilerServices.CompilerGenerated]
-    internal class NamespaceDoc
-    {
-    }
-    /// <summary>
     /// Classe indépendante d'accès à l'API REST.
     /// Implémente le pattern Singleton pour garantir une instance unique de connexion.
     /// </summary>
