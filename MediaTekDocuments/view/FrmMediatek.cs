@@ -2636,9 +2636,9 @@ txbLivresAuteur.Text,
             // .ToString car Text attend un string alors qu'il s'agit d'un int
             txtDureeDvdCommandes.Text = dvd.Duree.ToString();
             txtSynopsisDvdCommandes.Text = dvd.Synopsis;
-            cbxGenreDvdCommandes.Text = dvd.Genre;
-            cbxPublicDvdCommandes.Text = dvd.Public;
-            cbxRayonDvdCommandes.Text = dvd.Rayon;
+            txtGenreDvdCommandes.Text = dvd.Genre;
+            txtPublicDvdCommandes.Text = dvd.Public;
+            txtRayonDvdCommandes.Text = dvd.Rayon;
             txtTitreDvdCommandes.Text = dvd.Titre;
             txtIdDvdCommandes.Text = dvd.Id;
             string image = dvd.Image;
@@ -2663,9 +2663,9 @@ txbLivresAuteur.Text,
             txtRealisateurDvdCommandes.Text = "";
             txtDureeDvdCommandes.Text = "";
             txtSynopsisDvdCommandes.Text = "";
-            cbxGenreDvdCommandes.Text = "";
-            cbxPublicDvdCommandes.Text = "";
-            cbxRayonDvdCommandes.Text = "";
+            txtGenreDvdCommandes.Text = "";
+            txtPublicDvdCommandes.Text = "";
+            txtRayonDvdCommandes.Text = "";
             txtTitreDvdCommandes.Text = "";
             txtIdDvdCommandes.Text = "";
             pcbImageDvdCommandes.Image = null;
@@ -3429,9 +3429,10 @@ txbLivresAuteur.Text,
         }
 
 
+
         #endregion
 
-
+       
     }
 }
 

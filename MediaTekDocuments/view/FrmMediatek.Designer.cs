@@ -266,9 +266,6 @@ namespace MediaTekDocuments.view
             this.colExemplairesDvd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colEtapeDvd = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.grpInfoDvdCommandes = new System.Windows.Forms.GroupBox();
-            this.cbxRayonDvdCommandes = new System.Windows.Forms.ComboBox();
-            this.cbxPublicDvdCommandes = new System.Windows.Forms.ComboBox();
-            this.cbxGenreDvdCommandes = new System.Windows.Forms.ComboBox();
             this.label60 = new System.Windows.Forms.Label();
             this.txtDureeDvdCommandes = new System.Windows.Forms.TextBox();
             this.txtSynopsisDvdCommandes = new System.Windows.Forms.TextBox();
@@ -321,6 +318,9 @@ namespace MediaTekDocuments.view
             this.labelDelaiRevuesCommandes = new System.Windows.Forms.Label();
             this.cbxTitreRevuesCommande = new System.Windows.Forms.ComboBox();
             this.labelSelectionRevueCommandes = new System.Windows.Forms.Label();
+            this.txtRayonDvdCommandes = new System.Windows.Forms.TextBox();
+            this.txtPublicDvdCommandes = new System.Windows.Forms.TextBox();
+            this.txtGenreDvdCommandes = new System.Windows.Forms.TextBox();
             this.tabCommandesLivres.SuspendLayout();
             this.grpGestionLivreCommandes.SuspendLayout();
             this.grpNouvelleLivreCommandes.SuspendLayout();
@@ -3058,6 +3058,7 @@ namespace MediaTekDocuments.view
             this.dgvListeDvdCommandes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvListeDvdCommandes.Size = new System.Drawing.Size(1269, 217);
             this.dgvListeDvdCommandes.TabIndex = 1;
+           
             // 
             // colDateDvd
             // 
@@ -3093,9 +3094,9 @@ namespace MediaTekDocuments.view
             // 
             // grpInfoDvdCommandes
             // 
-            this.grpInfoDvdCommandes.Controls.Add(this.cbxRayonDvdCommandes);
-            this.grpInfoDvdCommandes.Controls.Add(this.cbxPublicDvdCommandes);
-            this.grpInfoDvdCommandes.Controls.Add(this.cbxGenreDvdCommandes);
+            this.grpInfoDvdCommandes.Controls.Add(this.txtGenreDvdCommandes);
+            this.grpInfoDvdCommandes.Controls.Add(this.txtPublicDvdCommandes);
+            this.grpInfoDvdCommandes.Controls.Add(this.txtRayonDvdCommandes);
             this.grpInfoDvdCommandes.Controls.Add(this.label60);
             this.grpInfoDvdCommandes.Controls.Add(this.txtDureeDvdCommandes);
             this.grpInfoDvdCommandes.Controls.Add(this.txtSynopsisDvdCommandes);
@@ -3119,36 +3120,6 @@ namespace MediaTekDocuments.view
             this.grpInfoDvdCommandes.TabIndex = 22;
             this.grpInfoDvdCommandes.TabStop = false;
             this.grpInfoDvdCommandes.Text = "Information du dvd";
-            // 
-            // cbxRayonDvdCommandes
-            // 
-            this.cbxRayonDvdCommandes.FormattingEnabled = true;
-            this.cbxRayonDvdCommandes.Location = new System.Drawing.Point(225, 292);
-            this.cbxRayonDvdCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cbxRayonDvdCommandes.Name = "cbxRayonDvdCommandes";
-            this.cbxRayonDvdCommandes.Size = new System.Drawing.Size(308, 28);
-            this.cbxRayonDvdCommandes.TabIndex = 36;
-            this.cbxRayonDvdCommandes.Visible = false;
-            // 
-            // cbxPublicDvdCommandes
-            // 
-            this.cbxPublicDvdCommandes.FormattingEnabled = true;
-            this.cbxPublicDvdCommandes.Location = new System.Drawing.Point(225, 256);
-            this.cbxPublicDvdCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cbxPublicDvdCommandes.Name = "cbxPublicDvdCommandes";
-            this.cbxPublicDvdCommandes.Size = new System.Drawing.Size(308, 28);
-            this.cbxPublicDvdCommandes.TabIndex = 35;
-            this.cbxPublicDvdCommandes.Visible = false;
-            // 
-            // cbxGenreDvdCommandes
-            // 
-            this.cbxGenreDvdCommandes.FormattingEnabled = true;
-            this.cbxGenreDvdCommandes.Location = new System.Drawing.Point(225, 216);
-            this.cbxGenreDvdCommandes.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.cbxGenreDvdCommandes.Name = "cbxGenreDvdCommandes";
-            this.cbxGenreDvdCommandes.Size = new System.Drawing.Size(308, 28);
-            this.cbxGenreDvdCommandes.TabIndex = 34;
-            this.cbxGenreDvdCommandes.Visible = false;
             // 
             // label60
             // 
@@ -3251,7 +3222,7 @@ namespace MediaTekDocuments.view
             // 
             this.label63.AutoSize = true;
             this.label63.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label63.Location = new System.Drawing.Point(9, 292);
+            this.label63.Location = new System.Drawing.Point(9, 296);
             this.label63.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label63.Name = "label63";
             this.label63.Size = new System.Drawing.Size(73, 20);
@@ -3726,6 +3697,27 @@ namespace MediaTekDocuments.view
             this.labelSelectionRevueCommandes.TabIndex = 9;
             this.labelSelectionRevueCommandes.Text = "Sélectionner une revue :";
             // 
+            // txtRayonDvdCommandes
+            // 
+            this.txtRayonDvdCommandes.Location = new System.Drawing.Point(225, 293);
+            this.txtRayonDvdCommandes.Name = "txtRayonDvdCommandes";
+            this.txtRayonDvdCommandes.Size = new System.Drawing.Size(308, 26);
+            this.txtRayonDvdCommandes.TabIndex = 36;
+            // 
+            // txtPublicDvdCommandes
+            // 
+            this.txtPublicDvdCommandes.Location = new System.Drawing.Point(225, 254);
+            this.txtPublicDvdCommandes.Name = "txtPublicDvdCommandes";
+            this.txtPublicDvdCommandes.Size = new System.Drawing.Size(308, 26);
+            this.txtPublicDvdCommandes.TabIndex = 37;
+            // 
+            // txtGenreDvdCommandes
+            // 
+            this.txtGenreDvdCommandes.Location = new System.Drawing.Point(225, 215);
+            this.txtGenreDvdCommandes.Name = "txtGenreDvdCommandes";
+            this.txtGenreDvdCommandes.Size = new System.Drawing.Size(305, 26);
+            this.txtGenreDvdCommandes.TabIndex = 38;
+            // 
             // FrmMediatek
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
@@ -4020,8 +4012,6 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.ComboBox cbxTitreDvdCommandes;
         private System.Windows.Forms.Label labelSelectionDvdCommandes;
         private System.Windows.Forms.GroupBox grpInfoDvdCommandes;
-        private System.Windows.Forms.ComboBox cbxRayonDvdCommandes;
-        private System.Windows.Forms.ComboBox cbxPublicDvdCommandes;
         private System.Windows.Forms.Label label60;
         private System.Windows.Forms.TextBox txtDureeDvdCommandes;
         private System.Windows.Forms.TextBox txtSynopsisDvdCommandes;
@@ -4053,7 +4043,6 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.Button btnSupprimerDvdCommandes;
         private System.Windows.Forms.ComboBox cbxEtapeDvdCommandes;
         private System.Windows.Forms.Label label68;
-        private System.Windows.Forms.ComboBox cbxGenreDvdCommandes;
         private System.Windows.Forms.DataGridViewTextBoxColumn colDateDvd;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMontantDvd;
         private System.Windows.Forms.DataGridViewTextBoxColumn colExemplairesDvd;
@@ -4096,6 +4085,9 @@ namespace MediaTekDocuments.view
         private System.Windows.Forms.DataGridViewTextBoxColumn colMontantAbo;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFinAbo;
         private System.Windows.Forms.Button btnSupprimerRevuesAbo;
+        private System.Windows.Forms.TextBox txtGenreDvdCommandes;
+        private System.Windows.Forms.TextBox txtPublicDvdCommandes;
+        private System.Windows.Forms.TextBox txtRayonDvdCommandes;
     }
 }
 
